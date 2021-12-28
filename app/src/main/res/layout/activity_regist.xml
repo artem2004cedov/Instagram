@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".Login.RegistActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <ImageView
+            android:layout_width="240dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/logotip" />
+
+        <EditText
+            android:id="@+id/ed_email"
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ed_text_bagraund"
+            android:hint="Электронный адрес"
+            android:padding="15dp"
+            android:textSize="12dp" />
+
+        <EditText
+            android:id="@+id/ed_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ed_text_bagraund"
+            android:hint="Имя"
+            android:padding="15dp"
+            android:textSize="12dp" />
+
+        <EditText
+            android:id="@+id/ed_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ed_text_bagraund"
+            android:hint="имя пользователя"
+            android:padding="15dp"
+            android:textSize="12dp" />
+
+        <EditText
+            android:id="@+id/ed_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:password="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/ed_text_bagraund"
+            android:hint="Пароль"
+            android:padding="15dp"
+            android:textSize="12dp" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_registr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/buuton_bacraund"
+            android:text="Зарегистрироваться"
+            android:textColor="@color/white"
+            android:textSize="11dp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/text_prost" />
+
+        <LinearLayout
+            android:id="@+id/liner_perexot_nazad"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10dp"
+                android:text="Ужес есть аккаунт?" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Войдите"
+                android:textColor="@color/sinii_92"
+                android:textSize="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

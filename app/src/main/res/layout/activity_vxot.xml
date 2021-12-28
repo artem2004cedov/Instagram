@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context=".Login.VxotActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Русский(Россия)"
+        android:textSize="11dp" />
+
+    <LinearLayout
+        android:id="@+id/liner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="25dp">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/logotip" />
+
+        <EditText
+            android:id="@+id/ed_email_vxot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/ed_text_bagraund"
+            android:hint="Электронный адрес"
+            android:padding="15dp"
+            android:textSize="12dp" />
+
+        <EditText
+            android:id="@+id/ed_password_vhot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ed_text_bagraund"
+            android:hint="Пароль"
+            android:padding="15dp"
+            android:password="true"
+            android:textSize="12dp" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_vxot"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/buuton_bacraund"
+            android:text="Вход"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="11dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Забыли свои учетные данные? "
+                android:textSize="11dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/text"
+                android:text="Получите помощь со входом в систему "
+                android:textColor="#DC0195F7"
+                android:textSize="11dp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+           <View
+               android:layout_width="0dp"
+               android:layout_weight="2"
+               android:background="@color/text_prost"
+               android:layout_height="1dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="ИЛИ"
+                android:layout_gravity="center_vertical"
+                android:textColor="#ACABAB"
+                android:textSize="12dp"
+                android:paddingHorizontal="10dp"
+                android:layout_height="wrap_content"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:background="@color/text_prost"
+                android:layout_height="1dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:src="@drawable/faisbook_foreground"
+                android:layout_height="25dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:text="Войдите через Facebook"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/sinii_92"
+                android:textStyle="bold"
+                android:textSize="12dp"
+                android:layout_marginStart="6dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="10dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/text_prost" />
+
+        <LinearLayout
+            android:id="@+id/liner_perexot"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10dp"
+                android:text="Увас ещё нет аккаунта?" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Зарегистрируйтесь"
+                android:textColor="#DD0195F7"
+                android:textSize="10dp" />
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

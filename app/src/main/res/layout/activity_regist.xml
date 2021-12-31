@@ -17,65 +17,268 @@
         android:orientation="vertical"
         android:padding="15dp">
 
-        <ImageView
-            android:layout_width="240dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/logotip" />
-
-        <EditText
-            android:id="@+id/ed_email"
-            android:layout_marginTop="30dp"
+        <LinearLayout
+            android:id="@+id/layout_email"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ed_text_bagraund"
-            android:hint="Электронный адрес"
-            android:padding="15dp"
-            android:textSize="12dp" />
+            android:orientation="vertical"
+            >
 
-        <EditText
-            android:id="@+id/ed_name"
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/usericon" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="14dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Телефон"
+                    android:textAlignment="center" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Эл.Адрес"
+                    android:textAlignment="center"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/text_prost"
+                    android:text="Телефон"
+                    android:textAlignment="center" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="@color/black"
+                    android:text="Телефон"
+                    android:textAlignment="center" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/ed_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/ed_text_bagraund"
+                android:hint="Электронный адрес"
+                android:padding="15dp"
+                android:textSize="12dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/bt_next_"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="100dp"
+                android:background="@drawable/buuton_bacraundprozratni"
+                android:text="далее"
+                android:textColor="@color/white"
+                android:textSize="11dp" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/layout_registr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/ed_text_bagraund"
-            android:hint="Имя"
-            android:padding="15dp"
-            android:textSize="12dp" />
+            android:layout_marginBottom="130dp"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/ed_username"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Имя и пароль"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/ed_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ed_text_bagraund"
+                android:hint="Имя"
+                android:padding="15dp"
+                android:textSize="12dp" />
+
+            <EditText
+                android:id="@+id/ed_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ed_text_bagraund"
+                android:hint="имя пользователя"
+                android:padding="15dp"
+                android:textSize="12dp" />
+
+            <EditText
+                android:id="@+id/ed_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/ed_text_bagraund"
+                android:hint="Пароль"
+                android:padding="15dp"
+                android:password="true"
+                android:textSize="12dp" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Запомнить пароль"
+                android:textColor="#AAA9A9"
+                android:textSize="11dp" />
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/bt_next_registr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/buuton_bacraundprozratni"
+                android:text="Продолжить с синхранизацией контактов"
+                android:textColor="@color/white"
+                android:textSize="10dp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="Продолжить без синхронизации контактов"
+                android:textAlignment="center"
+                android:textColor="@color/sinii_92" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_finis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/ed_text_bagraund"
-            android:hint="имя пользователя"
-            android:padding="15dp"
-            android:textSize="12dp" />
+            android:layout_marginBottom="50dp"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <EditText
-            android:id="@+id/ed_password"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Зарегистрироваться как"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="17dp" />
+
+            <TextView
+                android:id="@+id/text_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="16dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Имя пользователя можно будет изменить в любой
+                 момент"
+                android:textAlignment="center"
+                android:textSize="12dp" />
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/bt_registr"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/buuton_bacraund"
+                android:text="Зарегистрироваться"
+                android:textColor="@color/white"
+                android:textSize="11dp" />
+
+            <TextView
+                android:id="@+id/changeName_"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Изменить имя пользователя"
+                android:textAlignment="center"
+                android:textColor="@color/sinii_92"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_name"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="wrap_content"
-            android:password="true"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/ed_text_bagraund"
-            android:hint="Пароль"
-            android:padding="15dp"
-            android:textSize="12dp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="Изменить имя пользователя"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Выберите имя пользователя для вашего аккаунта. Вы всегда можите изменить его."
+                android:textAlignment="center"
+                android:textSize="13dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/ed_text_bagraund"
+                android:hint="имя пользователя"
+                android:padding="15dp"
+                android:textSize="12dp" />
 
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/bt_registr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="100dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/buuton_bacraund"
-            android:text="Зарегистрироваться"
-            android:textColor="@color/white"
-            android:textSize="11dp" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/bt_next_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/buuton_bacraund"
+                android:text="Далее"
+                android:textColor="@color/white"
+                android:textSize="11dp" />
 
+        </LinearLayout>
     </LinearLayout>
 
 
@@ -100,8 +303,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="10dp"
-                android:text="Ужес есть аккаунт?" />
+                android:text="Ужес есть аккаунт?"
+                android:textSize="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -109,8 +312,9 @@
                 android:text=" Войдите"
                 android:textColor="@color/sinii_92"
                 android:textSize="10dp" />
+
+
         </LinearLayout>
     </LinearLayout>
-
 
 </RelativeLayout>

@@ -69,8 +69,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                         } else {
                             Picasso.get().load(user.getImageurl()).placeholder(R.drawable.profilo).into(holder.imageProfile);
                         }
-                        holder.username.setText(user.getUsername());
-                        holder.author.setText(user.getName());
+                        holder.author.setText(user.getUsername());
+                        holder.username.setText(user.getName());
                     }
 
                     @Override
@@ -231,10 +231,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(postId).exists()) {
-                    image.setImageResource(R.drawable.ic_save_black);
+                    image.setImageResource(R.drawable.saveiconback);
                     image.setTag("saved");
                 } else {
-                    image.setImageResource(R.drawable.ic_save);
+                    image.setImageResource(R.drawable.saveicon);
                     image.setTag("save");
                 }
             }

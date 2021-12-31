@@ -127,7 +127,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void uploadImage() {
         final ProgressDialog pd = new ProgressDialog(this);
-        pd.setMessage("Uploading");
+        pd.setMessage("Загрузка");
         pd.show();
 
         if (mImageUri != null) {
@@ -149,16 +149,13 @@ public class EditProfileActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
                         String url = downloadUri.toString();
-
                         FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).child("imageurl").setValue(url);
                         pd.dismiss();
                     } else {
-                        Toast.makeText(EditProfileActivity.this, "Upload failed!", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         } else {
-            Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -172,7 +169,6 @@ public class EditProfileActivity extends AppCompatActivity {
 
             uploadImage();
         } else {
-            Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show();
         }
     }
 }

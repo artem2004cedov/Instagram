@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+   >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_levo"
+        android:maxWidth="310dp"
+        android:maxHeight="500dp"
+        android:gravity="center_vertical"
+        android:minWidth="60dp"
+        android:minHeight="35dp">
+
+    <TextView
+        android:id="@+id/text_recever_massege"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_vertical"
+        android:maxWidth="270dp"
+        android:textSize="14dp"
+        android:layout_marginStart="18dp"
+        android:padding="8dp"
+        android:textColor="#191919"
+        android:text=""
+     />
+    </LinearLayout>
+
+
+
+
+    <TextView
+        android:id="@+id/text_recever_tame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="4dp"
+        android:visibility="invisible"
+        android:text="12.00"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</RelativeLayout>

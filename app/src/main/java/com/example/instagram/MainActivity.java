@@ -22,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
     private Fragment selectorFragment;
+    private  long backPressedTime;
+    private  Toast backToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+//
+//    @Override
+//    public void onBackPressed() {
+//        if (backPressedTime + 2000 > System.currentTimeMillis()){
+//            backToast.cancel();
+//            super.onBackPressed();
+//            return;
+//        }else {
+//            backToast = Toast.makeText(getBaseContext(), "", Toast.LENGTH_SHORT);
+//            backToast.show();
+//        }
+//        backPressedTime = System.currentTimeMillis();
+//    }
 
 }

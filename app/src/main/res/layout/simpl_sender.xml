@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:padding="4dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/bg_pravo"
+        android:maxWidth="310dp"
+        android:maxHeight="500dp"
+        android:gravity="center_vertical"
+        android:minWidth="60dp"
+        android:minHeight="35dp">
+
+        <TextView
+            android:id="@+id/text_sender_massege"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="270dp"
+            android:textSize="13dp"
+            android:padding="10dp"
+            android:paddingEnd="30dp"
+            android:layout_marginBottom="3dp"
+            android:textColor="@color/white"
+            android:minWidth="50dp"
+            android:text="Teвавыавпавоплваоплавоплавопалвопалвпоавадал"
+             />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/text_sender_tame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="12.00"
+        android:visibility="gone"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+</RelativeLayout>

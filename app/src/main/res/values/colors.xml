@@ -11,5 +11,8 @@
     <color name="matovi_white_99">#EFEFEF</color>
     <color name="text_prost">#D3D1D1</color>
     <color name="sinii_92">#0195F7</color>
+    <color name="sinii_92_prozrathni">#5C0195F7</color>
     <color name="colorAccent">#E3E1E1</color>
+
+
 </resources>

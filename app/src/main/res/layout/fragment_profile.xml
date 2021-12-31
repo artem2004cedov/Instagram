@@ -24,19 +24,26 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"
+                    android:textSize="18dp"
                     android:maxLines="1"
                     android:textStyle="bold"
                     android:id="@+id/username"
                     android:textColor="@color/black"/>
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/options1"
+                    android:layout_width="20dp"
+                    android:src="@drawable/addicon"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_height="20dp"/>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:id="@+id/options1"
-                    android:src="@drawable/ic_options"
+                    android:src="@drawable/menuicon"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="15dp"/>
+                    android:layout_marginEnd="20dp"/>
 
             </RelativeLayout>
 
@@ -162,15 +169,50 @@
 
             </LinearLayout>
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:layout_height="wrap_content">
+
             <androidx.appcompat.widget.AppCompatButton
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:padding="5dp"
+                android:visibility="gone"
+                android:text="Редактировать профиль"
                 android:layout_marginHorizontal="15dp"
                 android:background="@drawable/buuton_bio"
                 android:textSize="11dp"
                 android:layout_marginTop="10dp"
                 android:id="@+id/edit_profile"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="0dp"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:text=""
+                android:background="@drawable/buuton_bio_sini92"
+                android:textSize="10dp"
+                android:textColor="@color/white"
+                android:layout_marginTop="10dp"
+                android:id="@+id/edit_following"/>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"
+                    android:text="Написать"
+                    android:background="@drawable/buuton_bio"
+                    android:textStyle="bold"
+                    android:textSize="10dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/edit_chats"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -215,12 +257,13 @@
                     android:src="@drawable/ic_my_pictures"
                     style="?android:attr/buttonBarButtonStyle"/>
 
-                <ImageButton
+
+                <ImageView
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:layout_weight="1"
                     android:id="@+id/saved_pictures"
-                    android:src="@drawable/ic_save_black"
+                    android:src="@drawable/saveiconback"
                     style="?android:attr/buttonBarButtonStyle"/>
 
             </LinearLayout>

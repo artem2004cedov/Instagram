@@ -1,39 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bar"
         android:background="?android:attr/windowBackground">
 
         <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="?android:attr/windowBackground">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:gravity="center_vertical">
 
-                <ImageView
-                    android:layout_width="180dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="-20dp"
-                    android:src="@drawable/logotip"/>
-
-                <ImageView
+                <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_maps"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_height="wrap_content">
 
-            </RelativeLayout>
+                    <ImageView
+                        android:layout_width="180dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="-20dp"
+                        android:src="@drawable/logotip" />
+
+                    <ImageView
+                        android:id="@+id/startThat"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/chatstart" />
+                </RelativeLayout>
+            </LinearLayout>
+
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -48,17 +55,63 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
+
+            <LinearLayout
+                android:padding="6dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:id="@+id/recycler_view_story"/>
+                android:layout_marginHorizontal="4dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:orientation="vertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/image_storis"
+                        android:layout_width="68dp"
+                        android:layout_height="68dp"
+                        android:src="@drawable/profilo" />
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:src="@drawable/plusicon"
+                        android:layout_marginStart="48dp"
+                        android:layout_marginTop="-22dp"
+                        android:layout_below="@id/image_storis"
+                        android:layout_height="18dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/image_storis"
+                        android:layout_marginTop="5dp"
+                        android:text="Ваша история "
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="10dp" />
+
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_story"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:background="#D1D0D0" />
+
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_posts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:id="@+id/recycler_view_posts"/>
+                android:layout_margin="5dp" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

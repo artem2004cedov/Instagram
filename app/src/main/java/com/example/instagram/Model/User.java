@@ -8,6 +8,7 @@ public class User {
     private String bio;
     private String imageurl;
     private String id;
+    private String useridraidom;
 
     public User() {
     }
@@ -19,6 +20,16 @@ public class User {
         this.bio = bio;
         this.imageurl = imageurl;
         this.id = id;
+    }
+
+    public User(String name, String email, String username, String bio, String imageurl, String id, String useridraidom) {
+        this.name = name;
+        this.email = email;
+        this.username = username;
+        this.bio = bio;
+        this.imageurl = imageurl;
+        this.id = id;
+        this.useridraidom = useridraidom;
     }
 
     public String getName() {
@@ -67,5 +78,13 @@ public class User {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getUseridraidom() {
+        return useridraidom;
+    }
+
+    public void setUseridraidom(String useridraidom) {
+        this.useridraidom = useridraidom;
     }
 }

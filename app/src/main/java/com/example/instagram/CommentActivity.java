@@ -34,7 +34,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class CommentActivity extends AppCompatActivity {
+public class    CommentActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private CommentAdapter commentAdapter;

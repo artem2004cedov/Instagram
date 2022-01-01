@@ -58,6 +58,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         Picasso.get().load(post.getImageurl()).into(holder.postImage);
         holder.description.setText(post.getDescription());
 
+        // Данные автора поста
         FirebaseDatabase.getInstance().getReference().child("Users").child(post.getPublisher())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -88,6 +89,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             @Override
             public void onClick(View v) {
                 if (holder.like.getTag().equals("like")) {
+                    // 1 Автор поста 2 текущий пользователь
                     FirebaseDatabase.getInstance().getReference().child("Likes")
                             .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
 
@@ -99,6 +101,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
+        // Коменты
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,6 +112,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
+        // Коменты
         holder.noOfComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,6 +123,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
+        // сохронёные
         holder.save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,6 +148,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
+        // переход в профиль
         holder.username.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,6 +160,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
+        // переход в профиль
         holder.author.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,6 +238,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(postId).exists()) {
+                    // если у меня есть то сохроннёные
                     image.setImageResource(R.drawable.saveiconback);
                     image.setTag("saved");
                 } else {

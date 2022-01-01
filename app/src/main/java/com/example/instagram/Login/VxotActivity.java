@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 
@@ -32,8 +33,6 @@ public class VxotActivity extends AppCompatActivity {
     private Button bt_vxot;
     private EditText ed_password_vhot, ed_email_vxot;
     private FirebaseAuth auth;
-    private boolean isLast1;
-    private boolean isLas2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,25 +48,11 @@ public class VxotActivity extends AppCompatActivity {
                 startActivity(new Intent(VxotActivity.this, RegistActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
-
-
-        bt_vxot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String emil = ed_email_vxot.getText().toString();
-                String password = ed_password_vhot.getText().toString();
-
-                if (TextUtils.isEmpty(emil) || TextUtils.isEmpty(password)) {
-                } else {
-                    vxotUser(emil, password);
-                }
-            }
-        });
-
     }
 
+    // работа с кантенерами,отоброжения
     private void userExamination() {
-        ed_email_vxot.addTextChangedListener(new TextWatcher() {
+        ed_password_vhot.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -84,52 +69,40 @@ public class VxotActivity extends AppCompatActivity {
             }
 
         });
-
-
-        ed_password_vhot.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                examination2(s);
-            }
-        });
     }
 
-
+    // работа с кантенерами,отоброжения
     private void examination1(Editable s) {
-        if (s.length() == 0) {
-            bt_vxot.setBackgroundResource(R.drawable.buuton_bacraundprozratni);
-            isLast1 = false;
-        } else {
-//            checkingVariables();
-            isLast1 = true;
+        if (s.length() >= 6) {
             bt_vxot.setBackgroundResource(R.drawable.buuton_bacraund);
+            bt_vxot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String emil = ed_email_vxot.getText().toString();
+                    String password = ed_password_vhot.getText().toString();
+
+                    if (TextUtils.isEmpty(emil) || TextUtils.isEmpty(password)) {
+                    } else {
+                        vxotUser(emil, password);
+                    }
+                }
+            });
+        } else {
+            bt_vxot.setBackgroundResource(R.drawable.buuton_bacraundprozratni);
+
         }
     }
 
-    private void examination2(Editable s) {
-
-    }
-
+    // метод для входа в аккаунт
     private void vxotUser(String emil, String password) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("email", emil);
         map.put("password", password);
-        FirebaseDatabase.getInstance().getReference().child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("Email | Password").setValue(map);
+        FirebaseDatabase.getInstance().getReference().child("Email | Password").setValue(map);
         auth.signInWithEmailAndPassword(emil, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(VxotActivity.this, "Успешный вход", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(VxotActivity.this, MainActivity.class));
                     finish();
                 } else {

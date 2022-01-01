@@ -1,6 +1,7 @@
 package com.example.instagram.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.instagram.Model.Stories;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
+import com.example.instagram.StoryWindowActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -42,6 +44,7 @@ public class StorisAdapter extends RecyclerView.Adapter<StorisAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Stories stories = storiesList.get(position);
+
         FirebaseDatabase.getInstance().getReference().child("Users").child(stories.getPublisher())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -53,6 +56,17 @@ public class StorisAdapter extends RecyclerView.Adapter<StorisAdapter.ViewHolder
                             Picasso.get().load(user.getImageurl()).placeholder(R.drawable.profilo).into(holder.prifale_storis);
                         }
                         holder.name_storis.setText(user.getUsername());
+
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent = new Intent(context, StoryWindowActivity.class);
+                                intent.putExtra("username",user.getUsername());
+                                intent.putExtra("imageurl",user.getImageurl());
+                                intent.putExtra("storiesurl",stories.getImageurl());
+                                context.startActivity(intent);
+                            }
+                        });
                     }
 
                     @Override
@@ -60,6 +74,8 @@ public class StorisAdapter extends RecyclerView.Adapter<StorisAdapter.ViewHolder
 
                     }
                 });
+
+
     }
 
     @Override

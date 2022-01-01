@@ -14,5 +14,9 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="noBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 
 </resources>

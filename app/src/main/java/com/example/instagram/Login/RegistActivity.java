@@ -33,7 +33,7 @@ import java.util.HashMap;
 
 public class RegistActivity extends AppCompatActivity {
 
-    private EditText ed_name, ed_email, ed_password, ed_username;
+    private EditText ed_name, ed_email, ed_password, ed_username, ed_usernameChange;
     private Button bt_registr, bt_next_, bt_next_registr, bt_next_name;
     private DatabaseReference mRootRef;
     private TextView text_email, changeName_;
@@ -49,6 +49,7 @@ public class RegistActivity extends AppCompatActivity {
         inite();
         containers();
 
+        // Ввод данных пользователя
         bt_registr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +59,6 @@ public class RegistActivity extends AppCompatActivity {
                 String password = ed_password.getText().toString();
 
                 if (TextUtils.isEmpty(email) || TextUtils.isEmpty(name) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
-
                 } else {
                     registrUser(email, name, password, username);
                 }
@@ -66,6 +66,7 @@ public class RegistActivity extends AppCompatActivity {
         });
     }
 
+    // работа с кантенерами,отоброжения
     private void containers() {
         ed_password.addTextChangedListener(new TextWatcher() {
             @Override
@@ -101,7 +102,6 @@ public class RegistActivity extends AppCompatActivity {
             }
         });
 
-
         bt_next_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +111,7 @@ public class RegistActivity extends AppCompatActivity {
         });
     }
 
+    // работа с кантенерами,отоброжения
     private void continu(Editable s) {
         if (s.length() >= 6) {
             bt_next_registr.setBackgroundResource(R.drawable.buuton_bacraund);
@@ -126,6 +127,8 @@ public class RegistActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             layout_finis.setVisibility(View.GONE);
                             layout_name.setVisibility(View.VISIBLE);
+                            ed_usernameChange.setText(ed_username.getText().toString());
+                            ed_username.setText(ed_usernameChange.getText().toString());
                         }
                     });
                 }
@@ -135,7 +138,7 @@ public class RegistActivity extends AppCompatActivity {
         }
     }
 
-
+    // работа с кантенерами,отоброжения
     private void next(Editable s) {
         if (s.length() == 0) {
             bt_next_.setBackgroundResource(R.drawable.buuton_bacraundprozratni);
@@ -152,6 +155,7 @@ public class RegistActivity extends AppCompatActivity {
         }
     }
 
+    // метод для регистрации
     private void registrUser(String email, String name, String password, String username) {
         pd.setTitle("Регистрация");
         pd.setMessage("Пожалуйста подождите...");
@@ -193,10 +197,12 @@ public class RegistActivity extends AppCompatActivity {
 
     }
 
+    // переменые
     private void inite() {
         pd = new ProgressDialog(this);
         ed_email = findViewById(R.id.ed_email);
         ed_username = findViewById(R.id.ed_username);
+        ed_usernameChange = findViewById(R.id.ed_usernameChange);
         bt_next_ = findViewById(R.id.bt_next_);
         bt_registr = findViewById(R.id.bt_registr);
         text_email = findViewById(R.id.text_email);

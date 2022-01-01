@@ -31,7 +31,7 @@ public class AddStorisActivity extends AppCompatActivity {
 
     private Uri imageUri;
     private String imageUrl;
-    private ImageView image_foto,image_Next;
+    private ImageView image_foto, image_Next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class AddStorisActivity extends AppCompatActivity {
         pd.show();
 
         // если есть картинки
-        if (imageUri != null){
+        if (imageUri != null) {
             final StorageReference filePath = FirebaseStorage.getInstance().
                     getReference("Stories").child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
 
@@ -73,7 +73,7 @@ public class AddStorisActivity extends AppCompatActivity {
             uploadtask.continueWithTask(new Continuation() {
                 @Override
                 public Object then(@NonNull Task task) throws Exception {
-                    if (!task.isSuccessful()){
+                    if (!task.isSuccessful()) {
                         throw task.getException();
                     }
 
@@ -89,14 +89,14 @@ public class AddStorisActivity extends AppCompatActivity {
                     String storiesid = ref.push().getKey();
 
                     HashMap<String, Object> map = new HashMap<>();
-                    map.put("storiesid" , storiesid);
-                    map.put("imageurl" , imageUrl);
-                    map.put("publisher" , FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    map.put("storiesid", storiesid);
+                    map.put("imageurl", imageUrl);
+                    map.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                     ref.child(storiesid).setValue(map);
 
                     pd.dismiss();
-                    startActivity(new Intent(AddStorisActivity.this , MainActivity.class));
+                    startActivity(new Intent(AddStorisActivity.this, MainActivity.class));
                     finish();
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -119,13 +119,13 @@ public class AddStorisActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             // записывается id картинки
             imageUri = result.getUri();
             image_foto.setImageURI(imageUri);
         } else {
-            startActivity(new Intent(AddStorisActivity.this , MainActivity.class));
+            startActivity(new Intent(AddStorisActivity.this, MainActivity.class));
             finish();
         }
     }

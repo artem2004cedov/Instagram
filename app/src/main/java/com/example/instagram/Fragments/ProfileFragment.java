@@ -56,7 +56,7 @@ public class ProfileFragment extends Fragment {
     private CircleImageView imageProfile;
     private ImageView options;
     private TextView followers, following;
-    private TextView posts;
+    private TextView posts,textAdmin;
     private TextView fullname;
     private TextView bio;
     private TextView username;
@@ -90,6 +90,7 @@ public class ProfileFragment extends Fragment {
         posts = view.findViewById(R.id.posts);
         fullname = view.findViewById(R.id.fullname);
         bio = view.findViewById(R.id.bio);
+        textAdmin = view.findViewById(R.id.textAdmin);
         username = view.findViewById(R.id.username);
         myPictures = view.findViewById(R.id.my_pictures);
         savedPictures = view.findViewById(R.id.saved_pictures);
@@ -127,6 +128,13 @@ public class ProfileFragment extends Fragment {
         } else {
             checkFollowingStatus();
         }
+//
+//        if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals("Rtm1Ya3sQ8VdPdlM2n6Z4HqBg5y1")) {
+//            Toast.makeText(getContext(), "оравлоарвылоарвлоп", Toast.LENGTH_SHORT).show();
+//            textAdmin.setVisibility(View.GONE);
+//        } else {
+//            textAdmin.setVisibility(View.VISIBLE);
+//        }
 
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override

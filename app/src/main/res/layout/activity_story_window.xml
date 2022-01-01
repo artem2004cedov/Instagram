@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:paddingTop="10dp"
+    tools:context=".StoryWindowActivity">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@color/black_89" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:background="#A5A0A0"
+        android:layout_margin="6dp"
+        android:indeterminateTint="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp" />
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="34dp"
+            android:id="@+id/stories_profale"
+            android:layout_height="34dp"
+            android:src="@drawable/profilo" />
+
+        <TextView
+            android:id="@+id/name_user_stories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13dp"
+            android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="4 ч"
+            android:textColor="@color/text_prost"
+            android:textSize="10dp" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/more_whate" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/mainWindowStories"
+        android:layout_below="@id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/black"
+        android:paddingBottom="70dp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="10dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="0dp"
+            android:id="@+id/massege_stories"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_weight="5"
+            android:background="@drawable/ed_stories_thate"
+            android:hint="Отправить сообщение"
+            android:textColor="@color/white"
+            android:padding="15dp"
+            android:textColorHint="@color/white"
+            android:textSize="12dp" />
+
+        <ImageView
+            android:id="@+id/add_comment_stories"
+            android:layout_width="0dp"
+            android:layout_height="34dp"
+            android:layout_alignParentEnd="true"
+            android:fadingEdge="none"
+            android:layout_weight="1"
+            android:layout_marginVertical="8dp"
+            android:src="@drawable/send_24" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

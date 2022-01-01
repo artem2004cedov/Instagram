@@ -1,6 +1,10 @@
 package com.example.instagram;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,18 +12,14 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.example.instagram.Model.User;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,50 +31,68 @@ import com.google.firebase.storage.StorageTask;
 import com.hendraanggrian.appcompat.socialview.Hashtag;
 import com.hendraanggrian.appcompat.widget.HashtagArrayAdapter;
 import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
-import com.theartofdev.edmodo.cropper.CropImage;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class PostActivity extends AppCompatActivity {
+import de.hdodenhof.circleimageview.CircleImageView;
 
+public class PostDiscriptionActivity extends AppCompatActivity {
+
+    private ImageView postNext, POST;
+    private CircleImageView post_profale;
+    private SocialAutoCompleteTextView descriptionPost;
     private Uri imageUri;
     private String imageUrl;
+    private FirebaseUser fUser;
 
-    private ImageView close;
-    private ImageView imageAdded;
-    private ImageView post;
-    SocialAutoCompleteTextView description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post);
+        setContentView(R.layout.activity_post_discription);
 
-        close = findViewById(R.id.close);
-        imageAdded = findViewById(R.id.image_added);
-        post = findViewById(R.id.post);
-        description = findViewById(R.id.description);
+        postNext = findViewById(R.id.postNext);
+        post_profale = findViewById(R.id.post_profale);
+        descriptionPost = findViewById(R.id.descriptionPost);
+        POST = findViewById(R.id.POST);
+        fUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        close.setOnClickListener(new View.OnClickListener() {
+
+        imageUri = getIntent().getData();
+        POST.setImageURI(imageUri);
+
+
+        findViewById(R.id.image_back_post).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PostActivity.this , MainActivity.class));
                 finish();
             }
         });
 
-        post.setOnClickListener(new View.OnClickListener() {
+        postNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                upload();
-                Intent intent = new Intent(PostActivity.this, PostDiscriptionActivity.class);
-                intent.setData(imageUri);
-                startActivity(intent);
+                upload();
             }
         });
 
-        CropImage.activity().start(PostActivity.this);
+        // установка фото профиля
+        FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user.getImageurl().equals("default")) {
+                } else {
+                    Picasso.get().load(user.getImageurl()).into(post_profale);
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     // при нажатии на продолжить
@@ -84,7 +102,7 @@ public class PostActivity extends AppCompatActivity {
         pd.show();
 
         // если есть картинки
-        if (imageUri != null){
+        if (imageUri != null) {
             final StorageReference filePath = FirebaseStorage.getInstance().
                     getReference("Posts").child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
 
@@ -92,7 +110,7 @@ public class PostActivity extends AppCompatActivity {
             uploadtask.continueWithTask(new Continuation() {
                 @Override
                 public Object then(@NonNull Task task) throws Exception {
-                    if (!task.isSuccessful()){
+                    if (!task.isSuccessful()) {
                         throw task.getException();
                     }
 
@@ -104,30 +122,31 @@ public class PostActivity extends AppCompatActivity {
                     Uri downloadUri = task.getResult();
                     imageUrl = downloadUri.toString();
 
+                    // Запись в пост
                     DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
                     String postId = ref.push().getKey();
 
                     HashMap<String, Object> map = new HashMap<>();
-                    map.put("postid" , postId);
-                    map.put("imageurl" , imageUrl);
-                    map.put("description" , description.getText().toString());
-                    map.put("publisher" , FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    map.put("postid", postId);
+                    map.put("imageurl", imageUrl);
+                    map.put("description", descriptionPost.getText().toString());
+                    map.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                     ref.child(postId).setValue(map);
 
                     DatabaseReference mHashTagRef = FirebaseDatabase.getInstance().getReference().child("HashTags");
-                    List<String> hashTags = description.getHashtags();
-                    if (!hashTags.isEmpty()){
-                        for (String tag : hashTags){
+                    List<String> hashTags = descriptionPost.getHashtags();
+                    if (!hashTags.isEmpty()) {
+                        for (String tag : hashTags) {
                             map.clear();
-                            map.put("tag" , tag.toLowerCase());
-                            map.put("postid" , postId);
+                            map.put("tag", tag.toLowerCase());
+                            map.put("postid", postId);
                             mHashTagRef.child(tag.toLowerCase()).child(postId).setValue(map);
                         }
                     }
 
                     pd.dismiss();
-                    startActivity(new Intent(PostActivity.this , MainActivity.class));
+                    startActivity(new Intent(PostDiscriptionActivity.this, MainActivity.class));
                     finish();
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -145,21 +164,24 @@ public class PostActivity extends AppCompatActivity {
 
     }
 
-    // открыват фото
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onStart() {
+        super.onStart();
+        final ArrayAdapter<Hashtag> hashtagAdapter = new HashtagArrayAdapter<>(getApplicationContext());
+        FirebaseDatabase.getInstance().getReference().child("HashTags").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    hashtagAdapter.add(new Hashtag(snapshot.getKey(), (int) snapshot.getChildrenCount()));
+                }
+            }
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK){
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            // записывается id картинки
-            imageUri = result.getUri();
-            imageAdded.setImageURI(imageUri);
-        } else {
-            startActivity(new Intent(PostActivity.this , MainActivity.class));
-            finish();
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        descriptionPost.setHashtagAdapter(hashtagAdapter);
     }
-
-
 }

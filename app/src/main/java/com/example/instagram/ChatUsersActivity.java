@@ -10,7 +10,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.instagram.Adapter.ChatUserAdapter;
 import com.example.instagram.Model.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,7 +42,6 @@ public class ChatUsersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chath_user);
 
         name_chat = findViewById(R.id.name_chat);
-
         recycler_chat = findViewById(R.id.recycler_chat);
         search_user = findViewById(R.id.search_user);
         fUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -126,11 +127,15 @@ public class ChatUsersActivity extends AppCompatActivity {
     }
 
     private void getUsername() {
+
+        name_chat.setText(getSharedPreferences("thatUser", MODE_PRIVATE).getString("nameChat", ""));
+
         FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
                 name_chat.setText(user.getUsername());
+                getSharedPreferences("thatUser", MODE_PRIVATE).edit().putString("nameChat", user.getUsername()).apply();
             }
 
             @Override

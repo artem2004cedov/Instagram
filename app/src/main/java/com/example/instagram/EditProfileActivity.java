@@ -1,7 +1,9 @@
 package com.example.instagram;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Registry;
+import com.bumptech.glide.annotation.GlideModule;
+import com.bumptech.glide.module.AppGlideModule;
+import com.example.instagram.Model.ImageId;
 import com.example.instagram.Model.User;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,19 +38,25 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditProfileActivity extends AppCompatActivity {
 
     private ImageView close;
-    private CircleImageView imageProfile;
+    static CircleImageView imageProfile;
     private ImageView save;
     private TextView changePhoto;
     private MaterialEditText fullname;
     private MaterialEditText username;
     private MaterialEditText bio;
+    private String uri;
+    static List<User> listUri;
+    static List<User> follList;
 
     private FirebaseUser fUser;
 
@@ -63,30 +76,60 @@ public class EditProfileActivity extends AppCompatActivity {
         fullname = findViewById(R.id.fullname);
         username = findViewById(R.id.username);
         bio = findViewById(R.id.bio);
+        listUri = new ArrayList<>();
+        follList = new ArrayList<>();
 
         fUser = FirebaseAuth.getInstance().getCurrentUser();
         storageRef = FirebaseStorage.getInstance().getReference().child("Uploads");
 
-        FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                fullname.setText(user.getName());
-                username.setText(user.getUsername());
-                bio.setText(user.getBio());
-                if (user.getImageurl().equals("default")) {
-                    imageProfile.setImageResource(R.drawable.profilo);
-                } else {
-                    Picasso.get().load(user.getImageurl()).into(imageProfile);
+        String cs = Context.CONNECTIVITY_SERVICE;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(cs);
+        if (cm.getActiveNetworkInfo() == null) {
+//            return false;
+            getimageuri();
+        } else {
+//            return true;
+            FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+
+                    fullname.setText(user.getName());
+                    username.setText(user.getUsername());
+                    bio.setText(user.getBio());
+
+                    getSharedPreferences("profaleUser", MODE_PRIVATE).edit().putString("name", user.getName()).apply();
+                    getSharedPreferences("profaleUser", MODE_PRIVATE).edit().putString("username", user.getUsername()).apply();
+                    getSharedPreferences("profaleUser", MODE_PRIVATE).edit().putString("bio", user.getBio()).apply();
+
+
+                    if (user.getImageurl().equals("default")) {
+                        imageProfile.setImageResource(R.drawable.profilo);
+                    } else {
+
+                        listUri.clear();
+                        listUri.add(dataSnapshot.getValue(User.class));
+
+                        getimageuri();
+//                    for (User user1 : listUri) {
+//                        Picasso.get().load(user1.getImageurl()).into(imageProfile);
+//                        Toast.makeText(EditProfileActivity.this, "идет", Toast.LENGTH_SHORT).show();
+//                    }
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
 
+
+        for (User user1 : listUri) {
+            Picasso.get().load(user1.getImageurl()).into(imageProfile);
+            Toast.makeText(EditProfileActivity.this, "идет", Toast.LENGTH_SHORT).show();
+        }
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +137,17 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("name", fullname.getText().toString());
+                map.put("username", username.getText().toString());
+                map.put("bio", bio.getText().toString());
+                FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).updateChildren(map);
+                finish();
+            }
+        });
         changePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,21 +162,26 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateProfile();
-            }
-        });
+        dataCaching();
+
     }
 
-    private void updateProfile() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("fullname", fullname.getText().toString());
-        map.put("username", username.getText().toString());
-        map.put("bio", bio.getText().toString());
-        FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).updateChildren(map);
-        finish();
+    private void getimageuri() {
+        follList.clear();
+        follList.addAll(listUri);
+        for (User user : follList) {
+
+            Glide.with(getApplicationContext())
+                    .load(user.getImageurl())
+                    .into(imageProfile);
+        }
+    }
+
+    private void dataCaching() {
+        fullname.setText(getSharedPreferences("profaleUser", MODE_PRIVATE).getString("name", ""));
+        username.setText(getSharedPreferences("profaleUser", MODE_PRIVATE).getString("username", ""));
+        bio.setText(getSharedPreferences("profaleUser", MODE_PRIVATE).getString("bio", ""));
+        imageProfile.setImageResource(R.drawable.profilo);
     }
 
     private void uploadImage() {
@@ -171,4 +230,5 @@ public class EditProfileActivity extends AppCompatActivity {
         } else {
         }
     }
+
 }

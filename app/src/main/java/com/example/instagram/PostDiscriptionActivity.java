@@ -33,10 +33,15 @@ import com.hendraanggrian.appcompat.widget.HashtagArrayAdapter;
 import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+/*
+Работа с постом
+ */
 
 public class PostDiscriptionActivity extends AppCompatActivity {
 
@@ -59,10 +64,8 @@ public class PostDiscriptionActivity extends AppCompatActivity {
         POST = findViewById(R.id.POST);
         fUser = FirebaseAuth.getInstance().getCurrentUser();
 
-
         imageUri = getIntent().getData();
         POST.setImageURI(imageUri);
-
 
         findViewById(R.id.image_back_post).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +91,7 @@ public class PostDiscriptionActivity extends AppCompatActivity {
                     Picasso.get().load(user.getImageurl()).into(post_profale);
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -131,6 +135,7 @@ public class PostDiscriptionActivity extends AppCompatActivity {
                     map.put("imageurl", imageUrl);
                     map.put("description", descriptionPost.getText().toString());
                     map.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    map.put("tame", new Date().getTime());
 
                     ref.child(postId).setValue(map);
 

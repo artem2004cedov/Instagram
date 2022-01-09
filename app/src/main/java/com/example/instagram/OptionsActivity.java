@@ -11,6 +11,9 @@ import androidx.appcompat.widget.Toolbar;
 import com.example.instagram.Login.VxotActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
+/*
+Настройки
+ */
 public class OptionsActivity extends AppCompatActivity {
 
     private TextView settings;

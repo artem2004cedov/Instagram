@@ -124,6 +124,15 @@
             android:id="@+id/no_of_comments"
             android:textColor="#707070"/>
 
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="wrap_content"
+            android:text="2 часа назад"
+            android:textSize="9.1dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
 </RelativeLayout>

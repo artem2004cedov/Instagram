@@ -1,6 +1,12 @@
 package com.example.instagram.Adapter;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +14,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.Fragments.PostDetailFragment;
 import com.example.instagram.Fragments.ProfileFragment;
+import com.example.instagram.MainActivity;
 import com.example.instagram.Model.Notification;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.User;
@@ -25,11 +33,19 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static android.telephony.AvailableNetworkInfo.PRIORITY_HIGH;
+
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
 
     private Context mContext;
     private List<Notification> mNotifications;
+    private NotificationManager notificationManager;
+    private static final int NOTIFY_ID = 101;
+    private static final String CHANNEL_ID = "CHANNEL_ID";
+
 
     public NotificationAdapter(Context mContext, List<Notification> mNotifications) {
         this.mContext = mContext;
@@ -49,7 +65,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         final Notification notification = mNotifications.get(position);
 
-        getUser(holder.imageProfile, holder.username, notification.getUserid());
+//        notification.getPostid(), notification.getUserid()
+//        phone_notification();
+
+        getUser(holder.image_profile11, holder.username1, notification.getUserid());
         holder.comment.setText(notification.getText());
 
         if (notification.isIsPost()) {
@@ -87,17 +106,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView imageProfile;
+        public CircleImageView image_profile11;
         public ImageView postImage;
-        public TextView username;
+        public TextView username1;
         public TextView comment;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            imageProfile = itemView.findViewById(R.id.image_profile);
+            image_profile11 = itemView.findViewById(R.id.image_profile11);
             postImage = itemView.findViewById(R.id.post_image);
-            username = itemView.findViewById(R.id.username);
+            username1 = itemView.findViewById(R.id.username1);
             comment = itemView.findViewById(R.id.comment);
         }
     }
@@ -118,6 +137,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     private void getUser(final ImageView imageView, final TextView textView, String userId) {
+        // id поста автора
         FirebaseDatabase.getInstance().getReference().child("Users").child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

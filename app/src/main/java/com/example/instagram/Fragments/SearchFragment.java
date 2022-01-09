@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.Adapter.TagAdapter;
 import com.example.instagram.Adapter.UserAdapter;
+import com.example.instagram.Adapter.UserRandomAdapter;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
 import com.google.firebase.database.DataSnapshot;
@@ -34,16 +36,18 @@ import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchFragment extends Fragment {
+public class    SearchFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private List<User> mUsers;
     private UserAdapter userAdapter;
 
+
     private RecyclerView recyclerViewTags;
     private List<String> mHashTags;
     private List<String> mHashTagsCount;
     private TagAdapter tagAdapter;
+    private ImageView arrowback;
 
     private SocialAutoCompleteTextView search_bar;
 
@@ -53,6 +57,7 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         search_bar = view.findViewById(R.id.search_bar);
+        arrowback = view.findViewById(R.id.arrowback);
 
         recyclerView = view.findViewById(R.id.recycler_view_users);
         recyclerView.setHasFixedSize(true);
@@ -70,7 +75,6 @@ public class SearchFragment extends Fragment {
         mUsers = new ArrayList<>();
         userAdapter = new UserAdapter(getContext(), mUsers, true);
         recyclerView.setAdapter(userAdapter);
-
 
         readUsers();
         readTags();
@@ -96,7 +100,6 @@ public class SearchFragment extends Fragment {
     }
 
     private void readTags() {
-
         FirebaseDatabase.getInstance().getReference().child("HashTags").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -36,11 +36,12 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import java.util.HashMap;
 import java.util.List;
 
+/*
+Работа с постом
+ */
 public class PostActivity extends AppCompatActivity {
 
     private Uri imageUri;
-    private String imageUrl;
-
     private ImageView close;
     private ImageView imageAdded;
     private ImageView post;
@@ -67,7 +68,6 @@ public class PostActivity extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                upload();
                 Intent intent = new Intent(PostActivity.this, PostDiscriptionActivity.class);
                 intent.setData(imageUri);
                 startActivity(intent);
@@ -75,74 +75,6 @@ public class PostActivity extends AppCompatActivity {
         });
 
         CropImage.activity().start(PostActivity.this);
-    }
-
-    // при нажатии на продолжить
-    private void upload() {
-        final ProgressDialog pd = new ProgressDialog(this);
-        pd.setMessage("Загрузка");
-        pd.show();
-
-        // если есть картинки
-        if (imageUri != null){
-            final StorageReference filePath = FirebaseStorage.getInstance().
-                    getReference("Posts").child(System.currentTimeMillis() + "." + getFileExtension(imageUri));
-
-            StorageTask uploadtask = filePath.putFile(imageUri);
-            uploadtask.continueWithTask(new Continuation() {
-                @Override
-                public Object then(@NonNull Task task) throws Exception {
-                    if (!task.isSuccessful()){
-                        throw task.getException();
-                    }
-
-                    return filePath.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    Uri downloadUri = task.getResult();
-                    imageUrl = downloadUri.toString();
-
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
-                    String postId = ref.push().getKey();
-
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put("postid" , postId);
-                    map.put("imageurl" , imageUrl);
-                    map.put("description" , description.getText().toString());
-                    map.put("publisher" , FirebaseAuth.getInstance().getCurrentUser().getUid());
-
-                    ref.child(postId).setValue(map);
-
-                    DatabaseReference mHashTagRef = FirebaseDatabase.getInstance().getReference().child("HashTags");
-                    List<String> hashTags = description.getHashtags();
-                    if (!hashTags.isEmpty()){
-                        for (String tag : hashTags){
-                            map.clear();
-                            map.put("tag" , tag.toLowerCase());
-                            map.put("postid" , postId);
-                            mHashTagRef.child(tag.toLowerCase()).child(postId).setValue(map);
-                        }
-                    }
-
-                    pd.dismiss();
-                    startActivity(new Intent(PostActivity.this , MainActivity.class));
-                    finish();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                }
-            });
-        } else {
-        }
-
-    }
-
-    private String getFileExtension(Uri uri) {
-        return MimeTypeMap.getSingleton().getExtensionFromMimeType(this.getContentResolver().getType(uri));
-
     }
 
     // открыват фото
@@ -160,6 +92,4 @@ public class PostActivity extends AppCompatActivity {
             finish();
         }
     }
-
-
 }

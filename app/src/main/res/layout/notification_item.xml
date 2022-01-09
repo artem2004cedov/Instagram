@@ -9,20 +9,20 @@
         android:layout_width="40dp"
         android:src="@drawable/profilo"
         android:layout_height="40dp"
-        android:id="@+id/image_profile"/>
+        android:id="@+id/image_profile11"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:orientation="vertical"
-        android:layout_toEndOf="@id/image_profile"
+        android:layout_toEndOf="@id/image_profile11"
         android:layout_toStartOf="@id/post_image">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/username"
+            android:id="@+id/username1"
             android:textStyle="bold"
             android:textColor="@color/black"/>
 

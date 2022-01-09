@@ -10,6 +10,10 @@ import android.os.Handler;
 import com.example.instagram.Login.VxotActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
+/*
+заставка
+ */
+
 public class SplashScreenActivity extends AppCompatActivity {
 
     @Override

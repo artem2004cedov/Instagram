@@ -24,12 +24,14 @@ import com.google.firebase.storage.StorageTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+/*
+ Установка фото после регистрации
+ */
 public class PhotoinprofileActivity extends AppCompatActivity {
     private Button addPhoto;
     private TextView text_next;
 
     private FirebaseUser fUser;
-
     private Uri mImageUri;
     private StorageTask uploadTask;
     private StorageReference storageRef;

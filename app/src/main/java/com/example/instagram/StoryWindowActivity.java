@@ -18,6 +18,10 @@ import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/*
+ Класс для просмотра строз
+ */
+
 public class StoryWindowActivity extends AppCompatActivity {
     private ImageView mainWindowStories,add_comment_stories;
     private CircleImageView stories_profale;
@@ -39,7 +43,7 @@ public class StoryWindowActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         progressBar.setProgressTintList(ColorStateList.valueOf(Color.WHITE));
 
-
+        // передача данных
         name_user_stories.setText(getIntent().getStringExtra("username"));
         Picasso.get().load(getIntent().getStringExtra("imageurl")).into(stories_profale);
         Picasso.get().load(getIntent().getStringExtra("storiesurl")).into(mainWindowStories);
@@ -60,6 +64,6 @@ public class StoryWindowActivity extends AppCompatActivity {
                 }
             }
         };
-        timer.schedule(timerTask,0,30);
+        timer.schedule(timerTask,0,40);
     }
 }

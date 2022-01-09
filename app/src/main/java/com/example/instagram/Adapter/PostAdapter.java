@@ -1,7 +1,12 @@
 package com.example.instagram.Adapter;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +22,7 @@ import com.example.instagram.CommentActivity;
 import com.example.instagram.FollowersActivity;
 import com.example.instagram.Fragments.PostDetailFragment;
 import com.example.instagram.Fragments.ProfileFragment;
+import com.example.instagram.MainActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
@@ -28,13 +35,21 @@ import com.google.firebase.database.ValueEventListener;
 import com.hendraanggrian.appcompat.widget.SocialTextView;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import static android.telephony.AvailableNetworkInfo.PRIORITY_HIGH;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
     private Context mContext;
     private List<Post> mPosts;
+    private NotificationManager notificationManager;
+    private static final int NOTIFY_ID = 101;
+    private static final String CHANNEL_ID = "CHANNEL_ID";
+
 
     private FirebaseUser firebaseUser;
 
@@ -80,6 +95,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                     }
                 });
 
+        Date date = new Date(post.getTame());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-HH:mm");
+        String strDate = simpleDateFormat.format(date);
+        holder.textDate.setText(strDate.toString());
+
         isLiked(post.getPostid(), holder.like);
         noOfLikes(post.getPostid(), holder.noOfLikes);
         getComments(post.getPostid(), holder.noOfComments);
@@ -94,6 +114,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                             .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
 
                     addNotification(post.getPostid(), post.getPublisher());
+//                    phone_notification();
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("Likes")
                             .child(post.getPostid()).child(firebaseUser.getUid()).removeValue();
@@ -142,6 +163,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             public void onClick(View v) {
                 mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE)
                         .edit().putString("profileId", post.getPublisher()).apply();
+
 
                 ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new ProfileFragment()).commit();
@@ -208,7 +230,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         public ImageView save;
         public ImageView more;
 
-        public TextView username;
+        public TextView username,textDate;
         public TextView noOfLikes;
         public TextView author;
         public TextView noOfComments;
@@ -223,6 +245,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             comment = itemView.findViewById(R.id.comment);
             save = itemView.findViewById(R.id.save);
             more = itemView.findViewById(R.id.more);
+            textDate = itemView.findViewById(R.id.textDate);
 
             username = itemView.findViewById(R.id.username);
             noOfLikes = itemView.findViewById(R.id.no_of_likes);
@@ -302,6 +325,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         });
     }
 
+    // id поста id автора
     private void addNotification(String postId, String publisherId) {
         HashMap<String, Object> map = new HashMap<>();
         map.put("userid", publisherId);
@@ -310,5 +334,41 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         map.put("isPost", true);
         FirebaseDatabase.getInstance().getReference().child("Notifications").child(firebaseUser.getUid()).push().setValue(map);
     }
+
+//
+//    private void phone_notification() {
+//        Intent intent = new Intent(mContext, PostAdapter.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//
+//        Intent notificationIntent = new Intent(mContext, MainActivity.class);
+//        PendingIntent contentIntent = PendingIntent.getActivity(mContext,
+//                0, notificationIntent,
+//                PendingIntent.FLAG_CANCEL_CURRENT);
+//
+//        NotificationCompat.Builder notifaketionBilder =
+//                new NotificationCompat.Builder(mContext, CHANNEL_ID)
+//                        .setAutoCancel(false) // астоматическая отмена
+//                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+//                        .setWhen(System.currentTimeMillis())
+//                        .setContentTitle("Заголовок")
+//                        .setContentText("Текст")
+//                        .setContentIntent(contentIntent) // запуск при нажатии
+////                        .setLargeIcon(BitmapFactory.decodeResource(getResources(),
+////                                R.drawable.profilo)) // большая картинка
+//                        .addAction(R.drawable.ic_launcher_foreground, "Запустить активность",
+//                                contentIntent)  // запуск при нажатии
+//                        .setAutoCancel(true) // автоматически закрыть уведомление после нажатия
+//                        .setPriority(PRIORITY_HIGH);
+//        createChannelIfNeeded(notificationManager);
+//        notificationManager.notify(NOTIFY_ID, notifaketionBilder.build());
+//    }
+
+//    public static void createChannelIfNeeded(NotificationManager manager) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel notificationChannel = new
+//                    NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
+//            manager.createNotificationChannel(notificationChannel);
+//        }
+//    }
 
 }

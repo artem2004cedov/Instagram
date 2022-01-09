@@ -1,46 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.SearchFragment">
+    tools:context=".SeartchActivity">
 
-    <RelativeLayout
+
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@color/white">
 
-        <LinearLayout
-            android:id="@+id/layout"
-            android:orientation="vertical"
+        <Toolbar
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
+            android:layout_height="wrap_content"
             android:background="@color/white"
             android:paddingEnd="16sp">
-
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:padding="10dp"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/arrowback"
-                    android:src="@drawable/ic_arrow_levo"
                     android:layout_width="20dp"
-                    android:visibility="gone"
-                    android:layout_weight="1.0"
-                    android:layout_height="30dp" />
+                    android:layout_height="30dp"
+                    android:layout_weight="1.5"
+                    android:src="@drawable/ic_arrow_levo"
+                    android:visibility="gone" />
 
                 <com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView
                     android:id="@+id/search_bar"
                     android:layout_width="0dp"
-                    android:layout_weight="15"
                     android:layout_height="wrap_content"
+                    android:layout_weight="15"
                     android:background="@drawable/ed_text_seathc"
                     android:drawableStart="@drawable/ic_search"
                     android:drawablePadding="10dp"
@@ -49,13 +45,42 @@
                     android:textSize="15dp" />
 
             </LinearLayout>
-        </LinearLayout>
+        </Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/layout_fragments"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bar">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tableLayot"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            app:tabMode="fixed"
+            android:background="@color/white"
+            android:elevation="1dp"
+            app:tabIndicatorColor="@color/black"
+            app:tabIndicatorHeight="0.8dp"
+            app:tabSelectedTextColor="@color/black"
+            app:tabTextColor="@color/black" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/Viper_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </RelativeLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/search_scrol"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/bar">
+        android:layout_below="@id/bar"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"

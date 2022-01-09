@@ -56,7 +56,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-
         user_profile = findViewById(R.id.user_profile);
         image_search = findViewById(R.id.image_search);
         image_cammerea = findViewById(R.id.image_cammerea);

@@ -76,6 +76,7 @@
 
         <ImageView
             android:id="@+id/POST"
+            android:scaleType="centerCrop"
             android:layout_width="100dp"
             android:layout_height="55dp"
             />

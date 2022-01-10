@@ -2,17 +2,14 @@ package com.example.instagram.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +20,6 @@ import com.example.instagram.Adapter.StorisAdapter;
 import com.example.instagram.Adapter.UserRandomAdapter;
 import com.example.instagram.AddStorisActivity;
 import com.example.instagram.ChatUsersActivity;
-import com.example.instagram.EditProfileActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.Stories;
 import com.example.instagram.Model.User;
@@ -35,7 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -50,20 +45,21 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerViewPosts;
     private RecyclerView recycler_view_story;
     private RecyclerView recyclerUserRandom;
+    private RecyclerView recyclerLower;
     private PostAdapter postAdapter;
     private StorisAdapter storisAdapter;
     private List<Post> postList;
+    private List<Post> postListLower;
     private List<Stories> storiesList;
     private CircleImageView image_storis;
     private FirebaseUser fUser;
+    private LinearLayout layoutRandom;
 
     private List<User> listRandom;
     private UserRandomAdapter userRandomAdapter;
 
     private Random randomGenerator;
     private List<User> follListRandom;
-
-
     private List<String> followingList;
 
     @Override
@@ -71,8 +67,10 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        followingList = new ArrayList<>();
+        postListLower = new ArrayList<>();
         randomGenerator = new Random();
+        layoutRandom = view.findViewById(R.id.layoutRandom);
+
 
         listRandom = new ArrayList<>();
         follListRandom = new ArrayList<>();
@@ -94,9 +92,9 @@ public class HomeFragment extends Fragment {
         linearLayoutManager1.setReverseLayout(true);
         recyclerViewPosts.setLayoutManager(linearLayoutManager1);
         postList = new ArrayList<>();
-        postAdapter = new PostAdapter(getContext(), postList);
-        recyclerViewPosts.setAdapter(postAdapter);
 
+        recyclerLower = view.findViewById(R.id.recyclerLower);
+        recyclerLower.setLayoutManager(new LinearLayoutManager(getContext()));
 
         recycler_view_story = view.findViewById(R.id.recycler_view_story);
         recycler_view_story.setHasFixedSize(true);
@@ -105,7 +103,6 @@ public class HomeFragment extends Fragment {
         storiesList = new ArrayList<>();
         storisAdapter = new StorisAdapter(getContext(), storiesList);
         recycler_view_story.setAdapter(storisAdapter);
-
         followingList = new ArrayList<>();
 
         checkFollowingUsers();
@@ -126,7 +123,63 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.text_all_random).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((FragmentActivity) getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container
+                        , new InterestingPeopleFragment()).commit();
+            }
+        });
+
         return view;
+    }
+
+    // если ты потписан то показывай посты других
+    private void readPosts() {
+        FirebaseDatabase.getInstance().getReference().child("Posts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Post post = snapshot.getValue(Post.class);
+                    for (String id : followingList) {
+                        if (post.getPublisher().equals(id)) {
+                            postList.add(post);
+                        }
+                    }
+                }
+
+                if (postList.size() != 0) {
+                    List<Post> posL = new ArrayList<>();
+                    Post post = postList.get(0);
+                    if (postList.size() >= 2) {
+                        Post post1 = postList.get(1);
+                        posL.add(post1);
+                    }
+                    posL.add(post);
+                    postAdapter = new PostAdapter(getContext(), posL);
+                    recyclerViewPosts.setAdapter(postAdapter);
+                    postAdapter.notifyDataSetChanged();
+                }
+
+                if (postList.size() >= 2) {
+                    List<Post> pList = new ArrayList<>();
+                    pList.addAll(postList);
+                    pList.remove(0);
+                    pList.remove(0);
+                    postAdapter = new PostAdapter(getContext(), pList);
+                    recyclerLower.setAdapter(postAdapter);
+                    postAdapter.notifyDataSetChanged();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void readUsers() {
@@ -144,51 +197,32 @@ public class HomeFragment extends Fragment {
                     }
                 }
 
-                if (follListRandom != null) {
+                Set<User> items_id = new HashSet<>();
+                if (follListRandom.size() != 0) {
+                    layoutRandom.setVisibility(View.VISIBLE);
 
-
-                    int index = randomGenerator.nextInt(follListRandom.size());
-                    int index1 = randomGenerator.nextInt(follListRandom.size());
-                    int index2 = randomGenerator.nextInt(follListRandom.size());
-                    int index3 = randomGenerator.nextInt(follListRandom.size());
-                    int index4 = randomGenerator.nextInt(follListRandom.size());
-                    int index5 = randomGenerator.nextInt(follListRandom.size());
-                    int index6 = randomGenerator.nextInt(follListRandom.size());
-                    int index7 = randomGenerator.nextInt(follListRandom.size());
-
-                    User random = follListRandom.get(index);
-                    User random1 = follListRandom.get(index1);
-                    User random2 = follListRandom.get(index2);
-                    User random3 = follListRandom.get(index3);
-                    User random4 = follListRandom.get(index4);
-                    User random5 = follListRandom.get(index5);
-                    User random6 = follListRandom.get(index6);
-                    User random7 = follListRandom.get(index7);
-
-                    Set<User> items_id = new HashSet<>();
-                    items_id.add(random);
-                    items_id.add(random1);
-                    items_id.add(random2);
-                    items_id.add(random3);
-                    items_id.add(random4);
-                    items_id.add(random5);
-                    items_id.add(random6);
-                    items_id.add(random7);
-
-                    for (User user : items_id) {
-                        listRandom.add(user);
+                    if (follListRandom.size() != 0) {
+                        for (int i = 0; i < 16; i++) {
+                            int index = randomGenerator.nextInt(follListRandom.size());
+                            User random = follListRandom.get(index);
+                            items_id.add(random);
+                        }
                     }
-
-                    userRandomAdapter.notifyDataSetChanged();
                 }
+                for (User user : items_id) {
+                    listRandom.add(user);
+                }
+
+                userRandomAdapter.notifyDataSetChanged();
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-    }
+        @Override
+        public void onCancelled (@NonNull DatabaseError databaseError){
+
+        }
+    });
+}
 
     private void getImageUser() {
         FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).addValueEventListener(new ValueEventListener() {
@@ -230,31 +264,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-    }
-
-    // если ты потписан то показывай посты других
-    private void readPosts() {
-        FirebaseDatabase.getInstance().getReference().child("Posts").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                postList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Post post = snapshot.getValue(Post.class);
-                    for (String id : followingList) {
-                        if (post.getPublisher().equals(id)) {
-                            postList.add(post);
-                        }
-                    }
-                }
-                postAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
     }
 
     private void readStories() {

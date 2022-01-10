@@ -57,11 +57,11 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:padding="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="4dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="6dp">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -77,11 +77,11 @@
 
                     <ImageView
                         android:layout_width="18dp"
-                        android:src="@drawable/plusicon"
+                        android:layout_height="18dp"
+                        android:layout_below="@id/image_storis"
                         android:layout_marginStart="48dp"
                         android:layout_marginTop="-22dp"
-                        android:layout_below="@id/image_storis"
-                        android:layout_height="18dp"/>
+                        android:src="@drawable/plusicon" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -109,32 +109,57 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_posts"
-                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp" />
+                android:layout_margin="5dp"
+                android:visibility="visible" />
 
             <LinearLayout
+                android:id="@+id/layoutRandom"
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:background="@color/white99"
-                android:layout_height="wrap_content">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <TextView
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:text="Рекомендуем вам"
-                    android:padding="4dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="12dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="8dp"
+                        android:text="Рекомендуем вам"
+                        android:textColor="@color/black"
+                        android:textSize="12dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_all_random"
+                        android:padding="10dp"
+                        android:layout_width="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="13dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="Все"
+                        android:textColor="@color/sinii_92" />
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerUserRandom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerUserRandom"
+                android:id="@+id/recyclerLower"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-            </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:visibility="visible" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

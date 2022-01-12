@@ -134,6 +134,36 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             };
         });
 
+//        FirebaseDatabase.getInstance().getReference().child("Comments")
+//                .child(postId).child(comment.getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                if (task.isSuccessful()) {
+//                    Toast.makeText(mContext, "Поледнйи комент ", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+
+//        // установка последнего сообщение
+//        FirebaseDatabase.getInstance().getReference().child("Comments")
+//                .child(postId)
+//                .orderByChild("timestamp")
+//                .limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (snapshot.hasChildren()) {
+//                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                        Toast.makeText(mContext, dataSnapshot.child("comment").getValue().toString(), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+
     }
 
     @Override

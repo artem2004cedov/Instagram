@@ -1,11 +1,19 @@
 package com.example.instagram.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -24,6 +32,7 @@ import com.example.instagram.Model.Post;
 import com.example.instagram.Model.Stories;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +40,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -131,6 +141,25 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+        ConnectivityManager cm =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+        } else {
+            View layout = inflater.inflate(R.layout.item_toast,
+                    (ViewGroup) view.findViewById(R.id.toast_layout_root));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("Невозможно обновить Ленту");
+            Toast toast = new Toast(getContext());
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setView(layout);
+            toast.show();
+        }
+
+
         return view;
     }
 
@@ -217,12 +246,12 @@ public class HomeFragment extends Fragment {
             }
 
 
-        @Override
-        public void onCancelled (@NonNull DatabaseError databaseError){
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-        }
-    });
-}
+            }
+        });
+    }
 
     private void getImageUser() {
         FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).addValueEventListener(new ValueEventListener() {
@@ -232,9 +261,11 @@ public class HomeFragment extends Fragment {
                 if (user.getImageurl().equals("default")) {
                     image_storis.setImageResource(R.drawable.profilo);
                 } else {
-                    Glide.with(getContext())
-                            .load(user.getImageurl())
-                            .into(image_storis);
+//                    Picasso.get().load(user.getImageurl()).into(image_storis);
+                    if (getActivity() != null)
+                        Glide.with(getContext())
+                                .load(user.getImageurl())
+                                .into(image_storis);
                 }
             }
 

@@ -7,11 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -26,12 +30,16 @@ import com.example.instagram.MainActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 import com.hendraanggrian.appcompat.widget.SocialTextView;
 import com.squareup.picasso.Picasso;
 
@@ -71,7 +79,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
         final Post post = mPosts.get(position);
         Picasso.get().load(post.getImageurl()).into(holder.postImage);
-        holder.description.setText(post.getDescription());
+
+        if (post.getDescription().equals("")) {
+            holder.description.setVisibility(View.GONE);
+        } else {
+            holder.description.setVisibility(View.VISIBLE);
+            holder.description.setText(post.getDescription());
+        }
 
         // Данные автора поста
         FirebaseDatabase.getInstance().getReference().child("Users").child(post.getPublisher())
@@ -84,6 +98,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                             holder.imageProfile.setImageResource(R.drawable.profilo);
                         } else {
                             Picasso.get().load(user.getImageurl()).placeholder(R.drawable.profilo).into(holder.imageProfile);
+                        }
+                        if (!post.getPublisher().equals(firebaseUser.getUid())) {
+                            holder.textMy.setVisibility(View.VISIBLE);
+                            holder.textMy.setText("Потому что вы подписаны на " + user.getUsername());
+
                         }
                         holder.author.setText(user.getUsername());
                         holder.username.setText(user.getName());
@@ -122,6 +141,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
+
         // Коменты
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +152,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 mContext.startActivity(intent);
             }
         });
+
+
 
         // Коменты
         holder.noOfComments.setOnClickListener(new View.OnClickListener() {
@@ -194,6 +216,49 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
+        // установка последнего сообщение
+        FirebaseDatabase.getInstance().getReference().child("Comments")
+                .child(post.getPostid())
+                .orderByChild("timestamp")
+                .limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.hasChildren()) {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        holder.commentLast.setText(dataSnapshot.child("comment").getValue().toString());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+//        holder.postImage.setOnClickListener(new View.OnClickListener() {
+//            int i = 0;
+//
+//            @Override
+//            public void onClick(View v) {
+//                i++;
+//                Handler handler = new Handler();
+//                Runnable r = new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        i = 0;
+//                    }
+//                };
+//                if (i == 1) {
+//                    handler.postDelayed(r, 100);
+//                } else if (i == 2) {
+//                    Toast.makeText(mContext, "2 нажатия", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+
+
         holder.postImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,16 +288,17 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
     public class Viewholder extends RecyclerView.ViewHolder {
 
-        public ImageView imageProfile;
+        public ImageView imageProfile, profale_coment;
         public ImageView postImage;
         public ImageView like;
         public ImageView comment;
         public ImageView save;
         public ImageView more;
+        public SocialAutoCompleteTextView put_comment;
 
-        public TextView username,textDate;
+        public TextView username, textDate;
         public TextView noOfLikes;
-        public TextView author;
+        public TextView author, commentLast, textMy;
         public TextView noOfComments;
         SocialTextView description;
 
@@ -240,6 +306,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             super(itemView);
 
             imageProfile = itemView.findViewById(R.id.image_profile);
+            textMy = itemView.findViewById(R.id.textMy);
+            commentLast = itemView.findViewById(R.id.commentLast);
             postImage = itemView.findViewById(R.id.post_image);
             like = itemView.findViewById(R.id.like);
             comment = itemView.findViewById(R.id.comment);

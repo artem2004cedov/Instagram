@@ -1,6 +1,7 @@
 package com.example.instagram.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -303,6 +304,8 @@ public class ProfileFragment extends Fragment {
                     edit_chats.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+
+
                             Intent intent = new Intent(getContext(), ChatUsersActivity.class);
                             startActivity(intent);
                         }
@@ -413,9 +416,10 @@ public class ProfileFragment extends Fragment {
                 if (user.getImageurl().equals("default")) {
                     imageProfile.setImageResource(R.drawable.profilo);
                 } else {
-                    Glide.with(getContext())
-                            .load(user.getImageurl())
-                            .into(imageProfile);
+                    if (getView() != null)
+                        Glide.with(getView())
+                                .load(user.getImageurl())
+                                .into(imageProfile);
                 }
             }
 

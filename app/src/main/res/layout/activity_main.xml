@@ -7,30 +7,62 @@
     tools:context=".MainActivity">
 
     <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment_container"
-        android:layout_above="@id/bottom"/>
+        android:layout_above="@id/bottom" />
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/bottom"
         android:layout_alignParentBottom="true"
         tools:ignore="MissingConstraints">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/bottom_navigation"
-            app:itemIconTint="@color/black"
-            app:labelVisibilityMode="unlabeled"
-            android:background="?android:attr/windowBackground"
-            app:menu="@menu/bottom_menu"/>
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:padding="16dp">
 
+            <ImageView
+                android:id="@+id/homeMain"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_weight="3"
+                android:src="@drawable/homeicon" />
 
+            <ImageView
+                android:id="@+id/searchMain"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_weight="3"
+                android:src="@drawable/searchicon" />
+
+            <ImageView
+                android:id="@+id/addMain"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_weight="3"
+                android:src="@drawable/addicon" />
+
+            <ImageView
+                android:id="@+id/heartMani"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_weight="3"
+                android:src="@drawable/heart" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profaleMani"
+                android:layout_width="28dp"
+                android:layout_weight="2"
+                android:layout_height="28dp"
+                android:src="@drawable/profilo" />
+
+        </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
-
 
 
 </RelativeLayout>

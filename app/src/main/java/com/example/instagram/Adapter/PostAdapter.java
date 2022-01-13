@@ -26,10 +26,12 @@ import com.example.instagram.CommentActivity;
 import com.example.instagram.FollowersActivity;
 import com.example.instagram.Fragments.PostDetailFragment;
 import com.example.instagram.Fragments.ProfileFragment;
+import com.example.instagram.Login.VxotActivity;
 import com.example.instagram.MainActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
+import com.example.instagram.SplashScreenActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,6 +59,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
     private NotificationManager notificationManager;
     private static final int NOTIFY_ID = 101;
     private static final String CHANNEL_ID = "CHANNEL_ID";
+
+    int number_of_clicks = 0;
+    boolean thread_started = false;
+    final int DELAY_BETWEEN_CLICKS_IN_MILLISECONDS = 350;
+    int num = 0;
 
 
     private FirebaseUser firebaseUser;
@@ -154,7 +161,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         });
 
 
-
         // Коменты
         holder.noOfComments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,37 +242,45 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
-
-//        holder.postImage.setOnClickListener(new View.OnClickListener() {
-//            int i = 0;
-//
-//            @Override
-//            public void onClick(View v) {
-//                i++;
-//                Handler handler = new Handler();
-//                Runnable r = new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        i = 0;
-//                    }
-//                };
-//                if (i == 1) {
-//                    handler.postDelayed(r, 100);
-//                } else if (i == 2) {
-//                    Toast.makeText(mContext, "2 нажатия", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-
-
         holder.postImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit().putString("postid", post.getPostid()).apply();
+                ++number_of_clicks;
+                setAnimation(holder.heartAnimation,number_of_clicks);
+                if (!thread_started) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            thread_started = true;
+//                            +79634164421
+                            try {
+                                Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
+                                if (number_of_clicks == 1) {
+                                    mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit().putString("postid", post.getPostid()).apply();
+                                    ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction()
+                                            .replace(R.id.fragment_container, new PostDetailFragment()).commit();
+                                } else if (number_of_clicks == 2) {
+                                    if (holder.like.getTag().equals("like")) {
+                                        FirebaseDatabase.getInstance().getReference().child("Likes")
+                                                .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
+                                        addNotification(post.getPostid(), post.getPublisher());
+                                    } else {
+                                        FirebaseDatabase.getInstance().getReference().child("Likes")
+                                                .child(post.getPostid()).child(firebaseUser.getUid()).removeValue();
+                                    }
+                                }
+                                number_of_clicks = 0;
+                                thread_started = false;
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
 
-                ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new PostDetailFragment()).commit();
+                    }).start();
+                }
             }
+
+
         });
 
         holder.noOfLikes.setOnClickListener(new View.OnClickListener() {
@@ -278,7 +292,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 mContext.startActivity(intent);
             }
         });
+    }
 
+    private void setAnimation(ImageView heartAnimation, int number_of_clicks) {
+        if (number_of_clicks == 2) {
+            heartAnimation.setVisibility(View.VISIBLE);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    heartAnimation.setVisibility(View.GONE);
+                }
+            }, 600);
+        }
     }
 
     @Override
@@ -293,7 +319,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         public ImageView like;
         public ImageView comment;
         public ImageView save;
-        public ImageView more;
+        public ImageView more, heartAnimation;
         public SocialAutoCompleteTextView put_comment;
 
         public TextView username, textDate;
@@ -314,6 +340,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             save = itemView.findViewById(R.id.save);
             more = itemView.findViewById(R.id.more);
             textDate = itemView.findViewById(R.id.textDate);
+            heartAnimation = itemView.findViewById(R.id.heartAnimation);
 
             username = itemView.findViewById(R.id.username);
             noOfLikes = itemView.findViewById(R.id.no_of_likes);

@@ -167,6 +167,7 @@ public class RegistActivity extends AppCompatActivity {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("name", name);
                 map.put("email", email);
+                // замена email
                 map.put("username", username);
                 map.put("id", auth.getCurrentUser().getUid());
                 map.put("bio", "");

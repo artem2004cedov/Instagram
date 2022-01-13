@@ -19,7 +19,7 @@
 
         <LinearLayout
             android:id="@+id/layout_email"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -29,9 +29,8 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/usericon" />
-
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/pfofaleicon" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -91,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="100dp"
+                android:layout_marginBottom="130dp"
                 android:background="@drawable/buuton_bacraundprozratni"
                 android:text="далее"
                 android:textColor="@color/white"
@@ -105,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="130dp"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:layout_width="match_parent"
@@ -253,7 +252,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
                 android:text="Выберите имя пользователя для вашего аккаунта. Вы всегда можите изменить его."
                 android:textAlignment="center"
                 android:textSize="13dp" />
@@ -311,7 +309,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" Войдите"
-                android:textColor="@color/sinii_92"
+                android:textColor="@color/sinii_92_prozrathni"
                 android:textSize="10dp" />
 
 

@@ -1,5 +1,6 @@
 package com.example.instagram.Login;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,13 +35,16 @@ import java.util.HashMap;
 
 public class RegistActivity extends AppCompatActivity {
 
-    private EditText ed_name, ed_email, ed_password, ed_username, ed_usernameChange;
+    private EditText ed_email, ed_password, ed_username, ed_usernameChange;
     private Button bt_registr, bt_next_, bt_next_registr, bt_next_name;
     private DatabaseReference mRootRef;
-    private TextView text_email, changeName_;
+    private TextView text_email, changeName_, text_bot, text_bot_main;
     private LinearLayout layout_email, layout_registr, layout_finis, layout_name;
     private FirebaseAuth auth;
     private ProgressDialog pd;
+    private View view;
+    private CheckBox checkbox;
+    private LinearLayout linearBottom, linearMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,13 +59,13 @@ public class RegistActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String email = ed_email.getText().toString();
-                String name = ed_name.getText().toString();
                 String username = ed_username.getText().toString();
                 String password = ed_password.getText().toString();
+                String name = ed_usernameChange.getText().toString();
 
-                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(name) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
+                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(username)) {
                 } else {
-                    registrUser(email, name, password, username);
+                    registrUser(email, password, name, username);
                 }
             }
         });
@@ -107,6 +112,8 @@ public class RegistActivity extends AppCompatActivity {
             public void onClick(View v) {
                 layout_finis.setVisibility(View.VISIBLE);
                 layout_name.setVisibility(View.GONE);
+
+                text_email.setText(ed_usernameChange.getText().toString() + "?");
             }
         });
     }
@@ -118,6 +125,9 @@ public class RegistActivity extends AppCompatActivity {
             bt_next_registr.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    linearBottom.setVisibility(View.VISIBLE);
+                    linearMain.setVisibility(View.GONE);
+
                     text_email.setText(ed_email.getText().toString() + "?");
                     layout_registr.setVisibility(View.GONE);
                     layout_finis.setVisibility(View.VISIBLE);
@@ -127,8 +137,7 @@ public class RegistActivity extends AppCompatActivity {
                         public void onClick(View v) {
                             layout_finis.setVisibility(View.GONE);
                             layout_name.setVisibility(View.VISIBLE);
-                            ed_usernameChange.setText(ed_username.getText().toString());
-                            ed_username.setText(ed_usernameChange.getText().toString());
+                            ed_usernameChange.setText(ed_email.getText().toString());
                         }
                     });
                 }
@@ -148,6 +157,12 @@ public class RegistActivity extends AppCompatActivity {
                 bt_next_.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        view.setVisibility(View.GONE);
+                        text_bot_main.setTextColor(getResources().getColor(R.color.text));
+                        text_bot_main.setText("Ваши контакты будут ругулярно синхранизироваться и хронится на сервирах Instagram.Благодаря этому" +
+                                "вам и другим пользователям будет проще находить друзей,а мы сможем улутшать качество своих услуг.Чтобы удалить контакты," +
+                                " отмените их синхранизацию в настройках.");
+
                         layout_email.setVisibility(View.GONE);
                         layout_registr.setVisibility(View.VISIBLE);
                     }
@@ -156,18 +171,20 @@ public class RegistActivity extends AppCompatActivity {
     }
 
     // метод для регистрации
-    private void registrUser(String email, String name, String password, String username) {
-        pd.setTitle("Регистрация");
-        pd.setMessage("Пожалуйста подождите...");
+    private void registrUser(String email, String password, String name, String username) {
+        pd.setTitle("Регистрация...");
         pd.setCanceledOnTouchOutside(false);
         pd.show();
         auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("name", name);
+                if (!TextUtils.isEmpty(name)) {
+                    map.put("name", name);
+                } else {
+                    map.put("name", email);
+                }
                 map.put("email", email);
-                // замена email
                 map.put("username", username);
                 map.put("id", auth.getCurrentUser().getUid());
                 map.put("bio", "");
@@ -202,6 +219,12 @@ public class RegistActivity extends AppCompatActivity {
     private void inite() {
         pd = new ProgressDialog(this);
         ed_email = findViewById(R.id.ed_email);
+        view = findViewById(R.id.view);
+        linearBottom = findViewById(R.id.linearBottom);
+        text_bot = findViewById(R.id.text_bot);
+        linearMain = findViewById(R.id.linearMain);
+        checkbox = findViewById(R.id.checkbox);
+        text_bot_main = findViewById(R.id.text_bot_main);
         ed_username = findViewById(R.id.ed_username);
         ed_usernameChange = findViewById(R.id.ed_usernameChange);
         bt_next_ = findViewById(R.id.bt_next_);
@@ -214,10 +237,11 @@ public class RegistActivity extends AppCompatActivity {
         changeName_ = findViewById(R.id.changeName_);
         bt_next_name = findViewById(R.id.bt_next_name);
         layout_finis = findViewById(R.id.layout_finis);
-        ed_name = findViewById(R.id.ed_name);
         ed_password = findViewById(R.id.ed_password);
         mRootRef = FirebaseDatabase.getInstance().getReference();
         auth = FirebaseAuth.getInstance();
+
+        checkbox.setChecked(true);
 
         findViewById(R.id.liner_perexot_nazad).setOnClickListener(new View.OnClickListener() {
             @Override

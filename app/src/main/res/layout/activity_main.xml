@@ -29,35 +29,36 @@
             <ImageView
                 android:id="@+id/homeMain"
                 android:layout_width="0dp"
-                android:layout_height="25dp"
+                android:layout_height="23dp"
                 android:layout_weight="3"
                 android:src="@drawable/homeicon" />
 
             <ImageView
                 android:id="@+id/searchMain"
                 android:layout_width="0dp"
-                android:layout_height="25dp"
+                android:layout_height="23dp"
                 android:layout_weight="3"
                 android:src="@drawable/searchicon" />
 
             <ImageView
                 android:id="@+id/addMain"
                 android:layout_width="0dp"
-                android:layout_height="25dp"
+                android:layout_height="23dp"
                 android:layout_weight="3"
                 android:src="@drawable/addicon" />
 
             <ImageView
                 android:id="@+id/heartMani"
                 android:layout_width="0dp"
-                android:layout_height="25dp"
+                android:layout_height="23dp"
                 android:layout_weight="3"
                 android:src="@drawable/heart" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profaleMani"
-                android:layout_width="28dp"
+                android:layout_width="26dp"
                 android:layout_weight="2"
+                app:civ_border_width="0.1dp"
                 android:layout_height="28dp"
                 android:src="@drawable/profilo" />
 

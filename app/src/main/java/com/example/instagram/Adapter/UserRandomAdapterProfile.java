@@ -31,7 +31,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserRandomAdapter extends RecyclerView.Adapter<UserRandomAdapter.ViewHolder> {
+public class UserRandomAdapterProfile extends RecyclerView.Adapter<UserRandomAdapterProfile.ViewHolder> {
 
     private Context context;
     private List<User> userList;
@@ -39,7 +39,7 @@ public class UserRandomAdapter extends RecyclerView.Adapter<UserRandomAdapter.Vi
 
     private FirebaseUser firebaseUser;
 
-    public UserRandomAdapter(Context context, List<User> userList, boolean isFargment) {
+    public UserRandomAdapterProfile(Context context, List<User> userList, boolean isFargment) {
         this.context = context;
         this.userList = userList;
         this.isFargment = isFargment;
@@ -48,7 +48,7 @@ public class UserRandomAdapter extends RecyclerView.Adapter<UserRandomAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.random_item, parent, false));
+        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.random_itemprofile, parent, false));
     }
 
     @Override

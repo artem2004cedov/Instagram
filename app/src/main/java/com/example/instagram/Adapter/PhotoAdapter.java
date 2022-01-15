@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.instagram.Fragments.PostDetailFragment;
 import com.example.instagram.Model.Post;
 import com.example.instagram.R;
@@ -38,7 +39,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final Post post = mPosts.get(position);
-        Picasso.get().load(post.getImageurl()).placeholder(R.drawable.profilo).into(holder.postImage);
+        Glide.with(mContext)
+                .load(post.getImageurl())
+                .into(holder.postImage);
 
         holder.postImage.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -3,6 +3,8 @@ package com.example.instagram;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.instagram.Fragments.InterestingPeopleFragment;
+import com.example.instagram.Fragments.WelcomeFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,6 +34,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 public class PhotoinprofileActivity extends AppCompatActivity {
     private Button addPhoto;
     private TextView text_next;
+    private Fragment fragment;
 
     private FirebaseUser fUser;
     private Uri mImageUri;
@@ -57,7 +62,7 @@ public class PhotoinprofileActivity extends AppCompatActivity {
         text_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
     }
@@ -88,7 +93,7 @@ public class PhotoinprofileActivity extends AppCompatActivity {
                         String url = downloadUri.toString();
                         FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).child("imageurl").setValue(url);
                         pd.dismiss();
-                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
                     } else {
                     }
                 }
@@ -96,7 +101,6 @@ public class PhotoinprofileActivity extends AppCompatActivity {
         } else {
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

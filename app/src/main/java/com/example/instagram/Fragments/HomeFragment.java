@@ -163,7 +163,6 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    // если ты потписан то показывай посты других
     private void readPosts() {
         FirebaseDatabase.getInstance().getReference().child("Posts").addValueEventListener(new ValueEventListener() {
             @Override

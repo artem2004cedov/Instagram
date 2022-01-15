@@ -16,6 +16,9 @@
     <color name="black_89">#201E1F</color>
     <color name="black_94">#4A4A4A</color>
     <color name="white99">#F6F6F6</color>
+    <color name="text">#B76C6C6C</color>
+    <color name="textblack">#B7373737</color>
+    <color name="zilin">#23C629</color>
 
 
 </resources>

@@ -21,6 +21,7 @@
             android:theme="@style/noBar" />
         <activity android:name=".PostDiscriptionActivity" />
         <activity android:name=".AddStorisActivity" />
+        <activity android:name=".StartUserRandomActivity"/>
         <activity android:name=".PhotoinprofileActivity" />
         <activity android:name=".ChatUsersActivity" />
         <activity android:name=".ChatActivity" />

@@ -9,6 +9,9 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,11 +31,15 @@ import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 
 import java.util.HashMap;
 
+import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
+
 public class VxotActivity extends AppCompatActivity {
 
-    private Button bt_vxot;
+    private LinearLayout bt_vxot;
     private EditText ed_password_vhot, ed_email_vxot;
     private FirebaseAuth auth;
+    private TextView vxottext;
+    private ProgressBar vxotProgresBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +82,12 @@ public class VxotActivity extends AppCompatActivity {
     private void examination1(Editable s) {
         if (s.length() >= 6) {
             bt_vxot.setBackgroundResource(R.drawable.buuton_bacraund);
+            vxottext.setTextColor(getResources().getColor(R.color.white));
             bt_vxot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    vxotProgresBar.setVisibility(View.VISIBLE);
+                    vxottext.setVisibility(View.GONE);
                     String emil = ed_email_vxot.getText().toString();
                     String password = ed_password_vhot.getText().toString();
 
@@ -89,6 +99,9 @@ public class VxotActivity extends AppCompatActivity {
             });
         } else {
             bt_vxot.setBackgroundResource(R.drawable.buuton_bacraundprozratni);
+            vxottext.setTextColor(getResources().getColor(R.color.whiteprozrathi));
+            vxotProgresBar.setVisibility(View.GONE);
+            vxottext.setVisibility(View.VISIBLE);
 
         }
     }
@@ -116,6 +129,8 @@ public class VxotActivity extends AppCompatActivity {
         ed_email_vxot = findViewById(R.id.ed_email_vxot);
         ed_password_vhot = findViewById(R.id.ed_password_vhot);
         bt_vxot = findViewById(R.id.bt_vxot);
+        vxotProgresBar =findViewById(R.id.vxotProgresBar);
+        vxottext = findViewById(R.id.vxottext);
         auth = FirebaseAuth.getInstance();
     }
 

@@ -6,16 +6,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.instagram.Fragments.InterestingPeopleFragment;
-import com.example.instagram.Fragments.WelcomeFragment;
+import com.example.instagram.Fragments.ProfileFragment;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -62,14 +64,17 @@ public class PhotoinprofileActivity extends AppCompatActivity {
         text_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(),StartUserRandomActivity.class));
             }
         });
     }
 
     private void uploadImage() {
-        final ProgressDialog pd = new ProgressDialog(this);
-        pd.setMessage("Загрузка");
+        final Dialog pd = new Dialog(this);
+        pd.setContentView(R.layout.loading_window_addpost);
+        pd.setCancelable(false);
+        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pd.create();
         pd.show();
 
         if (mImageUri != null) {
@@ -93,7 +98,8 @@ public class PhotoinprofileActivity extends AppCompatActivity {
                         String url = downloadUri.toString();
                         FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).child("imageurl").setValue(url);
                         pd.dismiss();
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+
+                        startActivity(new Intent(getApplicationContext(),StartUserRandomActivity.class));
                     } else {
                     }
                 }

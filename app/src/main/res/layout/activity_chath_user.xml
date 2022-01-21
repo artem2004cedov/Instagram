@@ -66,6 +66,7 @@
                     android:layout_marginTop="15dp"
                     android:orientation="horizontal">
 
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -94,6 +95,7 @@
                     android:layout_height="0.5dp"
                     android:layout_marginTop="10dp"
                     android:background="@color/text_prost" />
+                
             </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>

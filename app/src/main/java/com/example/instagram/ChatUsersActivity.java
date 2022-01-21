@@ -103,17 +103,17 @@ public class ChatUsersActivity extends AppCompatActivity {
     }
 
     private void searchUser(String s) {
+
         Query query = FirebaseDatabase.getInstance().getReference().child("Users")
                 .orderByChild("username").startAt(s).endAt(s + "\uf8ff");
         query.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList.clear();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    User user = dataSnapshot.getValue(User.class);
-                    if (!user.getId().equals(FirebaseAuth.getInstance().getUid())) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
+                    if (!user.getId().equals(FirebaseAuth.getInstance().getUid()))
                         userList.add(user);
-                    }
                 }
                 chatAdapter.notifyDataSetChanged();
             }

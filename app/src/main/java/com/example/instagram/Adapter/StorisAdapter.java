@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.instagram.Model.Stories;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
@@ -53,7 +54,9 @@ public class StorisAdapter extends RecyclerView.Adapter<StorisAdapter.ViewHolder
                         if (user.getImageurl().equals("default")) {
                             holder.prifale_storis.setImageResource(R.drawable.profilo);
                         } else {
-                            Picasso.get().load(user.getImageurl()).placeholder(R.drawable.profilo).into(holder.prifale_storis);
+                            Glide.with(context)
+                                    .load(user.getImageurl())
+                                    .into(holder.prifale_storis);
                         }
                         holder.name_storis.setText(user.getUsername());
 

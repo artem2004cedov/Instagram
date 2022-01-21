@@ -35,6 +35,8 @@ public class StoryWindowActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story_window);
 
+        /*При переходе после регистрации сделать какойта ключь */
+
         mainWindowStories = findViewById(R.id.mainWindowStories);
         stories_profale = findViewById(R.id.stories_profale);
         name_user_stories = findViewById(R.id.name_user_stories);

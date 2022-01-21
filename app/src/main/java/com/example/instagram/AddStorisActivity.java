@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -60,10 +63,12 @@ public class AddStorisActivity extends AppCompatActivity {
 
     // при нажатии на продолжить
     private void upload() {
-        final ProgressDialog pd = new ProgressDialog(this);
-        pd.setMessage("Загрузка");
+        final Dialog pd = new Dialog(this);
+        pd.setContentView(R.layout.loading_window_addpost);
+        pd.setCancelable(false);
+        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pd.create();
         pd.show();
-
         // если есть картинки
         if (imageUri != null) {
             final StorageReference filePath = FirebaseStorage.getInstance().

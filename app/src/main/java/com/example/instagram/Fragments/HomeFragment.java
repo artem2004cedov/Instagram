@@ -230,7 +230,7 @@ public class HomeFragment extends Fragment {
                     layoutRandom.setVisibility(View.VISIBLE);
 
                     if (follListRandom.size() != 0) {
-                        for (int i = 0; i < 16; i++) {
+                        for (int i = 0; i < 30; i++) {
                             int index = randomGenerator.nextInt(follListRandom.size());
                             User random = follListRandom.get(index);
                             items_id.add(random);

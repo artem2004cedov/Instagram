@@ -27,7 +27,7 @@
             android:layout_marginTop="50dp"
             android:text="Добавить фото профиля"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:textStyle="bold" />
 
         <TextView

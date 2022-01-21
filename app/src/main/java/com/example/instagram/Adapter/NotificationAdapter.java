@@ -18,6 +18,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.instagram.Fragments.PostDetailFragment;
 import com.example.instagram.Fragments.ProfileFragment;
 import com.example.instagram.MainActivity;
@@ -64,9 +65,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         final Notification notification = mNotifications.get(position);
-
-//        notification.getPostid(), notification.getUserid()
-//        phone_notification();
 
         getUser(holder.image_profile11, holder.username1, notification.getUserid());
         holder.comment.setText(notification.getText());
@@ -126,7 +124,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Post post = dataSnapshot.getValue(Post.class);
-                Picasso.get().load(post.getImageurl()).placeholder(R.drawable.profilo).into(imageView);
+                Glide.with(mContext)
+                        .load(post.getImageurl())
+                        .into(imageView);
             }
 
             @Override
@@ -145,7 +145,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 if (user.getImageurl().equals("default")) {
                     imageView.setImageResource(R.drawable.profilo);
                 } else {
-                    Picasso.get().load(user.getImageurl()).into(imageView);
+                    Glide.with(mContext).
+                            load(user.getImageurl())
+                            .into(imageView);
                 }
                 textView.setText(user.getUsername());
             }

@@ -19,6 +19,7 @@ import com.example.instagram.Adapter.UserAdapter;
 import com.example.instagram.Adapter.UserRandomAdapter;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +37,7 @@ import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class    SearchFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private List<User> mUsers;
@@ -69,7 +70,7 @@ public class    SearchFragment extends Fragment {
 
         mHashTags = new ArrayList<>();
         mHashTagsCount = new ArrayList<>();
-        tagAdapter = new TagAdapter(getContext() , mHashTags , mHashTagsCount);
+        tagAdapter = new TagAdapter(getContext(), mHashTags, mHashTagsCount);
         recyclerViewTags.setAdapter(tagAdapter);
 
         mUsers = new ArrayList<>();
@@ -106,7 +107,7 @@ public class    SearchFragment extends Fragment {
                 mHashTags.clear();
                 mHashTagsCount.clear();
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     mHashTags.add(snapshot.getKey());
                     mHashTagsCount.add(snapshot.getChildrenCount() + "");
                 }
@@ -121,6 +122,7 @@ public class    SearchFragment extends Fragment {
         });
 
     }
+
     private void readUsers() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
         reference.addValueEventListener(new ValueEventListener() {
@@ -130,7 +132,8 @@ public class    SearchFragment extends Fragment {
                     mUsers.clear();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         User user = snapshot.getValue(User.class);
-                        mUsers.add(user);
+                        if (!user.getId().equals(FirebaseAuth.getInstance().getUid()))
+                            mUsers.add(user);
                     }
                     userAdapter.notifyDataSetChanged();
                 }
@@ -152,10 +155,12 @@ public class    SearchFragment extends Fragment {
                 mUsers.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
-                    mUsers.add(user);
+                    if (!user.getId().equals(FirebaseAuth.getInstance().getUid()))
+                        mUsers.add(user);
                 }
                 userAdapter.notifyDataSetChanged();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -163,16 +168,16 @@ public class    SearchFragment extends Fragment {
         });
     }
 
-    private void filter (String text) {
+    private void filter(String text) {
         List<String> mSearchTags = new ArrayList<>();
         List<String> mSearchTagsCount = new ArrayList<>();
 
         for (String s : mHashTags) {
-            if (s.toLowerCase().contains(text.toLowerCase())){
+            if (s.toLowerCase().contains(text.toLowerCase())) {
                 mSearchTags.add(s);
                 mSearchTagsCount.add(mHashTagsCount.get(mHashTags.indexOf(s)));
             }
         }
-        tagAdapter.filter(mSearchTags , mSearchTagsCount);
+        tagAdapter.filter(mSearchTags, mSearchTagsCount);
     }
 }

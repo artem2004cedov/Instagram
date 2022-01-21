@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.Adapter.NotificationAdapter;
+import com.example.instagram.MainActivity;
 import com.example.instagram.Model.Notification;
 import com.example.instagram.R;
 import com.google.firebase.auth.FirebaseAuth;

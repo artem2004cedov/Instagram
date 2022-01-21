@@ -112,7 +112,20 @@ public class UserRandomAdapter extends RecyclerView.Adapter<UserRandomAdapter.Vi
             }
         });
 
+        holder.imageRemov.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removItem(position);
+            }
+        });
 
+
+    }
+
+    private void removItem(int position) {
+        userList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position,userList.size());
     }
 
     private void isFollowed(final String id, final Button btnFollow) {

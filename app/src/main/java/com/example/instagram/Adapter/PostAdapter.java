@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.instagram.CommentActivity;
 import com.example.instagram.FollowersActivity;
 import com.example.instagram.Fragments.PostDetailFragment;
@@ -83,9 +85,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
     @Override
     public void onBindViewHolder(@NonNull final Viewholder holder, int position) {
-
         final Post post = mPosts.get(position);
-        Picasso.get().load(post.getImageurl()).into(holder.postImage);
+
+        Glide.with(mContext)
+                .load(post.getImageurl())
+                .into(holder.postImage);
 
         if (post.getDescription().equals("")) {
             holder.description.setVisibility(View.GONE);
@@ -104,7 +108,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                         if (user.getImageurl().equals("default")) {
                             holder.imageProfile.setImageResource(R.drawable.profilo);
                         } else {
-                            Picasso.get().load(user.getImageurl()).placeholder(R.drawable.profilo).into(holder.imageProfile);
+                            Glide.with(mContext)
+                                    .load(user.getImageurl())
+                                    .into(holder.imageProfile);
                         }
                         if (!post.getPublisher().equals(firebaseUser.getUid())) {
                             holder.textMy.setVisibility(View.VISIBLE);
@@ -222,6 +228,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             }
         });
 
+        holder.more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.linearsetibgs.setVisibility(View.VISIBLE);
+            }
+        });
+
         // установка последнего сообщение
         FirebaseDatabase.getInstance().getReference().child("Comments")
                 .child(post.getPostid())
@@ -326,6 +339,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         public TextView noOfLikes;
         public TextView author, commentLast, textMy;
         public TextView noOfComments;
+        public LinearLayout linearsetibgs;
         SocialTextView description;
 
         public Viewholder(@NonNull View itemView) {
@@ -341,6 +355,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             more = itemView.findViewById(R.id.more);
             textDate = itemView.findViewById(R.id.textDate);
             heartAnimation = itemView.findViewById(R.id.heartAnimation);
+
 
             username = itemView.findViewById(R.id.username);
             noOfLikes = itemView.findViewById(R.id.no_of_likes);
@@ -429,41 +444,4 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         map.put("isPost", true);
         FirebaseDatabase.getInstance().getReference().child("Notifications").child(firebaseUser.getUid()).push().setValue(map);
     }
-
-//
-//    private void phone_notification() {
-//        Intent intent = new Intent(mContext, PostAdapter.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-//
-//        Intent notificationIntent = new Intent(mContext, MainActivity.class);
-//        PendingIntent contentIntent = PendingIntent.getActivity(mContext,
-//                0, notificationIntent,
-//                PendingIntent.FLAG_CANCEL_CURRENT);
-//
-//        NotificationCompat.Builder notifaketionBilder =
-//                new NotificationCompat.Builder(mContext, CHANNEL_ID)
-//                        .setAutoCancel(false) // астоматическая отмена
-//                        .setSmallIcon(R.drawable.ic_launcher_foreground)
-//                        .setWhen(System.currentTimeMillis())
-//                        .setContentTitle("Заголовок")
-//                        .setContentText("Текст")
-//                        .setContentIntent(contentIntent) // запуск при нажатии
-////                        .setLargeIcon(BitmapFactory.decodeResource(getResources(),
-////                                R.drawable.profilo)) // большая картинка
-//                        .addAction(R.drawable.ic_launcher_foreground, "Запустить активность",
-//                                contentIntent)  // запуск при нажатии
-//                        .setAutoCancel(true) // автоматически закрыть уведомление после нажатия
-//                        .setPriority(PRIORITY_HIGH);
-//        createChannelIfNeeded(notificationManager);
-//        notificationManager.notify(NOTIFY_ID, notifaketionBilder.build());
-//    }
-
-//    public static void createChannelIfNeeded(NotificationManager manager) {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel notificationChannel = new
-//                    NotificationChannel(CHANNEL_ID, CHANNEL_ID, NotificationManager.IMPORTANCE_DEFAULT);
-//            manager.createNotificationChannel(notificationChannel);
-//        }
-//    }
-
 }

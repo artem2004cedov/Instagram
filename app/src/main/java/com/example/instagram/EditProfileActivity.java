@@ -1,8 +1,11 @@
 package com.example.instagram;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -185,8 +188,11 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void uploadImage() {
-        final ProgressDialog pd = new ProgressDialog(this);
-        pd.setMessage("Загрузка");
+        final Dialog pd = new Dialog(this);
+        pd.setContentView(R.layout.loading_window_addpost);
+        pd.setCancelable(false);
+        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pd.create();
         pd.show();
 
         if (mImageUri != null) {

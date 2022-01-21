@@ -1,22 +1,20 @@
-package com.example.instagram.Fragments;
-
-import android.content.Intent;
-import android.os.Bundle;
+package com.example.instagram;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.instagram.Adapter.StartRandomUserAdapter;
-import com.example.instagram.Adapter.UserAdapter;
-import com.example.instagram.MainActivity;
 import com.example.instagram.Model.User;
-import com.example.instagram.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,37 +28,37 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-
-public class InterestingPeopleFragment extends Fragment {
-    private RecyclerView recyclerIntersPeople;
+public class StartRecommendationFragmeint extends Fragment {
+    private RecyclerView recycler_bosses_recomendetion;
     private List<User> userListRandom;
-    private List<User> fullListRandom;
-    private StartRandomUserAdapter userAdapterRandom;
-    private Random randomGenerator;
+    private List<User> userListRandomFoll;
+    private StartRandomUserAdapter startRandomUserAdapter;
+    private Random random;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_interesting_people, container, false);
+        View view = inflater.inflate(R.layout.fragment_start__recommendation, container, false);
 
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
+        random = new Random();
+        recycler_bosses_recomendetion = view.findViewById(R.id.recycler_bosses_recomendetion);
+        recycler_bosses_recomendetion.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
         userListRandom = new ArrayList<>();
-        fullListRandom = new ArrayList<>();
-        randomGenerator = new Random();
+        userListRandomFoll = new ArrayList<>();
+        startRandomUserAdapter = new StartRandomUserAdapter(getContext(), userListRandom, true);
+        recycler_bosses_recomendetion.setAdapter(startRandomUserAdapter);
 
-        recyclerIntersPeople = view.findViewById(R.id.recyclerIntersPeople);
-        recyclerIntersPeople.setLayoutManager(new LinearLayoutManager(getContext()));
+        readUsers();
 
-        userAdapterRandom = new StartRandomUserAdapter(getContext(), userListRandom, true);
-        recyclerIntersPeople.setAdapter(userAdapterRandom);
-
-        view.findViewById(R.id.interesPeople).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.image_next_main).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), MainActivity.class));
             }
         });
-        readUsers();
-
         return view;
     }
 
@@ -73,15 +71,15 @@ public class InterestingPeopleFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
                     if (!user.getId().equals(FirebaseAuth.getInstance().getUid())) {
-                        fullListRandom.add(user);
+                        userListRandomFoll.add(user);
                     }
                 }
 
-                if (fullListRandom.size() != 0) {
+                if (userListRandomFoll.size() != 0) {
                     Set<User> items_id = new HashSet<>();
-                    for (int i = 0; i < fullListRandom.size(); i++) {
-                        int index = randomGenerator.nextInt(fullListRandom.size());
-                        User random = fullListRandom.get(index);
+                    for (int i = 0; i < userListRandomFoll.size(); i++) {
+                        int index = random.nextInt(userListRandomFoll.size());
+                        User random = userListRandomFoll.get(index);
                         items_id.add(random);
 
                     }
@@ -90,7 +88,7 @@ public class InterestingPeopleFragment extends Fragment {
                     }
                 }
 
-                userAdapterRandom.notifyDataSetChanged();
+                startRandomUserAdapter.notifyDataSetChanged();
             }
 
             @Override

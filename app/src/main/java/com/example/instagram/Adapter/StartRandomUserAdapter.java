@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -31,51 +32,47 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserRandomAdapterProfile extends RecyclerView.Adapter<UserRandomAdapterProfile.ViewHolder> {
+public class StartRandomUserAdapter extends RecyclerView.Adapter<StartRandomUserAdapter.ViewHolder> {
 
-    private Context context;
-    private List<User> userList;
+    private Context mContext;
+    private List<User> mUsers;
     private boolean isFargment;
 
     private FirebaseUser firebaseUser;
 
-    public UserRandomAdapterProfile(Context context, List<User> userList, boolean isFargment) {
-        this.context = context;
-        this.userList = userList;
+    public StartRandomUserAdapter(Context mContext, List<User> mUsers, boolean isFargment) {
+        this.mContext = mContext;
+        this.mUsers = mUsers;
         this.isFargment = isFargment;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.random_itemprofile, parent, false));
+        View view = LayoutInflater.from(mContext).inflate(R.layout.start_recomendat_item, parent, false);
+        return new ViewHolder(view);
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        User user = userList.get(position);
+        final User user = mUsers.get(position);
+        // делает кнопку падписаться видимой
+        holder.randombtn_follow.setVisibility(View.VISIBLE);
+        // устанавливаем время
+        holder.startrandomusername.setText(user.getUsername());
+        holder.startrandomfullname.setText(user.getName());
+        Picasso.get().load(user.getImageurl()).placeholder(R.drawable.profilo).into(holder.image_profile_random);
 
-        holder.nameRandom.setText(user.getUsername());
-        holder.btn_RandomFollow.setVisibility(View.VISIBLE);
-        if (user.getImageurl().equals("default")) {
-            holder.imageRandom.setImageResource(R.drawable.profilo);
-        } else {
-            Picasso.get().load(user.getImageurl()).into(holder.imageRandom);
-        }
-        isFollowed(user.getId(), holder.btn_RandomFollow);
+        // проверка если базе пользователь
+        isFollowed(user.getId(), holder.randombtn_follow);
 
-
-        if (user.getId().equals(firebaseUser.getUid())) {
-            holder.btn_RandomFollow.setVisibility(View.GONE);
-        }
-
-
-        holder.btn_RandomFollow.setOnClickListener(new View.OnClickListener() {
+        holder.randombtn_follow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // если нажать пописаться
-                if (holder.btn_RandomFollow.getText().toString().equals(("Подписаться"))) {
+                if (holder.randombtn_follow.getText().toString().equals(("Подписаться"))) {
 
                     // нынешний пользователь
                     FirebaseDatabase.getInstance().getReference().child("Follow").
@@ -96,39 +93,45 @@ public class UserRandomAdapterProfile extends RecyclerView.Adapter<UserRandomAda
             }
         });
 
+        // artem
+        if (user.getId().equals("lnosYnOZz9MNEyo9Wmru4WheqzC2")) {
+            holder.startRecomendatetRandom.setVisibility(View.VISIBLE);
+        } else {
+            holder.startRecomendatetRandom.setVisibility(View.GONE);
+        }
+
+        holder.startRandomClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                removeItem(position);
+            }
+        });
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isFargment) {
-                    context.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileId", user.getId()).apply();
+                    mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileId", user.getId()).apply();
 
-                    ((FragmentActivity) context).getSupportFragmentManager().beginTransaction().replace(R.id
+                    ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction().replace(R.id
                             .fragment_container, new ProfileFragment()).commit();
                 } else {
-                    Intent intent = new Intent(context, MainActivity.class);
+                    Intent intent = new Intent(mContext, MainActivity.class);
                     intent.putExtra("publisherId", user.getId());
-                    context.startActivity(intent);
+                    mContext.startActivity(intent);
                 }
             }
         });
 
-        holder.imageRemovProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removItem(position);
-            }
-        });
-
-
     }
 
-    private void removItem(int position) {
-        userList.remove(position);
+    private void removeItem(int position) {
+        mUsers.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position,userList.size());
+        notifyItemRangeChanged(position, mUsers.size());
     }
 
-    private void isFollowed(final String id, final Button btnFollow) {
+    private void isFollowed(final String id, final Button randombtn_follow) {
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Follow").child(firebaseUser.getUid())
                 .child("following");
@@ -136,9 +139,9 @@ public class UserRandomAdapterProfile extends RecyclerView.Adapter<UserRandomAda
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(id).exists())
-                    btnFollow.setText("Отписаться");
+                    randombtn_follow.setText("Отписаться");
                 else
-                    btnFollow.setText("Подписаться");
+                    randombtn_follow.setText("Подписаться");
             }
 
             @Override
@@ -151,23 +154,25 @@ public class UserRandomAdapterProfile extends RecyclerView.Adapter<UserRandomAda
 
     @Override
     public int getItemCount() {
-        return userList.size();
+        return mUsers.size();
     }
 
-
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView nameRandom;
-        private Button btn_RandomFollow;
-        private ImageView imageRemovProfile;
-        private CircleImageView imageRandom;
+
+        public CircleImageView image_profile_random;
+        public TextView startrandomusername;
+        public ImageView startRandomClose, startRecomendatetRandom;
+        public TextView startrandomfullname;
+        public Button randombtn_follow;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            imageRemovProfile = itemView.findViewById(R.id.imageRemovProfile);
-            imageRandom = itemView.findViewById(R.id.imageRandom);
-            nameRandom = itemView.findViewById(R.id.nameRandom);
-            btn_RandomFollow = itemView.findViewById(R.id.btn_RandomFollow);
+            image_profile_random = itemView.findViewById(R.id.image_profile_random);
+            startRandomClose = itemView.findViewById(R.id.startRandomClose);
+            startrandomusername = itemView.findViewById(R.id.startrandomusername);
+            startRecomendatetRandom = itemView.findViewById(R.id.startRecomendatetRandom);
+            startrandomfullname = itemView.findViewById(R.id.startrandomfullname);
+            randombtn_follow = itemView.findViewById(R.id.randombtn_follow);
         }
     }
 
@@ -180,4 +185,5 @@ public class UserRandomAdapterProfile extends RecyclerView.Adapter<UserRandomAda
 
         FirebaseDatabase.getInstance().getReference().child("Notifications").child(firebaseUser.getUid()).push().setValue(map);
     }
+
 }

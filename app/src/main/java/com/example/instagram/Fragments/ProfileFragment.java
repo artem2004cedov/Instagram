@@ -3,9 +3,12 @@ package com.example.instagram.Fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -27,6 +31,7 @@ import com.bumptech.glide.Glide;
 import com.example.instagram.Adapter.PhotoAdapter;
 import com.example.instagram.Adapter.ProfilAdapter;
 import com.example.instagram.Adapter.UserRandomAdapterProfile;
+import com.example.instagram.AddStorisActivity;
 import com.example.instagram.ChatActivity;
 import com.example.instagram.ChatUsersActivity;
 import com.example.instagram.EditProfileActivity;
@@ -83,14 +88,14 @@ public class ProfileFragment extends Fragment {
     private TextView followers, following;
     private TextView posts, count;
     private TextView fullname, text_all_random_profile;
-    private TextView bio;
+    private TextView bio, textAddFoto, textAddStories;
     private TextView username;
-    private ImageView myPictures;
-    private ImageView savedPictures;
+    private ImageView myPictures,bottomArrow,doneIconImage;
+    private ImageView savedPictures, imageprofileAdd;
     private Button editProfile, edit_following, edit_chats;
     private FirebaseUser fUser;
     private SharedPreferences sharedPref;
-    private LinearLayout linearProfale, linearProfaleSave, layoutRandomProfile, layoutfill;
+    private LinearLayout linearProfale, linearProfaleSave, layoutRandomProfile, layoutfill, linearprofileAdd, linearNoPublications;
 
     String profileId;
 
@@ -113,26 +118,7 @@ public class ProfileFragment extends Fragment {
         }
 
         sharedPref = this.getActivity().getSharedPreferences("Prof", Context.MODE_PRIVATE);
-
-        imageProfile = view.findViewById(R.id.image_profile);
-        view1 = view.findViewById(R.id.view1);
-        view2 = view.findViewById(R.id.view2);
-        options = view.findViewById(R.id.options1);
-        layoutfill = view.findViewById(R.id.layoutfill);
-        count = view.findViewById(R.id.count);
-        followers = view.findViewById(R.id.followers);
-        following = view.findViewById(R.id.following);
-        posts = view.findViewById(R.id.posts);
-        fullname = view.findViewById(R.id.fullname);
-        linearProfale = view.findViewById(R.id.linearProfale);
-        bio = view.findViewById(R.id.bio);
-        username = view.findViewById(R.id.username);
-        myPictures = view.findViewById(R.id.my_pictures);
-        savedPictures = view.findViewById(R.id.saved_pictures);
-        editProfile = view.findViewById(R.id.edit_profile);
-        edit_following = view.findViewById(R.id.edit_following);
-        edit_chats = view.findViewById(R.id.edit_chats);
-        myPhotoList = new ArrayList<>();
+        init(view);
 
         new Thread(new Runnable() {
             @Override
@@ -144,7 +130,6 @@ public class ProfileFragment extends Fragment {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                recyclerView = view.findViewById(R.id.recucler_view_pictures);
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
                 photoAdapter = new PhotoAdapter(getContext(), myPhotoList);
@@ -155,6 +140,7 @@ public class ProfileFragment extends Fragment {
         Thread thread = new Thread(runnable);
         thread.start();
 
+        bottomArrow = view.findViewById(R.id.bottomArrow);
         recyclerViewSaves = view.findViewById(R.id.recucler_view_saved);
         recyclerViewSaves.setHasFixedSize(true);
         recyclerViewSaves.setLayoutManager(new GridLayoutManager(getContext(), 3));
@@ -171,15 +157,32 @@ public class ProfileFragment extends Fragment {
         getPostCount();
         myPhotos();
 
+        // artem
+        if (profileId.equals("lnosYnOZz9MNEyo9Wmru4WheqzC2")) {
+            doneIconImage.setVisibility(View.VISIBLE);
+        } else {
+            doneIconImage.setVisibility(View.GONE);
+        }
+
+        // если есть то
         if (profileId.equals(fUser.getUid())) {
+            linearprofileAdd.setVisibility(View.VISIBLE);
             editProfile.setVisibility(View.VISIBLE);
             edit_following.setVisibility(View.GONE);
             edit_chats.setVisibility(View.GONE);
+            bottomArrow.setVisibility(View.VISIBLE);
+
             editProfile.setText("Редактировать профиль");
         } else {
+
+            edit_following.setVisibility(View.VISIBLE);
+            edit_chats.setVisibility(View.VISIBLE);
+            linearprofileAdd.setVisibility(View.GONE);
+
             layoutfill.setVisibility(View.GONE);
             layoutRandomProfile.setVisibility(View.GONE);
             linearProfale.setVisibility(View.GONE);
+            bottomArrow.setVisibility(View.GONE);
             checkFollowingStatus();
         }
 
@@ -262,6 +265,46 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    private void init(View view) {
+        imageProfile = view.findViewById(R.id.image_profile);
+        recyclerView = view.findViewById(R.id.recucler_view_pictures);
+        linearNoPublications = view.findViewById(R.id.linearNoPublications);
+        view1 = view.findViewById(R.id.view1);
+        view2 = view.findViewById(R.id.view2);
+        options = view.findViewById(R.id.options1);
+        imageprofileAdd = view.findViewById(R.id.imageprofileAdd);
+        linearprofileAdd = view.findViewById(R.id.linearprofileAdd);
+        layoutfill = view.findViewById(R.id.layoutfill);
+        count = view.findViewById(R.id.count);
+        followers = view.findViewById(R.id.followers);
+        following = view.findViewById(R.id.following);
+        posts = view.findViewById(R.id.posts);
+        fullname = view.findViewById(R.id.fullname);
+        linearProfale = view.findViewById(R.id.linearProfale);
+        bio = view.findViewById(R.id.bio);
+        doneIconImage = view.findViewById(R.id.doneIconImage);
+        username = view.findViewById(R.id.username);
+        myPictures = view.findViewById(R.id.my_pictures);
+        savedPictures = view.findViewById(R.id.saved_pictures);
+        editProfile = view.findViewById(R.id.edit_profile);
+        edit_following = view.findViewById(R.id.edit_following);
+        edit_chats = view.findViewById(R.id.edit_chats);
+        myPhotoList = new ArrayList<>();
+
+        imageprofileAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (layoutRandomProfile.getVisibility() == View.GONE) {
+                    imageprofileAdd.setImageResource(R.drawable.addusericonfinal);
+                    layoutRandomProfile.setVisibility(View.VISIBLE);
+                } else {
+                    imageprofileAdd.setImageResource(R.drawable.addusericon);
+                    layoutRandomProfile.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
     private void setrandomrecomendeitet(View view) {
         Random random = new Random();
         List<User> userListRanFoll = new ArrayList<>();
@@ -298,7 +341,7 @@ public class ProfileFragment extends Fragment {
 
                 Set<User> items_id = new HashSet<>();
                 if (userListRanFoll.size() != 0) {
-                    for (int i = 0; i < 16; i++) {
+                    for (int i = 0; i < 30; i++) {
                         int index = random.nextInt(userListRanFoll.size());
                         User userRandom = userListRanFoll.get(index);
                         items_id.add(userRandom);
@@ -312,6 +355,35 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+//        textAddStories = view.findViewById(R.id.textAddStories);
+        imageProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builderAl = new AlertDialog.Builder(getContext());
+                LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.alerdialogprofile, null);
+                builderAl.setView(layout);
+
+                TextView textAddFoto = layout.findViewById(R.id.textAddFoto);
+                textAddFoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(getContext(), EditProfileActivity.class));
+                    }
+                });
+
+                TextView textAddStories = layout.findViewById(R.id.textAddStories);
+                textAddStories.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(getContext(), AddStorisActivity.class));
+                    }
+                });
+
+                builderAl.show();
 
             }
         });
@@ -420,7 +492,10 @@ public class ProfileFragment extends Fragment {
                 }
                 if (myPhotoList.size() == 0) {
                     if (profileId.equals(fUser.getUid())) {
+                        linearNoPublications.setVisibility(View.GONE);
                         linearProfale.setVisibility(View.VISIBLE);
+                    } else {
+                        linearNoPublications.setVisibility(View.VISIBLE);
                     }
                 } else {
                     if (profileId.equals(fUser.getUid())) {
@@ -429,12 +504,14 @@ public class ProfileFragment extends Fragment {
                     Collections.reverse(myPhotoList);
                     photoAdapter.notifyDataSetChanged();
                 }
-                if (myPhotoList.size() >= 2) {
+                if (myPhotoList.size() >= 3) {
                     if (profileId.equals(fUser.getUid())) {
+                        imageprofileAdd.setImageResource(R.drawable.addusericon);
                         layoutRandomProfile.setVisibility(View.GONE);
                     }
                 } else {
                     if (profileId.equals(fUser.getUid())) {
+                        imageprofileAdd.setImageResource(R.drawable.addusericonfinal);
                         layoutRandomProfile.setVisibility(View.VISIBLE);
                     }
                 }
@@ -444,6 +521,14 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        edit_chats.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ChatUsersActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -471,13 +556,6 @@ public class ProfileFragment extends Fragment {
                         }
                     });
 
-                    edit_chats.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(getContext(), ChatUsersActivity.class);
-                            startActivity(intent);
-                        }
-                    });
 
                 } else {
                     edit_following.setVisibility(View.VISIBLE);

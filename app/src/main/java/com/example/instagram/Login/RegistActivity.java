@@ -1,8 +1,9 @@
 package com.example.instagram.Login;
 
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -19,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.example.instagram.MainActivity;
 import com.example.instagram.PhotoinprofileActivity;
 import com.example.instagram.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -38,10 +38,10 @@ public class RegistActivity extends AppCompatActivity {
     private EditText ed_email, ed_password, ed_username, ed_usernameChange;
     private Button bt_registr, bt_next_, bt_next_registr, bt_next_name;
     private DatabaseReference mRootRef;
-    private TextView text_email, changeName_, text_bot, text_bot_main;
+    private TextView text_email, changeName_, text_bot, text_bot_main, textPasswordIncorrect;
     private LinearLayout layout_email, layout_registr, layout_finis, layout_name;
     private FirebaseAuth auth;
-    private ProgressDialog pd;
+    private Dialog pd;
     private View view;
     private CheckBox checkbox;
     private LinearLayout linearBottom, linearMain;
@@ -121,13 +121,15 @@ public class RegistActivity extends AppCompatActivity {
     // работа с кантенерами,отоброжения
     private void continu(Editable s) {
         if (s.length() >= 6) {
+            textPasswordIncorrect.setVisibility(View.GONE);
+            ed_password.setBackground(getResources().getDrawable(R.drawable.ed_text_bagraund));
             bt_next_registr.setBackgroundResource(R.drawable.buuton_bacraund);
+            bt_next_registr.setTextColor(getResources().getColor(R.color.white));
             bt_next_registr.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     linearBottom.setVisibility(View.VISIBLE);
                     linearMain.setVisibility(View.GONE);
-
                     text_email.setText(ed_email.getText().toString() + "?");
                     layout_registr.setVisibility(View.GONE);
                     layout_finis.setVisibility(View.VISIBLE);
@@ -143,7 +145,10 @@ public class RegistActivity extends AppCompatActivity {
                 }
             });
         } else {
+            ed_password.setBackground(getResources().getDrawable(R.drawable.ed_password_incorrect));
+            textPasswordIncorrect.setVisibility(View.VISIBLE);
             bt_next_registr.setBackgroundResource(R.drawable.buuton_bacraundprozratni);
+            bt_next_registr.setTextColor(getResources().getColor(R.color.whiteprozrathi));
         }
     }
 
@@ -151,8 +156,10 @@ public class RegistActivity extends AppCompatActivity {
     private void next(Editable s) {
         if (s.length() == 0) {
             bt_next_.setBackgroundResource(R.drawable.buuton_bacraundprozratni);
+            bt_next_.setTextColor(getResources().getColor(R.color.whiteprozrathi));
         } else {
             bt_next_.setBackgroundResource(R.drawable.buuton_bacraund);
+            bt_next_.setTextColor(getResources().getColor(R.color.white));
             if (s.length() >= 6)
                 bt_next_.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -172,8 +179,7 @@ public class RegistActivity extends AppCompatActivity {
 
     // метод для регистрации
     private void registrUser(String email, String password, String name, String username) {
-        pd.setTitle("Регистрация...");
-        pd.setCanceledOnTouchOutside(false);
+        pd.create();
         pd.show();
         auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
@@ -195,12 +201,10 @@ public class RegistActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             pd.dismiss();
-                            Toast.makeText(RegistActivity.this, "Успешная регистрация", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(RegistActivity.this, PhotoinprofileActivity.class));
                             finish();
                         } else {
                             pd.dismiss();
-                            Toast.makeText(RegistActivity.this, "Произошла ошибка", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -217,9 +221,13 @@ public class RegistActivity extends AppCompatActivity {
 
     // переменые
     private void inite() {
-        pd = new ProgressDialog(this);
+        pd = new Dialog(this);
+        pd.setContentView(R.layout.loading_window_registr);
+        pd.setCancelable(true);
+        pd.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         ed_email = findViewById(R.id.ed_email);
         view = findViewById(R.id.view);
+        textPasswordIncorrect = findViewById(R.id.textPasswordIncorrect);
         linearBottom = findViewById(R.id.linearBottom);
         text_bot = findViewById(R.id.text_bot);
         linearMain = findViewById(R.id.linearMain);

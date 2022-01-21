@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -67,9 +68,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         // проверка если базе пользователь
         isFollowed(user.getId(), holder.btnFollow);
 
-        // если хозяин кнопку не видна
-        if (user.getId().equals(firebaseUser.getUid())) {
-            holder.btnFollow.setVisibility(View.GONE);
+
+        // artem
+        if (user.getId().equals("lnosYnOZz9MNEyo9Wmru4WheqzC2")) {
+            holder.officialAccountImage.setVisibility(View.VISIBLE);
+        } else {
+            holder.officialAccountImage.setVisibility(View.GONE);
         }
 
         holder.btnFollow.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +148,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public CircleImageView imageProfile;
+        public ImageView officialAccountImage;
         public TextView username;
         public TextView name;
         public Button btnFollow;
@@ -154,6 +159,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             username = itemView.findViewById(R.id.username);
             name = itemView.findViewById(R.id.fullname);
             btnFollow = itemView.findViewById(R.id.btn_follow);
+            officialAccountImage = itemView.findViewById(R.id.officialAccountImage);
         }
     }
 

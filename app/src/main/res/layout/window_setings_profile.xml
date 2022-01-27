@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:background="@drawable/moresetings"
+    android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/layoutSettingPost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/moresetings"
+            android:padding="6dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/removeicon"
+                android:scaleType="centerCrop"
+                android:layout_height="12dp"/>
+
+            <TextView
+                android:id="@+id/setingProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:text="Настройки" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:text="Архив" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:text="ваши действия" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:text="QR-Код" />
+
+            <TextView
+                android:id="@+id/deletPosttext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:text="Сохраненное" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="Блиские друзья"
+                android:textColor="@color/black"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/interesUserText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:padding="16dp"
+                android:textSize="15dp"
+                android:text="Интерестные люди" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:paddingBottom="30dp"
+                android:layout_margin="16dp"
+                android:textSize="6dp"
+                android:text="" />
+
+        </LinearLayout>
+</RelativeLayout>

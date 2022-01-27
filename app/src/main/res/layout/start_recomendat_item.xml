@@ -49,6 +49,7 @@
             android:maxLines="1"/>
 
         <TextView
+            android:id="@+id/inscriptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10dp"

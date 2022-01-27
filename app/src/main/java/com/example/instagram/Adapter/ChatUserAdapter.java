@@ -13,9 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.instagram.ChatActivity;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -41,17 +45,32 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ViewHo
         User user = userList.get(position);
 
         holder.text_name_item.setText(user.getName());
+        holder.statusText.setText(user.getStatus());
         Picasso.get().load(user.getImageurl()).placeholder(R.drawable.profilo).into(holder.profile_that);
+
+        if (user.getStatus().equals("Сейчас в сети")) {
+            holder.thatDotUser.setVisibility(View.VISIBLE);
+        } else {
+            holder.thatDotUser.setVisibility(View.GONE);
+        }
 
         // передача инфи о пользоватеи
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ChatActivity.class);
-                intent.putExtra("userid", user.getUseridraidom());
+                intent.putExtra("useridrandom", user.getUseridraidom());
                 intent.putExtra("profailPic", user.getImageurl());
                 intent.putExtra("username", user.getUsername());
+                intent.putExtra("name", user.getName());
+                intent.putExtra("userid", user.getId());
+                intent.putExtra("userstatus", user.getStatus());
                 context.startActivity(intent);
+
+                Map<String, Object> map = new HashMap<>();
+                map.put("status", "Сейчас в сети");
+                FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid()).updateChildren(map);
+
             }
         });
 
@@ -63,14 +82,16 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView profile_that;
-        public TextView text_name_item;
+        public CircleImageView profile_that,thatDotUser;
+        public TextView text_name_item,statusText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             profile_that = itemView.findViewById(R.id.profile_that);
             text_name_item = itemView.findViewById(R.id.text_name_item);
+            statusText = itemView.findViewById(R.id.statusText);
+            thatDotUser = itemView.findViewById(R.id.thatDotUser);
         }
     }
 }

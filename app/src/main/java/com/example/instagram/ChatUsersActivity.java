@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -26,7 +28,9 @@ import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatUsersActivity extends AppCompatActivity {
     private RecyclerView recycler_chat;
@@ -54,10 +58,25 @@ public class ChatUsersActivity extends AppCompatActivity {
         getUser();
         getUsername();
 
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Map<String, Object> map = new HashMap<>();
+                map.put("status", "Сейчас в сети");
+                FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid()).updateChildren(map);
+            }
+        }, 1000);
+
+
         findViewById(R.id.image_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                Map<String, Object> map = new HashMap<>();
+                map.put("status", "Сейчас в сети");
+                FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid()).updateChildren(map);
+
+               startActivity(new Intent(ChatUsersActivity.this,MainActivity.class));
             }
         });
     }
@@ -102,6 +121,20 @@ public class ChatUsersActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Map<String,Object> map = new HashMap<>();
+        map.put("status","Был недавно ");
+        FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid()).updateChildren(map);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MainActivity.online();
+    }
+
     private void searchUser(String s) {
 
         Query query = FirebaseDatabase.getInstance().getReference().child("Users")
@@ -126,10 +159,14 @@ public class ChatUsersActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MainActivity.onlineTame();
+    }
+
     private void getUsername() {
-
         name_chat.setText(getSharedPreferences("thatUser", MODE_PRIVATE).getString("nameChat", ""));
-
         FirebaseDatabase.getInstance().getReference().child("Users").child(fUser.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

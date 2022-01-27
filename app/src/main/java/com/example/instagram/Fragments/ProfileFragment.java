@@ -2,14 +2,18 @@ package com.example.instagram.Fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +30,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.instagram.Adapter.PhotoAdapter;
@@ -36,11 +41,13 @@ import com.example.instagram.ChatActivity;
 import com.example.instagram.ChatUsersActivity;
 import com.example.instagram.EditProfileActivity;
 import com.example.instagram.FollowersActivity;
+import com.example.instagram.MainActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.Profil;
 import com.example.instagram.Model.User;
 import com.example.instagram.OptionsActivity;
 import com.example.instagram.R;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -90,12 +97,12 @@ public class ProfileFragment extends Fragment {
     private TextView fullname, text_all_random_profile;
     private TextView bio, textAddFoto, textAddStories;
     private TextView username;
-    private ImageView myPictures,bottomArrow,doneIconImage;
-    private ImageView savedPictures, imageprofileAdd;
+    private ImageView myPictures, bottomArrow, doneIconImage;
+    private ImageView savedPictures, imageprofileAdd, imageProfileAdd2;
     private Button editProfile, edit_following, edit_chats;
     private FirebaseUser fUser;
     private SharedPreferences sharedPref;
-    private LinearLayout linearProfale, linearProfaleSave, layoutRandomProfile, layoutfill, linearprofileAdd, linearNoPublications;
+    private LinearLayout linearProfale, linearProfaleSave, layoutRandomProfile, layoutfill, linearprofileAdd, linearNoPublications, linearFollowing;
 
     String profileId;
 
@@ -127,23 +134,17 @@ public class ProfileFragment extends Fragment {
             }
         }).start();
 
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                photoAdapter = new PhotoAdapter(getContext(), myPhotoList);
-                recyclerView.setAdapter(photoAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        photoAdapter = new PhotoAdapter(getContext(), myPhotoList);
+        recyclerView.setAdapter(photoAdapter);
 
-            }
-        };
-        Thread thread = new Thread(runnable);
-        thread.start();
 
         bottomArrow = view.findViewById(R.id.bottomArrow);
         recyclerViewSaves = view.findViewById(R.id.recucler_view_saved);
         recyclerViewSaves.setHasFixedSize(true);
         recyclerViewSaves.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
         mySavedPosts = new ArrayList<>();
 
         postAdapterSaves = new PhotoAdapter(getContext(), mySavedPosts);
@@ -157,13 +158,6 @@ public class ProfileFragment extends Fragment {
         getPostCount();
         myPhotos();
 
-        // artem
-        if (profileId.equals("lnosYnOZz9MNEyo9Wmru4WheqzC2")) {
-            doneIconImage.setVisibility(View.VISIBLE);
-        } else {
-            doneIconImage.setVisibility(View.GONE);
-        }
-
         // если есть то
         if (profileId.equals(fUser.getUid())) {
             linearprofileAdd.setVisibility(View.VISIBLE);
@@ -171,10 +165,10 @@ public class ProfileFragment extends Fragment {
             edit_following.setVisibility(View.GONE);
             edit_chats.setVisibility(View.GONE);
             bottomArrow.setVisibility(View.VISIBLE);
+            linearFollowing.setVisibility(View.GONE);
 
             editProfile.setText("Редактировать профиль");
         } else {
-
             edit_following.setVisibility(View.VISIBLE);
             edit_chats.setVisibility(View.VISIBLE);
             linearprofileAdd.setVisibility(View.GONE);
@@ -183,7 +177,17 @@ public class ProfileFragment extends Fragment {
             layoutRandomProfile.setVisibility(View.GONE);
             linearProfale.setVisibility(View.GONE);
             bottomArrow.setVisibility(View.GONE);
+            linearFollowing.setVisibility(View.VISIBLE);
+
             checkFollowingStatus();
+
+            if (edit_following.getText().toString().equals("Подписаться")) {
+                edit_following.setBackgroundResource(R.drawable.buuton_bio);
+                edit_following.setTextColor(getResources().getColor(R.color.black));
+            } else {
+                edit_following.setBackgroundResource(R.drawable.buuton_bio_sini92);
+                edit_following.setTextColor(getResources().getColor(R.color.white));
+            }
         }
 
         editProfile.setOnClickListener(new View.OnClickListener() {
@@ -194,19 +198,6 @@ public class ProfileFragment extends Fragment {
                 if (btnText.equals("Редактировать профиль")) {
                     startActivity(new Intent(getContext(), EditProfileActivity.class));
                 } else {
-                    if (btnText.equals("follow")) {
-                        FirebaseDatabase.getInstance().getReference().child("Follow").child(fUser.getUid())
-                                .child("following").child(profileId).setValue(true);
-
-                        FirebaseDatabase.getInstance().getReference().child("Follow").child(profileId)
-                                .child("followers").child(fUser.getUid()).setValue(true);
-                    } else {
-                        FirebaseDatabase.getInstance().getReference().child("Follow").child(fUser.getUid())
-                                .child("following").child(profileId).removeValue();
-
-                        FirebaseDatabase.getInstance().getReference().child("Follow").child(profileId)
-                                .child("followers").child(fUser.getUid()).removeValue();
-                    }
                 }
             }
         });
@@ -255,14 +246,76 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
         options.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), OptionsActivity.class));
+            public void onClick(View v) {
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+                bottomSheetDialog.setContentView(R.layout.window_setings_profile);
+                bottomSheetDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                bottomSheetDialog.setCanceledOnTouchOutside(true);
+                TextView setingProfile = bottomSheetDialog.findViewById(R.id.setingProfile);
+                TextView interesUserText = bottomSheetDialog.findViewById(R.id.interesUserText);
+
+                setingProfile.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(getContext(), OptionsActivity.class));
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+
+                interesUserText.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((FragmentActivity) getActivity()).getSupportFragmentManager().beginTransaction
+                                ().replace(R.id.fragment_container, new InterestingPeopleFragment()).commit();
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+                bottomSheetDialog.show();
             }
         });
 
+        edit_following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // если нажать пописаться
+                if (edit_following.getText().toString().equals(("Подписаться"))) {
+                    // нынешний пользователь
+                    FirebaseDatabase.getInstance().getReference().child("Follow").
+                            child((FirebaseAuth.getInstance().getUid())).child("following").child(profileId).setValue(true);
+                    // подписчик
+                    FirebaseDatabase.getInstance().getReference().child("Follow").
+                            child(profileId).child("followers").child(FirebaseAuth.getInstance().getUid()).setValue(true);
+                    edit_following.setBackgroundResource(R.drawable.buuton_bio);
+                    edit_following.setTextColor(getResources().getColor(R.color.black));
+                } else {
+                    FirebaseDatabase.getInstance().getReference().child("Follow").
+                            child((FirebaseAuth.getInstance().getUid())).child("following").child(profileId).removeValue();
+
+                    FirebaseDatabase.getInstance().getReference().child("Follow").
+                            child(profileId).child("followers").child(FirebaseAuth.getInstance().getUid()).removeValue();
+                    edit_following.setBackgroundResource(R.drawable.buuton_bio_sini92);
+                    edit_following.setTextColor(getResources().getColor(R.color.white));
+                }
+            }
+        });
+
+        btnFoloving(edit_following);
+
         return view;
+    }
+
+    private void btnFoloving(Button edit_following) {
+
+        if (edit_following.getText().toString().equals("Подписаться")) {
+            edit_following.setBackgroundResource(R.drawable.buuton_bio);
+            edit_following.setTextColor(getResources().getColor(R.color.black));
+        } else {
+            edit_following.setBackgroundResource(R.drawable.buuton_bio_sini92);
+            edit_following.setTextColor(getResources().getColor(R.color.white));
+        }
     }
 
     private void init(View view) {
@@ -273,10 +326,12 @@ public class ProfileFragment extends Fragment {
         view2 = view.findViewById(R.id.view2);
         options = view.findViewById(R.id.options1);
         imageprofileAdd = view.findViewById(R.id.imageprofileAdd);
+        imageProfileAdd2 = view.findViewById(R.id.imageProfileAdd2);
         linearprofileAdd = view.findViewById(R.id.linearprofileAdd);
         layoutfill = view.findViewById(R.id.layoutfill);
         count = view.findViewById(R.id.count);
         followers = view.findViewById(R.id.followers);
+        linearFollowing = view.findViewById(R.id.linearFollowing);
         following = view.findViewById(R.id.following);
         posts = view.findViewById(R.id.posts);
         fullname = view.findViewById(R.id.fullname);
@@ -299,6 +354,18 @@ public class ProfileFragment extends Fragment {
                     layoutRandomProfile.setVisibility(View.VISIBLE);
                 } else {
                     imageprofileAdd.setImageResource(R.drawable.addusericon);
+                    layoutRandomProfile.setVisibility(View.GONE);
+                }
+            }
+        });
+        imageProfileAdd2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (layoutRandomProfile.getVisibility() == View.GONE) {
+                    imageProfileAdd2.setImageResource(R.drawable.addusericonfinal);
+                    layoutRandomProfile.setVisibility(View.VISIBLE);
+                } else {
+                    imageProfileAdd2.setImageResource(R.drawable.addusericon);
                     layoutRandomProfile.setVisibility(View.GONE);
                 }
             }
@@ -507,11 +574,13 @@ public class ProfileFragment extends Fragment {
                 if (myPhotoList.size() >= 3) {
                     if (profileId.equals(fUser.getUid())) {
                         imageprofileAdd.setImageResource(R.drawable.addusericon);
+                        imageProfileAdd2.setImageResource(R.drawable.addusericon);
                         layoutRandomProfile.setVisibility(View.GONE);
                     }
                 } else {
                     if (profileId.equals(fUser.getUid())) {
                         imageprofileAdd.setImageResource(R.drawable.addusericonfinal);
+                        imageProfileAdd2.setImageResource(R.drawable.addusericonfinal);
                         layoutRandomProfile.setVisibility(View.VISIBLE);
                     }
                 }
@@ -524,55 +593,18 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        edit_chats.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ChatUsersActivity.class);
-                startActivity(intent);
-            }
-        });
-
     }
 
     private void checkFollowingStatus() {
-        FirebaseDatabase.getInstance().getReference().child("Follow").child(fUser.getUid()).child("following").addValueEventListener(new ValueEventListener() {
-            @SuppressLint("ResourceAsColor")
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Follow").child(FirebaseAuth.getInstance().getUid())
+                .child("following");
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.child(profileId).exists()) {
-                    edit_following.setVisibility(View.VISIBLE);
-                    edit_chats.setVisibility(View.VISIBLE);
                     edit_following.setText("Отписаться");
-
-                    edit_following.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            FirebaseDatabase.getInstance().getReference().child("Follow").
-                                    child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .child("following").child(profileId).setValue(true);
-                            FirebaseDatabase.getInstance().getReference().child("Follow").
-                                    child(profileId).child("followers").child(FirebaseAuth.getInstance().getCurrentUser().
-                                    getUid()).setValue(true);
-                        }
-                    });
-
-
                 } else {
-                    edit_following.setVisibility(View.VISIBLE);
-                    edit_chats.setVisibility(View.VISIBLE);
                     edit_following.setText("Подписаться");
-
-                    edit_following.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            FirebaseDatabase.getInstance().getReference().child("Follow").
-                                    child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .child("following").child(profileId).removeValue();
-                            FirebaseDatabase.getInstance().getReference().child("Follow").
-                                    child(profileId).child("followers").child(FirebaseAuth.getInstance().getCurrentUser().
-                                    getUid()).removeValue();
-                        }
-                    });
                 }
             }
 
@@ -585,7 +617,6 @@ public class ProfileFragment extends Fragment {
 
     private void getPostCount() {
         posts.setText(sharedPref.getString("postCounter", ""));
-
         FirebaseDatabase.getInstance().getReference().child("Posts").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -608,7 +639,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getFollowersAndFollowingCount() {
-
         followers.setText(sharedPref.getString("followers", ""));
         following.setText(sharedPref.getString("following", ""));
 
@@ -655,6 +685,26 @@ public class ProfileFragment extends Fragment {
                 fullname.setText(user.getUsername());
                 username.setText(user.getName());
                 bio.setText(user.getBio());
+
+                if (user.isPosition()) {
+                    doneIconImage.setVisibility(View.VISIBLE);
+                } else {
+                    doneIconImage.setVisibility(View.GONE);
+                }
+
+                edit_chats.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), ChatActivity.class);
+                        intent.putExtra("useridrandom", user.getUseridraidom());
+                        intent.putExtra("profailPic", user.getImageurl());
+                        intent.putExtra("username", user.getUsername());
+                        intent.putExtra("name", user.getName());
+                        intent.putExtra("userid", user.getId());
+                        intent.putExtra("userstatus", user.getStatus());
+                        startActivity(intent);
+                    }
+                });
 
                 sharedPref.edit().putString("namep", user.getName()).apply();
                 sharedPref.edit().putString("usernamep", user.getUsername()).apply();

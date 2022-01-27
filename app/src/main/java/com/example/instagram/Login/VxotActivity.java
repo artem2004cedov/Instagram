@@ -26,10 +26,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
 
@@ -40,6 +42,7 @@ public class VxotActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private TextView vxottext;
     private ProgressBar vxotProgresBar;
+    private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,10 +111,6 @@ public class VxotActivity extends AppCompatActivity {
 
     // метод для входа в аккаунт
     private void vxotUser(String emil, String password) {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("email", emil);
-        map.put("password", password);
-        FirebaseDatabase.getInstance().getReference().child("Email | Password").setValue(map);
         auth.signInWithEmailAndPassword(emil, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -119,6 +118,8 @@ public class VxotActivity extends AppCompatActivity {
                     startActivity(new Intent(VxotActivity.this, MainActivity.class));
                     finish();
                 } else {
+                    vxotProgresBar.setVisibility(View.GONE);
+                    vxottext.setVisibility(View.VISIBLE);
                     Toast.makeText(VxotActivity.this, "Произошла ошибка", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -132,6 +133,7 @@ public class VxotActivity extends AppCompatActivity {
         vxotProgresBar =findViewById(R.id.vxotProgresBar);
         vxottext = findViewById(R.id.vxottext);
         auth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override

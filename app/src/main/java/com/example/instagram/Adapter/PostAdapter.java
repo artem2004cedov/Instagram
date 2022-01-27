@@ -1,23 +1,33 @@
 package com.example.instagram.Adapter;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -25,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.instagram.CommentActivity;
+import com.example.instagram.EditProfileActivity;
 import com.example.instagram.FollowersActivity;
 import com.example.instagram.Fragments.PostDetailFragment;
 import com.example.instagram.Fragments.ProfileFragment;
@@ -36,6 +47,7 @@ import com.example.instagram.R;
 import com.example.instagram.SplashScreenActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -46,6 +58,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 import com.hendraanggrian.appcompat.widget.SocialTextView;
 import com.squareup.picasso.Picasso;
+
+import org.michaelbel.bottomsheet.BottomSheet;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -61,6 +75,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
     private NotificationManager notificationManager;
     private static final int NOTIFY_ID = 101;
     private static final String CHANNEL_ID = "CHANNEL_ID";
+    private View por;
 
     int number_of_clicks = 0;
     boolean thread_started = false;
@@ -80,6 +95,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
     @Override
     public Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.post_item, parent, false);
+
         return new Viewholder(view);
     }
 
@@ -231,35 +247,94 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         holder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.linearsetibgs.setVisibility(View.VISIBLE);
+                if (post.getPublisher().equals(FirebaseAuth.getInstance().getUid())) {
+                    BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);
+                    bottomSheetDialog.setContentView(R.layout.window_setings);
+                    bottomSheetDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    bottomSheetDialog.setCanceledOnTouchOutside(true);
+                    TextView deletPosttext = bottomSheetDialog.findViewById(R.id.deletPosttext);
+                    deletPosttext.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            bottomSheetDialog.dismiss();
+                            Dialog dialog = new Dialog(mContext);
+                            dialog.setContentView(R.layout.deletepost);
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            TextView deleteText = dialog.findViewById(R.id.deleteText);
+                            TextView deletepostback = dialog.findViewById(R.id.deletepostback);
+                            deletepostback.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            deleteText.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    FirebaseDatabase.getInstance().getReference().child("Posts").child(post.getPostid()).removeValue();
+                                    Toast.makeText(mContext, "Публикация удалена", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                }
+                            });
+                            dialog.show();
+                        }
+                    });
+                    bottomSheetDialog.show();
+                } else {
+                    BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);
+                    bottomSheetDialog.setContentView(R.layout.window_setings_passerby);
+                    bottomSheetDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    bottomSheetDialog.setCanceledOnTouchOutside(true);
+                    TextView passerbyhideText = bottomSheetDialog.findViewById(R.id.passerbyhideText);
+                    passerbyhideText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            bottomSheetDialog.dismiss();
+                            deletepost(position);
+                        }
+                    });
+                    bottomSheetDialog.show();
+                }
             }
         });
 
         // установка последнего сообщение
-        FirebaseDatabase.getInstance().getReference().child("Comments")
-                .child(post.getPostid())
-                .orderByChild("timestamp")
-                .limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChildren()) {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        holder.commentLast.setText(dataSnapshot.child("comment").getValue().toString());
+        FirebaseDatabase.getInstance().
+
+                getReference().
+
+                child("Comments")
+                .
+
+                        child(post.getPostid())
+                .
+
+                        orderByChild("timestamp")
+                .
+
+                        limitToLast(1).
+
+                addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.hasChildren()) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                holder.commentLast.setText(dataSnapshot.child("comment").getValue().toString());
+                            }
+                        }
                     }
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                    }
+                });
 
         holder.postImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ++number_of_clicks;
-                setAnimation(holder.heartAnimation,number_of_clicks);
+                setAnimation(holder.heartAnimation, number_of_clicks);
                 if (!thread_started) {
                     new Thread(new Runnable() {
                         @Override
@@ -276,7 +351,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                                     if (holder.like.getTag().equals("like")) {
                                         FirebaseDatabase.getInstance().getReference().child("Likes")
                                                 .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
-                                        addNotification(post.getPostid(), post.getPublisher());
+//                                        addNotification(post.getPostid(), post.getPublisher());
                                     } else {
                                         FirebaseDatabase.getInstance().getReference().child("Likes")
                                                 .child(post.getPostid()).child(firebaseUser.getUid()).removeValue();
@@ -292,8 +367,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                     }).start();
                 }
             }
-
-
         });
 
         holder.noOfLikes.setOnClickListener(new View.OnClickListener() {
@@ -305,6 +378,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                 mContext.startActivity(intent);
             }
         });
+    }
+
+    private void deletepost(int position) {
+        mPosts.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mPosts.size());
     }
 
     private void setAnimation(ImageView heartAnimation, int number_of_clicks) {
@@ -336,7 +415,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         public SocialAutoCompleteTextView put_comment;
 
         public TextView username, textDate;
-        public TextView noOfLikes;
+        public TextView noOfLikes, deletPosttext;
         public TextView author, commentLast, textMy;
         public TextView noOfComments;
         public LinearLayout linearsetibgs;
@@ -352,6 +431,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             like = itemView.findViewById(R.id.like);
             comment = itemView.findViewById(R.id.comment);
             save = itemView.findViewById(R.id.save);
+            deletPosttext = itemView.findViewById(R.id.deletPosttext);
             more = itemView.findViewById(R.id.more);
             textDate = itemView.findViewById(R.id.textDate);
             heartAnimation = itemView.findViewById(R.id.heartAnimation);

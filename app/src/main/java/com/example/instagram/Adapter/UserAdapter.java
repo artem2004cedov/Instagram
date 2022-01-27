@@ -2,6 +2,7 @@ package com.example.instagram.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,20 +69,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         // проверка если базе пользователь
         isFollowed(user.getId(), holder.btnFollow);
 
-
-        // artem
-        if (user.getId().equals("lnosYnOZz9MNEyo9Wmru4WheqzC2")) {
+        if (user.isPosition()) {
             holder.officialAccountImage.setVisibility(View.VISIBLE);
         } else {
             holder.officialAccountImage.setVisibility(View.GONE);
         }
-
         holder.btnFollow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // если нажать пописаться
                 if (holder.btnFollow.getText().toString().equals(("Подписаться"))) {
-
                     // нынешний пользователь
                     FirebaseDatabase.getInstance().getReference().child("Follow").
                             child((firebaseUser.getUid())).child("following").child(user.getId()).setValue(true);
@@ -90,7 +87,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     FirebaseDatabase.getInstance().getReference().child("Follow").
                             child(user.getId()).child("followers").child(firebaseUser.getUid()).setValue(true);
 
-                    addNotification(user.getId());
+//                    addNotification(user.getId());
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("Follow").
                             child((firebaseUser.getUid())).child("following").child(user.getId()).removeValue();
@@ -126,10 +123,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(id).exists())
+                if (dataSnapshot.child(id).exists()) {
                     btnFollow.setText("Отписаться");
-                else
+                    btnFollow.setBackgroundResource(R.drawable.buuton_bio);
+                    btnFollow.setTextColor(Color.BLACK);
+                } else {
                     btnFollow.setText("Подписаться");
+                    btnFollow.setBackgroundResource(R.drawable.buuton_folovers);
+                    btnFollow.setTextColor(Color.WHITE);
+                }
             }
 
             @Override

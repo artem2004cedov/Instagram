@@ -30,12 +30,28 @@
                     android:layout_height="25dp"
                     android:src="@drawable/ic_arrow_levo" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/user_profile"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="20dp"
-                    android:src="@drawable/profilo" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/user_profile"
+                        android:layout_width="33dp"
+                        android:layout_height="33dp"
+                        android:layout_marginStart="20dp"
+                        android:src="@drawable/profilo" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/thatDot"
+                        android:layout_width="14dp"
+                        android:layout_marginTop="20dp"
+                        android:visibility="gone"
+                        android:layout_marginStart="40dp"
+                        android:background="@android:color/transparent"
+                        android:layout_height="14dp"
+                        android:src="@drawable/doticon" />
+                </RelativeLayout>
+
 
                 <LinearLayout
                     android:id="@+id/layout"
@@ -54,9 +70,9 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/statusTextThat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Сейчас в сети"
                         android:textSize="11dp" />
                 </LinearLayout>
 
@@ -96,7 +112,133 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/relav"
-        android:layout_below="@id/bar" />
+        android:layout_below="@id/bar"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ThatLinerL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bar"
+        android:layout_marginTop="30dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/thatUserProfile"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/profilo" />
+
+        <TextView
+            android:id="@+id/thatName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/thatUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="#8C8A8A"
+                android:textSize="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" : Instagram"
+                android:textAlignment="center"
+                android:textColor="#8C8A8A"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Подписчики: "
+                    android:textAlignment="center"
+                    android:textColor="#8C8A8A"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/thatfollowers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textColor="#8C8A8A"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Публикации: "
+                    android:textAlignment="center"
+                    android:textColor="#8C8A8A"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/thatPostCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textColor="#8C8A8A"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/thatUserFollowing"
+            android:layout_width="match_parent"
+            android:textColor="#8C8A8A"
+            android:textAlignment="center"
+            android:textSize="13dp"
+            android:layout_height="wrap_content"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="150dp"
+            android:id="@+id/visitProfileBtn"
+            android:layout_marginTop="15dp"
+            android:text="посмотреть профиль"
+            android:textSize="10dp"
+            android:textStyle="bold"
+            android:background="@drawable/buuton_bio"
+            android:layout_height="28dp"/>
+
+
+    </LinearLayout>
 
 
     <RelativeLayout

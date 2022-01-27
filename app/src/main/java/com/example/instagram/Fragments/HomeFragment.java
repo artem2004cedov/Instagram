@@ -6,12 +6,14 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import com.example.instagram.Adapter.StorisAdapter;
 import com.example.instagram.Adapter.UserRandomAdapter;
 import com.example.instagram.AddStorisActivity;
 import com.example.instagram.ChatUsersActivity;
+import com.example.instagram.MainActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.Stories;
 import com.example.instagram.Model.User;
@@ -43,12 +46,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class HomeFragment extends Fragment {
 
@@ -64,6 +70,7 @@ public class HomeFragment extends Fragment {
     private CircleImageView image_storis;
     private FirebaseUser fUser;
     private LinearLayout layoutRandom;
+    private ProgressBar progresbarHome;
 
     private List<User> listRandom;
     private UserRandomAdapter userRandomAdapter;
@@ -81,6 +88,7 @@ public class HomeFragment extends Fragment {
         randomGenerator = new Random();
         layoutRandom = view.findViewById(R.id.layoutRandom);
 
+        progresbarHome = view.findViewById(R.id.progresbarHome);
 
         listRandom = new ArrayList<>();
         follListRandom = new ArrayList<>();
@@ -115,11 +123,18 @@ public class HomeFragment extends Fragment {
         recycler_view_story.setAdapter(storisAdapter);
         followingList = new ArrayList<>();
 
-        checkFollowingUsers();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkFollowingUsers();
+            }
+        },1000);
 
         view.findViewById(R.id.startThat).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity.online();
                 startActivity(new Intent(getContext(), ChatUsersActivity.class));
             }
         });
@@ -159,7 +174,6 @@ public class HomeFragment extends Fragment {
             toast.show();
         }
 
-
         return view;
     }
 
@@ -178,6 +192,7 @@ public class HomeFragment extends Fragment {
                 }
 
                 if (postList.size() != 0) {
+                    progresbarHome.setVisibility(View.GONE);
                     List<Post> posL = new ArrayList<>();
                     Post post = postList.get(0);
                     if (postList.size() >= 2) {
@@ -200,6 +215,8 @@ public class HomeFragment extends Fragment {
                     postAdapter.notifyDataSetChanged();
 
                 }
+
+                layoutRandom.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -207,7 +224,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
     }
 
     private void readUsers() {
@@ -219,6 +235,7 @@ public class HomeFragment extends Fragment {
                 followingList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
+                    if (user != null)
                     if (!user.getId().equals(fUser.getUid())) {
                         follListRandom.add(user);
 
@@ -227,8 +244,6 @@ public class HomeFragment extends Fragment {
 
                 Set<User> items_id = new HashSet<>();
                 if (follListRandom.size() != 0) {
-                    layoutRandom.setVisibility(View.VISIBLE);
-
                     if (follListRandom.size() != 0) {
                         for (int i = 0; i < 30; i++) {
                             int index = randomGenerator.nextInt(follListRandom.size());
@@ -287,6 +302,7 @@ public class HomeFragment extends Fragment {
                 followingList.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
                 readPosts();
                 readStories();
+
             }
 
             @Override

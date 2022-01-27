@@ -2,6 +2,7 @@ package com.example.instagram.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,10 +136,15 @@ public class UserRandomAdapterProfile extends RecyclerView.Adapter<UserRandomAda
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(id).exists())
+                if (dataSnapshot.child(id).exists()) {
                     btnFollow.setText("Отписаться");
-                else
+                    btnFollow.setBackgroundResource(R.drawable.buuton_bio);
+                    btnFollow.setTextColor(Color.BLACK);
+                }else {
                     btnFollow.setText("Подписаться");
+                    btnFollow.setBackgroundResource(R.drawable.buuton_folovers);
+                    btnFollow.setTextColor(Color.WHITE);
+                }
             }
 
             @Override

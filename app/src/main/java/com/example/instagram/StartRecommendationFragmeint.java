@@ -48,7 +48,7 @@ public class StartRecommendationFragmeint extends Fragment {
         recycler_bosses_recomendetion.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.VERTICAL,false));
         userListRandom = new ArrayList<>();
         userListRandomFoll = new ArrayList<>();
-        startRandomUserAdapter = new StartRandomUserAdapter(getContext(), userListRandom, true);
+        startRandomUserAdapter = new StartRandomUserAdapter(getContext(), userListRandom, false);
         recycler_bosses_recomendetion.setAdapter(startRandomUserAdapter);
 
         readUsers();

@@ -195,6 +195,8 @@ public class RegistActivity extends AppCompatActivity {
                 map.put("id", auth.getCurrentUser().getUid());
                 map.put("bio", "");
                 map.put("imageurl", "default");
+                map.put("status","Сейчас в сети");
+                map.put("position",false);
 
                 mRootRef.child("Users").child(auth.getCurrentUser().getUid()).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

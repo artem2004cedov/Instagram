@@ -81,6 +81,7 @@ public class EditProfileActivity extends AppCompatActivity {
         bio = findViewById(R.id.bio);
         listUri = new ArrayList<>();
         follList = new ArrayList<>();
+        MainActivity.onlineTame();
 
         fUser = FirebaseAuth.getInstance().getCurrentUser();
         storageRef = FirebaseStorage.getInstance().getReference().child("Uploads");
@@ -222,6 +223,18 @@ public class EditProfileActivity extends AppCompatActivity {
             });
         } else {
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MainActivity.offline();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MainActivity.online();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.instagram.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +74,6 @@ public class StartRandomUserAdapter extends RecyclerView.Adapter<StartRandomUser
             public void onClick(View v) {
                 // если нажать пописаться
                 if (holder.randombtn_follow.getText().toString().equals(("Подписаться"))) {
-
                     // нынешний пользователь
                     FirebaseDatabase.getInstance().getReference().child("Follow").
                             child((firebaseUser.getUid())).child("following").child(user.getId()).setValue(true);
@@ -93,11 +93,12 @@ public class StartRandomUserAdapter extends RecyclerView.Adapter<StartRandomUser
             }
         });
 
-        // artem
-        if (user.getId().equals("lnosYnOZz9MNEyo9Wmru4WheqzC2")) {
+        if (user.isPosition()) {
             holder.startRecomendatetRandom.setVisibility(View.VISIBLE);
+            holder.inscriptionText.setText("Популярне");
         } else {
             holder.startRecomendatetRandom.setVisibility(View.GONE);
+            holder.inscriptionText.setText("Новый пользователь Instagram");
         }
 
         holder.startRandomClose.setOnClickListener(new View.OnClickListener() {
@@ -110,19 +111,22 @@ public class StartRandomUserAdapter extends RecyclerView.Adapter<StartRandomUser
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isFargment) {
-                    mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileId", user.getId()).apply();
-
-                    ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction().replace(R.id
-                            .fragment_container, new ProfileFragment()).commit();
-                } else {
-                    Intent intent = new Intent(mContext, MainActivity.class);
-                    intent.putExtra("publisherId", user.getId());
-                    mContext.startActivity(intent);
+                try {
+                    if (isFargment) {
+                        mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE).edit().putString("profileId", user.getId()).apply();
+                        ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction().replace(R.id
+                                .fragment_container, new ProfileFragment()).commit();
+                    } else {
+                        Intent intent = new Intent(mContext, MainActivity.class);
+                        intent.putExtra("publisherId", user.getId());
+                        mContext.startActivity(intent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mContext.startActivity(new Intent(mContext, MainActivity.class));
                 }
             }
         });
-
     }
 
     private void removeItem(int position) {
@@ -138,10 +142,16 @@ public class StartRandomUserAdapter extends RecyclerView.Adapter<StartRandomUser
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(id).exists())
+                if (dataSnapshot.child(id).exists()) {
                     randombtn_follow.setText("Отписаться");
-                else
+                    randombtn_follow.setBackgroundResource(R.drawable.buuton_bio);
+                    randombtn_follow.setTextColor(Color.BLACK);
+                }else {
                     randombtn_follow.setText("Подписаться");
+                    randombtn_follow.setBackgroundResource(R.drawable.buuton_folovers);
+                    randombtn_follow.setTextColor(Color.WHITE);
+                }
+
             }
 
             @Override
@@ -160,7 +170,7 @@ public class StartRandomUserAdapter extends RecyclerView.Adapter<StartRandomUser
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public CircleImageView image_profile_random;
-        public TextView startrandomusername;
+        public TextView startrandomusername, inscriptionText;
         public ImageView startRandomClose, startRecomendatetRandom;
         public TextView startrandomfullname;
         public Button randombtn_follow;
@@ -168,6 +178,7 @@ public class StartRandomUserAdapter extends RecyclerView.Adapter<StartRandomUser
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             image_profile_random = itemView.findViewById(R.id.image_profile_random);
+            inscriptionText = itemView.findViewById(R.id.inscriptionText);
             startRandomClose = itemView.findViewById(R.id.startRandomClose);
             startrandomusername = itemView.findViewById(R.id.startrandomusername);
             startRecomendatetRandom = itemView.findViewById(R.id.startRecomendatetRandom);

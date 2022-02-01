@@ -1,8 +1,8 @@
 package com.example.instagram.Fragments;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -18,16 +18,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.CompositePageTransformer;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.example.instagram.Adapter.PostAdapter;
 import com.example.instagram.Adapter.StorisAdapter;
 import com.example.instagram.Adapter.UserRandomAdapter;
+import com.example.instagram.Adapter.WellcomeAdapter;
 import com.example.instagram.AddStorisActivity;
 import com.example.instagram.ChatUsersActivity;
 import com.example.instagram.MainActivity;
@@ -35,7 +40,6 @@ import com.example.instagram.Model.Post;
 import com.example.instagram.Model.Stories;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,18 +47,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class HomeFragment extends Fragment {
 
@@ -65,12 +65,14 @@ public class HomeFragment extends Fragment {
     private PostAdapter postAdapter;
     private StorisAdapter storisAdapter;
     private List<Post> postList;
+    private List<User> wellcomList;
     private List<Post> postListLower;
     private List<Stories> storiesList;
     private CircleImageView image_storis;
     private FirebaseUser fUser;
-    private LinearLayout layoutRandom;
+    private LinearLayout layoutRandom,wellcomLiner;
     private ProgressBar progresbarHome;
+    private WellcomeAdapter wellcomAdapter;
 
     private List<User> listRandom;
     private UserRandomAdapter userRandomAdapter;
@@ -78,6 +80,8 @@ public class HomeFragment extends Fragment {
     private Random randomGenerator;
     private List<User> follListRandom;
     private List<String> followingList;
+
+    private ViewPager2 homeViewpager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,6 +93,7 @@ public class HomeFragment extends Fragment {
         layoutRandom = view.findViewById(R.id.layoutRandom);
 
         progresbarHome = view.findViewById(R.id.progresbarHome);
+        wellcomLiner = view.findViewById(R.id.wellcomLiner);
 
         listRandom = new ArrayList<>();
         follListRandom = new ArrayList<>();
@@ -98,6 +103,38 @@ public class HomeFragment extends Fragment {
 
         userRandomAdapter = new UserRandomAdapter(getContext(), listRandom, true);
         recyclerUserRandom.setAdapter(userRandomAdapter);
+        homeViewpager = view.findViewById(R.id.homeViewpager);
+
+        wellcomList = new ArrayList<>();
+        wellcomAdapter = new WellcomeAdapter(getContext(),listRandom,false);
+        homeViewpager.setAdapter(wellcomAdapter);
+        homeViewpager.setClipToPadding(false);
+        homeViewpager.setClipChildren(false);
+        homeViewpager.setOffscreenPageLimit(3);
+
+        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+        compositePageTransformer.addTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                float a = 1 - Math.abs(position);
+                page.setScaleX(0.85f + a*.15f);
+
+            }
+        });
+
+        homeViewpager.setPageTransformer(compositePageTransformer);
+
+//
+        CompositePageTransformer transformer = new CompositePageTransformer();
+        transformer.addTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                float a = 1 - Math.abs(position);
+                page.setScaleX(0.85f + a*.15f);
+            }
+        });
+
+        homeViewpager.setPageTransformer(transformer);
         readUsers();
 
         fUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -193,6 +230,7 @@ public class HomeFragment extends Fragment {
 
                 if (postList.size() != 0) {
                     progresbarHome.setVisibility(View.GONE);
+                    wellcomLiner.setVisibility(View.GONE);
                     List<Post> posL = new ArrayList<>();
                     Post post = postList.get(0);
                     if (postList.size() >= 2) {
@@ -203,6 +241,8 @@ public class HomeFragment extends Fragment {
                     postAdapter = new PostAdapter(getContext(), posL);
                     recyclerViewPosts.setAdapter(postAdapter);
                     postAdapter.notifyDataSetChanged();
+                } else {
+                    wellcomLiner.setVisibility(View.VISIBLE);
                 }
 
                 if (postList.size() >= 2) {
@@ -213,9 +253,7 @@ public class HomeFragment extends Fragment {
                     postAdapter = new PostAdapter(getContext(), pList);
                     recyclerLower.setAdapter(postAdapter);
                     postAdapter.notifyDataSetChanged();
-
                 }
-
                 layoutRandom.setVisibility(View.VISIBLE);
             }
 
@@ -233,12 +271,13 @@ public class HomeFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 listRandom.clear();
                 followingList.clear();
+                wellcomList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
                     if (user != null)
                     if (!user.getId().equals(fUser.getUid())) {
                         follListRandom.add(user);
-
+                        wellcomList.add(user);
                     }
                 }
 
@@ -257,6 +296,7 @@ public class HomeFragment extends Fragment {
                 }
 
                 userRandomAdapter.notifyDataSetChanged();
+                wellcomAdapter.notifyDataSetChanged();
             }
 
 
@@ -335,5 +375,6 @@ public class HomeFragment extends Fragment {
         });
 
     }
+
 
 }

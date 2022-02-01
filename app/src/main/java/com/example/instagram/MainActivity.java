@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
     public static void offline() {
         Map<String,Object> map = new HashMap<>();
         map.put("status","Был недавно ");
+        map.put("statustame",new Date().getTime());
         FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid()).updateChildren(map);
     }
 
@@ -350,6 +351,13 @@ public class MainActivity extends AppCompatActivity {
 
 //        createChannelIfNeeded(notificationManager);
 //        notificationManager.notify(NOTIFY_ID, notificationBuilder.build());
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        android.os.Process.killProcess(android.os.Process.myPid());
+//        this.finishAffinity();
     }
 
     public static void createChannelIfNeeded(NotificationManager manager) {

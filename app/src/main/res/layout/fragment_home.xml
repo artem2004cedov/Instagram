@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/bar"
@@ -48,10 +48,10 @@
     <ProgressBar
         android:id="@+id/progresbarHome"
         android:layout_width="40dp"
-        android:indeterminateTint="#605F5F"
         android:layout_height="40dp"
         android:layout_centerInParent="true"
-        android:indeterminate="true"/>
+        android:indeterminate="true"
+        android:indeterminateTint="#605F5F" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -59,6 +59,7 @@
         android:layout_below="@id/bar">
 
         <LinearLayout
+            android:id="@+id/linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -79,9 +80,9 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/image_storis"
                         android:layout_width="68dp"
-                        app:civ_border_width="0.1dp"
                         android:layout_height="68dp"
-                        android:src="@drawable/profilo" />
+                        android:src="@drawable/profilo"
+                        app:civ_border_width="0.1dp" />
 
                     <ImageView
                         android:layout_width="18dp"
@@ -122,21 +123,61 @@
                 android:visibility="visible" />
 
             <LinearLayout
+                android:id="@+id/wellcomLiner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="#FEFEFE"
+                android:paddingBottom="30dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Добро пожаовать в Instagram!"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:paddingHorizontal="15dp"
+                    android:text="Подписывайтесь на интересных людей,чтобы видить фото и видео, которые они публикуют."
+                    android:textAlignment="center"
+                    android:textColor="#7A7A7A"
+                    android:textSize="13dp" />
+
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/homeViewpager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="65dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/layoutRandom"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white99"
+                android:background="#F4F3F3"
                 android:orientation="vertical"
                 android:visibility="gone">
 
                 <RelativeLayout
+                    android:layout_margin="4dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
+                        android:layout_marginStart="6dp"
+                        android:padding="2dp"
                         android:text="Рекомендуем вам"
                         android:textColor="@color/black"
                         android:textSize="12dp"
@@ -144,14 +185,15 @@
 
                     <TextView
                         android:id="@+id/text_all_random"
-                        android:padding="10dp"
                         android:layout_width="wrap_content"
-                        android:textStyle="bold"
-                        android:textSize="13dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:padding="2dp"
+                        android:layout_marginEnd="8dp"
                         android:text="Все"
-                        android:textColor="@color/sinii_92" />
+                        android:textColor="@color/sinii_92"
+                        android:textSize="13dp"
+                        android:textStyle="bold" />
                 </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -160,11 +202,13 @@
                     android:layout_height="wrap_content" />
             </LinearLayout>
 
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerLower"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="visible" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -81,7 +83,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
     boolean thread_started = false;
     final int DELAY_BETWEEN_CLICKS_IN_MILLISECONDS = 350;
     int num = 0;
-
 
     private FirebaseUser firebaseUser;
 
@@ -161,7 +162,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                     FirebaseDatabase.getInstance().getReference().child("Likes")
                             .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
 
-                    addNotification(post.getPostid(), post.getPublisher());
+//                    addNotification(post.getPostid(), post.getPublisher());
 //                    phone_notification();
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("Likes")
@@ -213,7 +214,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             public void onClick(View v) {
                 mContext.getSharedPreferences("PROFILE", Context.MODE_PRIVATE)
                         .edit().putString("profileId", post.getPublisher()).apply();
-
 
                 ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new ProfileFragment()).commit();
@@ -387,15 +387,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
     }
 
     private void setAnimation(ImageView heartAnimation, int number_of_clicks) {
+        Animation animHide = AnimationUtils.loadAnimation(mContext,R.anim.button_anim_hide);
+        Animation animShow = AnimationUtils.loadAnimation(mContext,R.anim.button_anim_show);
         if (number_of_clicks == 2) {
             heartAnimation.setVisibility(View.VISIBLE);
+            heartAnimation.setAnimation(animShow);
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     heartAnimation.setVisibility(View.GONE);
+                    heartAnimation.setAnimation(animHide);
                 }
-            }, 600);
+            }, 500);
         }
     }
 
@@ -524,4 +528,5 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         map.put("isPost", true);
         FirebaseDatabase.getInstance().getReference().child("Notifications").child(firebaseUser.getUid()).push().setValue(map);
     }
+
 }

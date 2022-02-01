@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputEditText;
 import com.squareup.picasso.Picasso;
 
@@ -23,7 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class StoryWindowActivity extends AppCompatActivity {
-    private ImageView mainWindowStories,add_comment_stories;
+    private ImageView mainWindowStories, add_comment_stories;
     private CircleImageView stories_profale;
     private TextView name_user_stories;
     private TextInputEditText massege_stories;
@@ -47,7 +48,10 @@ public class StoryWindowActivity extends AppCompatActivity {
 
         // передача данных
         name_user_stories.setText(getIntent().getStringExtra("username"));
-        Picasso.get().load(getIntent().getStringExtra("imageurl")).into(stories_profale);
+//        Picasso.get().load(getIntent().getStringExtra("imageurl")).into(stories_profale);
+        Glide.with(getApplicationContext())
+                .load(getIntent().getStringExtra("imageurl"))
+                .into(stories_profale);
         Picasso.get().load(getIntent().getStringExtra("storiesurl")).into(mainWindowStories);
         progres();
     }
@@ -62,10 +66,10 @@ public class StoryWindowActivity extends AppCompatActivity {
                 progressBar.setProgress(count);
                 if (count == 100) {
                     timer.cancel();
-                    startActivity(new Intent(StoryWindowActivity.this,MainActivity.class));
+                    startActivity(new Intent(StoryWindowActivity.this, MainActivity.class));
                 }
             }
         };
-        timer.schedule(timerTask,0,40);
+        timer.schedule(timerTask, 0, 40);
     }
 }

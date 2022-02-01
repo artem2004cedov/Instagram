@@ -11,6 +11,7 @@ public class User {
     private String useridraidom;
     private boolean position;
     private String status;
+    private Long statustame;
 
     public User() {
     }
@@ -44,6 +45,27 @@ public class User {
         this.useridraidom = useridraidom;
         this.position = position;
         this.status = status;
+    }
+
+    public User(String name, String email, String username, String bio, String imageurl, String id, String useridraidom, boolean position, String status, Long statustame) {
+        this.name = name;
+        this.email = email;
+        this.username = username;
+        this.bio = bio;
+        this.imageurl = imageurl;
+        this.id = id;
+        this.useridraidom = useridraidom;
+        this.position = position;
+        this.status = status;
+        this.statustame = statustame;
+    }
+
+    public Long getStatustame() {
+        return statustame;
+    }
+
+    public void setStatustame(Long statustame) {
+        this.statustame = statustame;
     }
 
     public boolean isPosition() {

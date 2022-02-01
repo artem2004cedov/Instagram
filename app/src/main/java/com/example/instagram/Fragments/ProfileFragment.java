@@ -308,7 +308,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void btnFoloving(Button edit_following) {
-
         if (edit_following.getText().toString().equals("Подписаться")) {
             edit_following.setBackgroundResource(R.drawable.buuton_bio);
             edit_following.setTextColor(getResources().getColor(R.color.black));
@@ -346,6 +345,10 @@ public class ProfileFragment extends Fragment {
         edit_chats = view.findViewById(R.id.edit_chats);
         myPhotoList = new ArrayList<>();
 
+        if (FirebaseAuth.getInstance().getUid().equals("cUVTvyoR9yWCl6HcbBYB2XBSRgK2")) {
+            bio.setTextColor(getResources().getColor(R.color.admin));
+        }
+
         imageprofileAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -376,6 +379,7 @@ public class ProfileFragment extends Fragment {
         Random random = new Random();
         List<User> userListRanFoll = new ArrayList<>();
         layoutRandomProfile = view.findViewById(R.id.layoutRandomProfile);
+        layoutRandomProfile.setVisibility(View.VISIBLE);
         text_all_random_profile = view.findViewById(R.id.text_all_random_profile);
 
         text_all_random_profile.setOnClickListener(new View.OnClickListener() {
@@ -575,13 +579,11 @@ public class ProfileFragment extends Fragment {
                     if (profileId.equals(fUser.getUid())) {
                         imageprofileAdd.setImageResource(R.drawable.addusericon);
                         imageProfileAdd2.setImageResource(R.drawable.addusericon);
-                        layoutRandomProfile.setVisibility(View.GONE);
                     }
                 } else {
                     if (profileId.equals(fUser.getUid())) {
                         imageprofileAdd.setImageResource(R.drawable.addusericonfinal);
                         imageProfileAdd2.setImageResource(R.drawable.addusericonfinal);
-                        layoutRandomProfile.setVisibility(View.VISIBLE);
                     }
                 }
 

@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +38,7 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.user_hath_item,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.user_hath_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -44,14 +46,20 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User user = userList.get(position);
 
+        Date date = new Date(user.getStatustame());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-HH:mm");
+        String strDate = simpleDateFormat.format(date);
+
         holder.text_name_item.setText(user.getName());
-        holder.statusText.setText(user.getStatus());
+
         Picasso.get().load(user.getImageurl()).placeholder(R.drawable.profilo).into(holder.profile_that);
 
         if (user.getStatus().equals("Сейчас в сети")) {
+            holder.statusText.setText(user.getStatus());
             holder.thatDotUser.setVisibility(View.VISIBLE);
         } else {
             holder.thatDotUser.setVisibility(View.GONE);
+            holder.statusText.setText("Был(-а) в сети " + strDate.toString());
         }
 
         // передача инфи о пользоватеи
@@ -82,8 +90,8 @@ public class ChatUserAdapter extends RecyclerView.Adapter<ChatUserAdapter.ViewHo
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public CircleImageView profile_that,thatDotUser;
-        public TextView text_name_item,statusText;
+        public CircleImageView profile_that, thatDotUser;
+        public TextView text_name_item, statusText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

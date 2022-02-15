@@ -1,5 +1,6 @@
 package com.example.instagram.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -7,6 +8,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -16,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.Adapter.TagAdapter;
 import com.example.instagram.Adapter.UserAdapter;
-import com.example.instagram.Adapter.UserRandomAdapter;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -77,8 +79,16 @@ public class SearchFragment extends Fragment {
         userAdapter = new UserAdapter(getContext(), mUsers, true);
         recyclerView.setAdapter(userAdapter);
 
+        Context context = recyclerView.getContext();
+        LayoutAnimationController layoutAnimationController = AnimationUtils.loadLayoutAnimation(context,R.anim.loyout_slide_recycler);
+        recyclerView.setLayoutAnimation(layoutAnimationController);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
+
+
         readUsers();
         readTags();
+//        layoutAnimation(recyclerView);
 
         search_bar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,6 +108,14 @@ public class SearchFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void layoutAnimation(RecyclerView recyclerView) {
+        Context context = recyclerView.getContext();
+        LayoutAnimationController layoutAnimationController = AnimationUtils.loadLayoutAnimation(context,R.anim.loyout_slide_recycler);
+        recyclerView.setLayoutAnimation(layoutAnimationController);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
     private void readTags() {

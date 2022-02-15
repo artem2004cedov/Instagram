@@ -118,6 +118,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_chat"
+        android:layoutAnimation="@anim/loyout_slide_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/search_user"

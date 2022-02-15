@@ -49,10 +49,12 @@
             <ImageView
                 android:id="@+id/post_image"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintDimensionRatio="1:1"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 tools:ignore="MissingConstraints" />
+            <!--
+                            app:layout_constraintDimensionRatio="1:1.1"
+            -->
 
             <ImageView
                 android:id="@+id/heartAnimation"

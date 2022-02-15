@@ -125,9 +125,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                         if (user.getImageurl().equals("default")) {
                             holder.imageProfile.setImageResource(R.drawable.profilo);
                         } else {
-                            Glide.with(mContext)
-                                    .load(user.getImageurl())
-                                    .into(holder.imageProfile);
+                            try {
+                                Glide.with(mContext)
+                                        .load(user.getImageurl())
+                                        .into(holder.imageProfile);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         if (!post.getPublisher().equals(firebaseUser.getUid())) {
                             holder.textMy.setVisibility(View.VISIBLE);
@@ -347,11 +351,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                                     mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE).edit().putString("postid", post.getPostid()).apply();
                                     ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction()
                                             .replace(R.id.fragment_container, new PostDetailFragment()).commit();
+
                                 } else if (number_of_clicks == 2) {
                                     if (holder.like.getTag().equals("like")) {
                                         FirebaseDatabase.getInstance().getReference().child("Likes")
                                                 .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
-//                                        addNotification(post.getPostid(), post.getPublisher());
+
+                                        if (!post.getPublisher().equals(firebaseUser.getUid())) {
+//                                            addNotification(post.getPostid(), post.getPublisher());
+                                        }
                                     } else {
                                         FirebaseDatabase.getInstance().getReference().child("Likes")
                                                 .child(post.getPostid()).child(firebaseUser.getUid()).removeValue();
@@ -387,8 +395,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
     }
 
     private void setAnimation(ImageView heartAnimation, int number_of_clicks) {
-        Animation animHide = AnimationUtils.loadAnimation(mContext,R.anim.button_anim_hide);
-        Animation animShow = AnimationUtils.loadAnimation(mContext,R.anim.button_anim_show);
+        Animation animHide = AnimationUtils.loadAnimation(mContext, R.anim.button_anim_hide);
+        Animation animShow = AnimationUtils.loadAnimation(mContext, R.anim.button_anim_show);
         if (number_of_clicks == 2) {
             heartAnimation.setVisibility(View.VISIBLE);
             heartAnimation.setAnimation(animShow);
@@ -521,12 +529,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
     // id поста id автора
     private void addNotification(String postId, String publisherId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Notifications");
+        String notificationId = databaseReference.push().getKey();
         HashMap<String, Object> map = new HashMap<>();
         map.put("userid", publisherId);
+        map.put("notifid", notificationId);
         map.put("text", "Понравилось ваше фото.");
         map.put("postid", postId);
         map.put("isPost", true);
-        FirebaseDatabase.getInstance().getReference().child("Notifications").child(firebaseUser.getUid()).push().setValue(map);
+
+        databaseReference.child(postId).child(notificationId).setValue(map);
     }
 
 }

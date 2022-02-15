@@ -54,9 +54,13 @@ public class StorisAdapter extends RecyclerView.Adapter<StorisAdapter.ViewHolder
                         if (user.getImageurl().equals("default")) {
                             holder.prifale_storis.setImageResource(R.drawable.profilo);
                         } else {
-                            Glide.with(context)
-                                    .load(user.getImageurl())
-                                    .into(holder.prifale_storis);
+                            try {
+                                Glide.with(context)
+                                        .load(user.getImageurl())
+                                        .into(holder.prifale_storis);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                         holder.name_storis.setText(user.getUsername());
 

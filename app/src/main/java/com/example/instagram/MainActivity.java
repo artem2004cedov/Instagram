@@ -84,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
     private NotificationManager notificationManager;
     private static final int NOTIFY_ID = 101;
     private static final String CHANNEL_ID = "CHANNEL_ID";
+    private static final int TIME_INTERVAL = 2000;
+    private long mBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 online();
             }
-        },1000);
+        }, 1000);
     }
 
     public static void online() {
@@ -213,16 +215,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void offline() {
-        Map<String,Object> map = new HashMap<>();
-        map.put("status","Был недавно ");
-        map.put("statustame",new Date().getTime());
+        Map<String, Object> map = new HashMap<>();
+        map.put("status", "Был недавно ");
+        map.put("statustame", new Date().getTime());
         FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid()).updateChildren(map);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-       online();
+        online();
     }
 
     private void readNotifications() {
@@ -235,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                     notificationList.add(notification);
                 }
                 for (Notification notification : notificationList) {
-                   phone_notification(notification);
+                    phone_notification(notification);
                 }
 
 
@@ -269,8 +271,8 @@ public class MainActivity extends AppCompatActivity {
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
         // Установка большой картинки
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.arrowicon, options);
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.arrowicon, options);
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
@@ -300,7 +302,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
-                getSharedPreferences("notific",MODE_PRIVATE).edit().putString("name",user.getName()).apply();
+                getSharedPreferences("notific", MODE_PRIVATE).edit().putString("name", user.getName()).apply();
 
                 FirebaseDatabase.getInstance().getReference().child("Posts").child(notification.getPostid()).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -353,11 +355,26 @@ public class MainActivity extends AppCompatActivity {
 //        notificationManager.notify(NOTIFY_ID, notificationBuilder.build());
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
+//            super.onBackPressed();
+//            return;
+//        } else {
+//            //popup
+//        }
+//        mBackPressed = System.currentTimeMillis();
+//
+//    }
+
+
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-//        android.os.Process.killProcess(android.os.Process.myPid());
-//        this.finishAffinity();
+        try {
+            super.onBackPressed();
+        } catch (Exception e) {
+
+        }
     }
 
     public static void createChannelIfNeeded(NotificationManager manager) {

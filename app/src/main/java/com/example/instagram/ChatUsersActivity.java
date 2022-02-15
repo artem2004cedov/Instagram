@@ -5,12 +5,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,9 +54,16 @@ public class ChatUsersActivity extends AppCompatActivity {
         fUser = FirebaseAuth.getInstance().getCurrentUser();
         recycler_chat.setHasFixedSize(true);
         recycler_chat.setLayoutManager(new LinearLayoutManager(this));
+
         userList = new ArrayList<>();
         chatAdapter = new ChatUserAdapter(this, userList);
         recycler_chat.setAdapter(chatAdapter);
+
+        Context context = recycler_chat.getContext();
+        LayoutAnimationController layoutAnimationController = AnimationUtils.loadLayoutAnimation(context,R.anim.loyout_slide_recycler);
+        recycler_chat.setLayoutAnimation(layoutAnimationController);
+        recycler_chat.getAdapter().notifyDataSetChanged();
+        recycler_chat.scheduleLayoutAnimation();
 
         getUser();
         getUsername();
@@ -79,6 +89,14 @@ public class ChatUsersActivity extends AppCompatActivity {
                startActivity(new Intent(ChatUsersActivity.this,MainActivity.class));
             }
         });
+    }
+
+    private void layoutAnimation(RecyclerView recyclerView) {
+        Context context = recyclerView.getContext();
+        LayoutAnimationController layoutAnimationController = AnimationUtils.loadLayoutAnimation(context,R.anim.loyout_to_up_recycler);
+        recyclerView.setLayoutAnimation(layoutAnimationController);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
     private void getUser() {

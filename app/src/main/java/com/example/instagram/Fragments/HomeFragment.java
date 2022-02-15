@@ -222,6 +222,7 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
                     for (String id : followingList) {
+//                        если id пользователя ,и все свопадет
                         if (post.getPublisher().equals(id)) {
                             postList.add(post);
                         }

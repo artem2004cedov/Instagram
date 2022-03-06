@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.instagram.Fragments.ProfileFragment;
-import com.example.instagram.MainActivity;
+import com.example.instagram.Activity.MainActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
@@ -28,10 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -222,13 +220,15 @@ public class WellcomeAdapter extends RecyclerView.Adapter<WellcomeAdapter.ViewHo
         }
     }
 
-    private void addNotification(String userId) {
+    private void addNotification(String publisherId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Notifications");
+        String notificationId = databaseReference.push().getKey();
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userid", userId);
+        map.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        map.put("notifid", notificationId);
         map.put("text", "Подписался(-ась) на ваши обновления. ");
-        map.put("postid", "");
         map.put("isPost", false);
 
-        FirebaseDatabase.getInstance().getReference().child("Notifications").child(firebaseUser.getUid()).push().setValue(map);
+        databaseReference.child(publisherId).child(notificationId).setValue(map);
     }
 }

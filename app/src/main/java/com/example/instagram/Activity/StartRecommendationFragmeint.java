@@ -1,8 +1,6 @@
-package com.example.instagram;
+package com.example.instagram.Activity;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.instagram.Adapter.StartRandomUserAdapter;
 import com.example.instagram.Model.User;
+import com.example.instagram.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,7 +40,7 @@ public class StartRecommendationFragmeint extends Fragment {
         View view = inflater.inflate(R.layout.fragment_start__recommendation, container, false);
 
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         random = new Random();
         recycler_bosses_recomendetion = view.findViewById(R.id.recycler_bosses_recomendetion);

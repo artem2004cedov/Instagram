@@ -17,23 +17,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Instagram">
         <activity
-            android:name=".StoryWindowActivity"
+            android:name=".Activity.StoryWindowActivity"
             android:theme="@style/noBar" />
-        <activity android:name=".PostDiscriptionActivity" />
-        <activity android:name=".AddStorisActivity" />
-        <activity android:name=".StartUserRandomActivity"/>
-        <activity android:name=".PhotoinprofileActivity" />
-        <activity android:name=".ChatUsersActivity" />
-        <activity android:name=".ChatActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".Activity.PostDiscriptionActivity" />
+        <activity android:name=".Activity.AddStorisActivity" />
+        <activity android:name=".Activity.StartUserRandomActivity"/>
+        <activity android:name=".Activity.PhotoinprofileActivity" />
+        <activity android:name=".Activity.ChatUsersActivity" />
+        <activity android:name=".Activity.ChatActivity" />
+        <activity android:name=".Activity.MainActivity" />
         <activity android:name=".Login.VxotActivity" />
-        <activity android:name=".CommentActivity" />
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".FollowersActivity" />
-        <activity android:name=".OptionsActivity" />
-        <activity android:name=".PostActivity" />
+        <activity android:name=".Activity.CommentActivity" />
+        <activity android:name=".Activity.EditProfileActivity" />
+        <activity android:name=".Activity.FollowersActivity" />
+        <activity android:name=".Activity.OptionsActivity" />
+        <activity android:name=".Activity.PostActivity" />
         <activity android:name=".Login.RegistActivity" />
-        <activity android:name=".SplashScreenActivity">
+        <activity android:name=".Activity.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,7 +44,7 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
-            android:name=".FollowersActivity"
+            android:name=".Activity.FollowersActivity"
             tools:ignore="DuplicateActivity" />
     </application>
 

@@ -1,4 +1,4 @@
-package com.example.instagram;
+package com.example.instagram.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,13 +10,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.Adapter.CommentAdapter;
 import com.example.instagram.Model.Comment;
 import com.example.instagram.Model.User;
+import com.example.instagram.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -127,18 +127,31 @@ public class CommentActivity extends AppCompatActivity {
         map.put("comment", addComment.getText().toString());
         map.put("publisher", fUser.getUid());
 
-        addComment.setText("");
-
         ref.child(id).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(CommentActivity.this, "Комментарий добавлен", Toast.LENGTH_SHORT).show();
+                    addNotification(postId,authorId);
+                    addComment.setText("");
                 } else {
                 }
             }
         });
 
+    }
+
+    private void addNotification(String postId, String publisherId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Notifications");
+        String notificationId = databaseReference.push().getKey();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        map.put("notifid", notificationId);
+        map.put("text", "Комментарий: " + addComment.getText().toString());
+        map.put("postid", postId);
+        map.put("isPost", true);
+
+        databaseReference.child(publisherId).child(notificationId).setValue(map);
     }
 
     private void getUserImage() {

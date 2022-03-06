@@ -1,7 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Instagram" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Instagram" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryVariant">@color/colorAccent</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -13,13 +15,11 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
         <item xmlns:tools="NewApi" name="android:windowLightStatusBar">true</item>
 
-
     </style>
 
     <style name="noBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowFullscreen">true</item>
+        <item name="android:forceDarkAllowed">false</item>
     </style>
-
-
 
 </resources>

@@ -1,7 +1,6 @@
-package com.example.instagram;
+package com.example.instagram.Activity;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,11 +18,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Registry;
-import com.bumptech.glide.annotation.GlideModule;
-import com.bumptech.glide.module.AppGlideModule;
-import com.example.instagram.Model.ImageId;
 import com.example.instagram.Model.User;
+import com.example.instagram.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,7 +37,6 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +52,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private MaterialEditText fullname;
     private MaterialEditText username;
     private MaterialEditText bio;
-    private String uri;
     static List<User> listUri;
     static List<User> follList;
 
@@ -106,7 +100,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     getSharedPreferences("profaleUser", MODE_PRIVATE).edit().putString("username", user.getUsername()).apply();
                     getSharedPreferences("profaleUser", MODE_PRIVATE).edit().putString("bio", user.getBio()).apply();
 
-
                     if (user.getImageurl().equals("default")) {
                         imageProfile.setImageResource(R.drawable.profilo);
                     } else {
@@ -115,10 +108,6 @@ public class EditProfileActivity extends AppCompatActivity {
                         listUri.add(dataSnapshot.getValue(User.class));
 
                         getimageuri();
-//                    for (User user1 : listUri) {
-//                        Picasso.get().load(user1.getImageurl()).into(imageProfile);
-//                        Toast.makeText(EditProfileActivity.this, "идет", Toast.LENGTH_SHORT).show();
-//                    }
                     }
                 }
 
@@ -128,7 +117,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             });
         }
-
 
         for (User user1 : listUri) {
             Picasso.get().load(user1.getImageurl()).into(imageProfile);
@@ -174,7 +162,6 @@ public class EditProfileActivity extends AppCompatActivity {
         follList.clear();
         follList.addAll(listUri);
         for (User user : follList) {
-
             Glide.with(getApplicationContext())
                     .load(user.getImageurl())
                     .into(imageProfile);

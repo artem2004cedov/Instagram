@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,7 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.Fragments.ProfileFragment;
-import com.example.instagram.MainActivity;
+import com.example.instagram.Activity.MainActivity;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -82,12 +81,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     // нынешний пользователь
                     FirebaseDatabase.getInstance().getReference().child("Follow").
                             child((firebaseUser.getUid())).child("following").child(user.getId()).setValue(true);
-
                     // подписчик
                     FirebaseDatabase.getInstance().getReference().child("Follow").
                             child(user.getId()).child("followers").child(firebaseUser.getUid()).setValue(true);
 
-//                    addNotification(user.getId());
+                    addNotification(user.getId());
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("Follow").
                             child((firebaseUser.getUid())).child("following").child(user.getId()).removeValue();
@@ -165,14 +163,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }
     }
 
-    private void addNotification(String userId) {
+
+
+    private void addNotification(String publisherId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Notifications");
+        String notificationId = databaseReference.push().getKey();
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userid", userId);
+        map.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        map.put("notifid", notificationId);
         map.put("text", "Подписался(-ась) на ваши обновления. ");
-        map.put("postid", "");
         map.put("isPost", false);
 
-        FirebaseDatabase.getInstance().getReference().child("Notifications").child(firebaseUser.getUid()).push().setValue(map);
+        databaseReference.child(publisherId).child(notificationId).setValue(map);
     }
 
 }

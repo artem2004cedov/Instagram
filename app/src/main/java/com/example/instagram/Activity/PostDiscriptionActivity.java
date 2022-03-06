@@ -1,11 +1,9 @@
-package com.example.instagram;
+package com.example.instagram.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -17,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.example.instagram.Model.User;
+import com.example.instagram.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;

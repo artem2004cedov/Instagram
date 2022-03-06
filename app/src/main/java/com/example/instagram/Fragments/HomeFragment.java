@@ -1,6 +1,5 @@
 package com.example.instagram.Fragments;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -11,20 +10,17 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -33,9 +29,9 @@ import com.example.instagram.Adapter.PostAdapter;
 import com.example.instagram.Adapter.StorisAdapter;
 import com.example.instagram.Adapter.UserRandomAdapter;
 import com.example.instagram.Adapter.WellcomeAdapter;
-import com.example.instagram.AddStorisActivity;
-import com.example.instagram.ChatUsersActivity;
-import com.example.instagram.MainActivity;
+import com.example.instagram.Activity.AddStorisActivity;
+import com.example.instagram.Activity.ChatUsersActivity;
+import com.example.instagram.Activity.MainActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.Stories;
 import com.example.instagram.Model.User;

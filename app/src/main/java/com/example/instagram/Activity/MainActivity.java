@@ -1,66 +1,42 @@
-package com.example.instagram;
+package com.example.instagram.Activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
-import androidx.core.graphics.drawable.IconCompat;
 import androidx.fragment.app.Fragment;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.RingtoneManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.instagram.Adapter.PostAdapter;
 import com.example.instagram.Fragments.HomeFragment;
 import com.example.instagram.Fragments.NotificationFragment;
 import com.example.instagram.Fragments.ProfileFragment;
 import com.example.instagram.Fragments.SearchFragment;
-import com.example.instagram.Login.VxotActivity;
 import com.example.instagram.Model.Notification;
-import com.example.instagram.Model.Post;
 import com.example.instagram.Model.User;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.instagram.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         profaleMani = findViewById(R.id.profaleMani);
         fUser = FirebaseAuth.getInstance().getCurrentUser();
         notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         readUser();
         readNotifications();
@@ -274,6 +249,8 @@ public class MainActivity extends AppCompatActivity {
 //        BitmapFactory.Options options = new BitmapFactory.Options();
 //        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.arrowicon, options);
 
+//        Toast.makeText(this, getName(notification), Toast.LENGTH_SHORT).show();
+
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                         .setAutoCancel(false)
@@ -281,11 +258,11 @@ public class MainActivity extends AppCompatActivity {
                         .setWhen(System.currentTimeMillis()) /* Время кведолмения*/
                         .setContentIntent(contentIntent) /* При нажати перехот в активность*/
                         .setContentTitle("Instagram") /*Заголовок*/
-                        .setContentText(/*getSharedPreferences(*//*"notific",MODE_PRIVATE).getString("name","") +  " " + */ notification.getText()) /* Текст*/
+                        .setContentText(/*getName(notification) +*/ notification.getText())
 //                                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap)) /* Установка большой картинки */
                         .setSound(defaultSoundUri) /* Установка звука*/
                         .setAutoCancel(true) /* Авто закрытие после нажатия*/
-//                        .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.profilo)) /* Установка значка уведомления*/
+                        .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.profilo)) /* Установка значка уведомления*/
 //                        .addAction(R.drawable.pfofaleicon,"Запуск",contentIntent) /* Нижняя надпись*/
 //                        .setStyle(new NotificationCompat.InboxStyle()
 //                                .addLine("Line 1")
@@ -298,33 +275,6 @@ public class MainActivity extends AppCompatActivity {
         createChannelIfNeeded(notificationManager);
         notificationManager.notify(NOTIFY_ID, notificationBuilder.build());
 
-        FirebaseDatabase.getInstance().getReference().child("Users").child(notification.getUserid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                getSharedPreferences("notific", MODE_PRIVATE).edit().putString("name", user.getName()).apply();
-
-                FirebaseDatabase.getInstance().getReference().child("Posts").child(notification.getPostid()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Post post = dataSnapshot.getValue(Post.class);
-//                        getSharedPreferences("notific",MODE_PRIVATE).edit().putString("post",post.getImageurl()).apply();
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
 //        // Установка большой картинки
 //        BitmapFactory.Options options = new BitmapFactory.Options();
@@ -367,14 +317,33 @@ public class MainActivity extends AppCompatActivity {
 //
 //    }
 
+//    public String getName(Notification notification) {
+//        String name;
+//        FirebaseDatabase.getInstance().getReference().child("Users").child(notification.getPostid()).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                String n;
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+//                    User user = dataSnapshot.getValue(User.class);
+//                    n = user.getUsername();
+//                }
+//
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//
+//        return name;
+//    }
 
     @Override
     public void onBackPressed() {
-        try {
-            super.onBackPressed();
-        } catch (Exception e) {
-
-        }
+//        super.onBackPressed();
     }
 
     public static void createChannelIfNeeded(NotificationManager manager) {

@@ -1,25 +1,15 @@
 package com.example.instagram.Adapter;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Handler;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -27,28 +17,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.instagram.CommentActivity;
-import com.example.instagram.EditProfileActivity;
-import com.example.instagram.FollowersActivity;
+import com.example.instagram.Activity.CommentActivity;
+import com.example.instagram.Activity.FollowersActivity;
 import com.example.instagram.Fragments.PostDetailFragment;
 import com.example.instagram.Fragments.ProfileFragment;
-import com.example.instagram.Login.VxotActivity;
-import com.example.instagram.MainActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
-import com.example.instagram.SplashScreenActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -59,25 +39,16 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 import com.hendraanggrian.appcompat.widget.SocialTextView;
-import com.squareup.picasso.Picasso;
-
-import org.michaelbel.bottomsheet.BottomSheet;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import static android.telephony.AvailableNetworkInfo.PRIORITY_HIGH;
-
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
 
     private Context mContext;
     private List<Post> mPosts;
-    private NotificationManager notificationManager;
-    private static final int NOTIFY_ID = 101;
-    private static final String CHANNEL_ID = "CHANNEL_ID";
-    private View por;
 
     int number_of_clicks = 0;
     boolean thread_started = false;
@@ -166,8 +137,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                     FirebaseDatabase.getInstance().getReference().child("Likes")
                             .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
 
-//                    addNotification(post.getPostid(), post.getPublisher());
-//                    phone_notification();
+                    addNotification(post.getPostid(), post.getPublisher());
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("Likes")
                             .child(post.getPostid()).child(firebaseUser.getUid()).removeValue();
@@ -275,8 +245,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                             deleteText.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    FirebaseDatabase.getInstance().getReference().child("Posts").child(post.getPostid()).removeValue();
-                                    Toast.makeText(mContext, "Публикация удалена", Toast.LENGTH_SHORT).show();
+//                                    FirebaseDatabase.getInstance().getReference().child("Posts").child(post.getPostid()).removeValue();
+//                                    Toast.makeText(mContext, "Публикация удалена", Toast.LENGTH_SHORT).show();
                                     dialog.dismiss();
                                 }
                             });
@@ -357,9 +327,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                                         FirebaseDatabase.getInstance().getReference().child("Likes")
                                                 .child(post.getPostid()).child(firebaseUser.getUid()).setValue(true);
 
-                                        if (!post.getPublisher().equals(firebaseUser.getUid())) {
-//                                            addNotification(post.getPostid(), post.getPublisher());
-                                        }
+                                        addNotification(post.getPostid(), post.getPublisher());
+
                                     } else {
                                         FirebaseDatabase.getInstance().getReference().child("Likes")
                                                 .child(post.getPostid()).child(firebaseUser.getUid()).removeValue();
@@ -532,13 +501,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Notifications");
         String notificationId = databaseReference.push().getKey();
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userid", publisherId);
+        map.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
         map.put("notifid", notificationId);
         map.put("text", "Понравилось ваше фото.");
         map.put("postid", postId);
         map.put("isPost", true);
 
-        databaseReference.child(postId).child(notificationId).setValue(map);
+        databaseReference.child(publisherId).child(notificationId).setValue(map);
     }
 
 }

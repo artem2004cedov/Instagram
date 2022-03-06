@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.Fragments.ProfileFragment;
-import com.example.instagram.MainActivity;
+import com.example.instagram.Activity.MainActivity;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -177,13 +177,15 @@ public class UserRandomAdapter extends RecyclerView.Adapter<UserRandomAdapter.Vi
         }
     }
 
-    private void addNotification(String userId) {
+    private void addNotification(String publisherId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Notifications");
+        String notificationId = databaseReference.push().getKey();
         HashMap<String, Object> map = new HashMap<>();
-        map.put("userid", userId);
+        map.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        map.put("notifid", notificationId);
         map.put("text", "Подписался(-ась) на ваши обновления. ");
-        map.put("postid", "");
         map.put("isPost", false);
 
-        FirebaseDatabase.getInstance().getReference().child("Notifications").child(firebaseUser.getUid()).push().setValue(map);
+        databaseReference.child(publisherId).child(notificationId).setValue(map);
     }
 }

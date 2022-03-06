@@ -1,12 +1,11 @@
-package com.example.instagram;
+package com.example.instagram.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 
-import com.example.instagram.Fragments.ProfileFragment;
+import com.example.instagram.R;
 
 public class StartUserRandomActivity extends AppCompatActivity {
     private Fragment fragment;

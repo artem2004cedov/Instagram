@@ -1,4 +1,4 @@
-package com.example.instagram;
+package com.example.instagram.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.instagram.Login.VxotActivity;
 import com.example.instagram.Model.User;
+import com.example.instagram.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

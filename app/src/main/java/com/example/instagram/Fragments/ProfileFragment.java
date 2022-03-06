@@ -1,16 +1,9 @@
 package com.example.instagram.Fragments;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Shader;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,22 +23,19 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.instagram.Adapter.PhotoAdapter;
 import com.example.instagram.Adapter.ProfilAdapter;
 import com.example.instagram.Adapter.UserRandomAdapterProfile;
-import com.example.instagram.AddStorisActivity;
-import com.example.instagram.ChatActivity;
-import com.example.instagram.ChatUsersActivity;
-import com.example.instagram.EditProfileActivity;
-import com.example.instagram.FollowersActivity;
-import com.example.instagram.MainActivity;
+import com.example.instagram.Activity.AddStorisActivity;
+import com.example.instagram.Activity.ChatActivity;
+import com.example.instagram.Activity.EditProfileActivity;
+import com.example.instagram.Activity.FollowersActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.Profil;
 import com.example.instagram.Model.User;
-import com.example.instagram.OptionsActivity;
+import com.example.instagram.Activity.OptionsActivity;
 import com.example.instagram.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,10 +45,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -179,15 +169,6 @@ public class ProfileFragment extends Fragment {
             bottomArrow.setVisibility(View.GONE);
             linearFollowing.setVisibility(View.VISIBLE);
 
-            checkFollowingStatus();
-
-            if (edit_following.getText().toString().equals("Подписаться")) {
-                edit_following.setBackgroundResource(R.drawable.buuton_bio);
-                edit_following.setTextColor(getResources().getColor(R.color.black));
-            } else {
-                edit_following.setBackgroundResource(R.drawable.buuton_bio_sini92);
-                edit_following.setTextColor(getResources().getColor(R.color.white));
-            }
         }
 
         editProfile.setOnClickListener(new View.OnClickListener() {
@@ -277,6 +258,9 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        checkFollowingStatus();
+
+
         edit_following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -290,6 +274,10 @@ public class ProfileFragment extends Fragment {
                             child(profileId).child("followers").child(FirebaseAuth.getInstance().getUid()).setValue(true);
                     edit_following.setBackgroundResource(R.drawable.buuton_bio);
                     edit_following.setTextColor(getResources().getColor(R.color.black));
+
+                    checkFollowingStatus();
+                    btnFoloving(edit_following);
+                    addNotification(profileId);
                 } else {
                     FirebaseDatabase.getInstance().getReference().child("Follow").
                             child((FirebaseAuth.getInstance().getUid())).child("following").child(profileId).removeValue();
@@ -298,23 +286,46 @@ public class ProfileFragment extends Fragment {
                             child(profileId).child("followers").child(FirebaseAuth.getInstance().getUid()).removeValue();
                     edit_following.setBackgroundResource(R.drawable.buuton_bio_sini92);
                     edit_following.setTextColor(getResources().getColor(R.color.white));
+
+                    checkFollowingStatus();
+                    btnFoloving(edit_following);
                 }
             }
         });
 
         btnFoloving(edit_following);
 
+
         return view;
     }
 
+    private void addNotification(String publisherId) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Notifications");
+        String notificationId = databaseReference.push().getKey();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("userid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        map.put("notifid", notificationId);
+        map.put("text", "Подписался(-ась) на ваши обновления. ");
+        map.put("isPost", false);
+
+        databaseReference.child(publisherId).child(notificationId).setValue(map);
+    }
+
     private void btnFoloving(Button edit_following) {
-        if (edit_following.getText().toString().equals("Подписаться")) {
-            edit_following.setBackgroundResource(R.drawable.buuton_bio);
-            edit_following.setTextColor(getResources().getColor(R.color.black));
-        } else {
-            edit_following.setBackgroundResource(R.drawable.buuton_bio_sini92);
-            edit_following.setTextColor(getResources().getColor(R.color.white));
-        }
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (edit_following.getText().toString().equals("Отписаться")) {
+                    edit_following.setBackgroundResource(R.drawable.buuton_bio);
+                    edit_following.setTextColor(getResources().getColor(R.color.black));
+                } else {
+                    edit_following.setBackgroundResource(R.drawable.buuton_bio_sini92);
+                    edit_following.setTextColor(getResources().getColor(R.color.white));
+                }
+            }
+        },100);
+
     }
 
     private void init(View view) {
@@ -344,10 +355,6 @@ public class ProfileFragment extends Fragment {
         edit_following = view.findViewById(R.id.edit_following);
         edit_chats = view.findViewById(R.id.edit_chats);
         myPhotoList = new ArrayList<>();
-
-        if (FirebaseAuth.getInstance().getUid().equals("cUVTvyoR9yWCl6HcbBYB2XBSRgK2")) {
-            bio.setTextColor(getResources().getColor(R.color.admin));
-        }
 
         imageprofileAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -527,7 +534,8 @@ public class ProfileFragment extends Fragment {
 
                             for (String id : savedIds) {
                                 if (post.getPostid().equals(id)) {
-                                    mySavedPosts.add(post);
+                                    if (post.getPublisher().equals(profileId))
+                                        mySavedPosts.add(post);
                                 }
                             }
                         }

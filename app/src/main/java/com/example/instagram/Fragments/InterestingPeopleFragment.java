@@ -13,8 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.instagram.Adapter.StartRandomUserAdapter;
-import com.example.instagram.Adapter.UserAdapter;
-import com.example.instagram.MainActivity;
+import com.example.instagram.Activity.MainActivity;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
 import com.google.firebase.auth.FirebaseAuth;

@@ -1,7 +1,5 @@
 package com.example.instagram.Model;
 
-import com.example.instagram.EditProfileActivity;
-
 import java.util.HashSet;
 import java.util.Set;
 

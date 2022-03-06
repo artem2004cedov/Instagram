@@ -14,12 +14,11 @@ import com.bumptech.glide.Glide;
 import com.example.instagram.Model.Stories;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
-import com.example.instagram.StoryWindowActivity;
+import com.example.instagram.Activity.StoryWindowActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 

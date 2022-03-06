@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.instagram.MainActivity;
+import com.example.instagram.Activity.MainActivity;
 import com.example.instagram.Model.Comment;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;

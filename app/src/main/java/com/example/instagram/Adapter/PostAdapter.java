@@ -1,7 +1,6 @@
 package com.example.instagram.Adapter;
 
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,7 +14,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -350,7 +348,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, FollowersActivity.class);
-                intent.putExtra("id", post.getPublisher());
+                intent.putExtra("id", post.getPostid());
                 intent.putExtra("title", "Отметки\"Нравится\"");
                 mContext.startActivity(intent);
             }

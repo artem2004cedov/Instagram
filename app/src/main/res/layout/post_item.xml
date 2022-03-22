@@ -52,9 +52,6 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 tools:ignore="MissingConstraints" />
-            <!--
-                            app:layout_constraintDimensionRatio="1:1.1"
-            -->
 
             <ImageView
                 android:id="@+id/heartAnimation"

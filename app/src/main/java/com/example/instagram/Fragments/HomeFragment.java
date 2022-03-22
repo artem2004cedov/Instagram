@@ -25,13 +25,13 @@ import androidx.viewpager2.widget.CompositePageTransformer;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.example.instagram.Activity.AddStorisActivity;
+import com.example.instagram.Activity.ChatUsersActivity;
+import com.example.instagram.Activity.MainActivity;
 import com.example.instagram.Adapter.PostAdapter;
 import com.example.instagram.Adapter.StorisAdapter;
 import com.example.instagram.Adapter.UserRandomAdapter;
 import com.example.instagram.Adapter.WellcomeAdapter;
-import com.example.instagram.Activity.AddStorisActivity;
-import com.example.instagram.Activity.ChatUsersActivity;
-import com.example.instagram.Activity.MainActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.Stories;
 import com.example.instagram.Model.User;
@@ -84,6 +84,73 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        init(view);
+        bottomPanel(inflater, view);
+
+        return view;
+    }
+
+    private void bottomPanel(LayoutInflater inflater, View view) {
+        view.findViewById(R.id.startThat).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.online();
+                startActivity(new Intent(getContext(), ChatUsersActivity.class));
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getImageUser();
+                readUsers();
+                checkFollowingUsers();
+            }
+        }).start();
+
+        image_storis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), AddStorisActivity.class));
+            }
+        });
+
+        view.findViewById(R.id.text_all_random).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((FragmentActivity) getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container
+                        , new InterestingPeopleFragment()).commit();
+            }
+        });
+
+        ConnectivityManager cm =
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+        } else {
+            View layout = inflater.inflate(R.layout.item_toast,
+                    (ViewGroup) view.findViewById(R.id.toast_layout_root));
+
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText("Невозможно обновить Ленту");
+            Toast toast = new Toast(getContext());
+            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setView(layout);
+            toast.show();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        recycler_view_story.setVisibility(View.GONE);
+        recyclerLower.setVisibility(View.GONE);
+        recyclerViewPosts.setVisibility(View.GONE);
+        recyclerUserRandom.setVisibility(View.GONE);
+    }
+
+    private void init(View view) {
         postListLower = new ArrayList<>();
         randomGenerator = new Random();
         layoutRandom = view.findViewById(R.id.layoutRandom);
@@ -120,7 +187,6 @@ public class HomeFragment extends Fragment {
 
         homeViewpager.setPageTransformer(compositePageTransformer);
 
-//
         CompositePageTransformer transformer = new CompositePageTransformer();
         transformer.addTransformer(new ViewPager2.PageTransformer() {
             @Override
@@ -131,7 +197,6 @@ public class HomeFragment extends Fragment {
         });
 
         homeViewpager.setPageTransformer(transformer);
-        readUsers();
 
         fUser = FirebaseAuth.getInstance().getCurrentUser();
         image_storis = view.findViewById(R.id.image_storis);
@@ -143,6 +208,17 @@ public class HomeFragment extends Fragment {
         linearLayoutManager1.setReverseLayout(true);
         recyclerViewPosts.setLayoutManager(linearLayoutManager1);
         postList = new ArrayList<>();
+        recyclerUserRandom.setVisibility(View.GONE);
+        recyclerViewPosts.setVisibility(View.GONE);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recyclerUserRandom.setVisibility(View.VISIBLE);
+                recyclerViewPosts.setVisibility(View.VISIBLE);
+            }
+        },150);
 
         recyclerLower = view.findViewById(R.id.recyclerLower);
         recyclerLower.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -155,59 +231,6 @@ public class HomeFragment extends Fragment {
         storisAdapter = new StorisAdapter(getContext(), storiesList);
         recycler_view_story.setAdapter(storisAdapter);
         followingList = new ArrayList<>();
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                checkFollowingUsers();
-            }
-        },1000);
-
-        view.findViewById(R.id.startThat).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.online();
-                startActivity(new Intent(getContext(), ChatUsersActivity.class));
-            }
-        });
-
-        getImageUser();
-
-        image_storis.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), AddStorisActivity.class));
-            }
-        });
-
-        view.findViewById(R.id.text_all_random).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((FragmentActivity) getActivity()).getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container
-                        , new InterestingPeopleFragment()).commit();
-            }
-        });
-
-
-        ConnectivityManager cm =
-                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-        } else {
-            View layout = inflater.inflate(R.layout.item_toast,
-                    (ViewGroup) view.findViewById(R.id.toast_layout_root));
-
-            TextView text = (TextView) layout.findViewById(R.id.text);
-            text.setText("Невозможно обновить Ленту");
-            Toast toast = new Toast(getContext());
-            toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-            toast.setDuration(Toast.LENGTH_SHORT);
-            toast.setView(layout);
-            toast.show();
-        }
-
-        return view;
     }
 
     private void readPosts() {
@@ -312,7 +335,6 @@ public class HomeFragment extends Fragment {
                 if (user.getImageurl().equals("default")) {
                     image_storis.setImageResource(R.drawable.profilo);
                 } else {
-//                    Picasso.get().load(user.getImageurl()).into(image_storis);
                     if (getActivity() != null)
                         Glide.with(getContext())
                                 .load(user.getImageurl())

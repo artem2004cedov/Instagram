@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -25,17 +24,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.instagram.Adapter.PhotoAdapter;
-import com.example.instagram.Adapter.ProfilAdapter;
-import com.example.instagram.Adapter.UserRandomAdapterProfile;
 import com.example.instagram.Activity.AddStorisActivity;
 import com.example.instagram.Activity.ChatActivity;
 import com.example.instagram.Activity.EditProfileActivity;
 import com.example.instagram.Activity.FollowersActivity;
+import com.example.instagram.Activity.OptionsActivity;
+import com.example.instagram.Adapter.PhotoAdapter;
+import com.example.instagram.Adapter.ProfilAdapter;
+import com.example.instagram.Adapter.UserRandomAdapterProfile;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.Profil;
 import com.example.instagram.Model.User;
-import com.example.instagram.Activity.OptionsActivity;
 import com.example.instagram.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
@@ -386,7 +385,7 @@ public class ProfileFragment extends Fragment {
         Random random = new Random();
         List<User> userListRanFoll = new ArrayList<>();
         layoutRandomProfile = view.findViewById(R.id.layoutRandomProfile);
-        layoutRandomProfile.setVisibility(View.VISIBLE);
+        layoutRandomProfile.setVisibility(View.GONE);
         text_all_random_profile = view.findViewById(R.id.text_all_random_profile);
 
         text_all_random_profile.setOnClickListener(new View.OnClickListener() {

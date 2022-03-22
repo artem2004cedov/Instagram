@@ -2,7 +2,6 @@ package com.example.instagram.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.instagram.Adapter.UserAdapter;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -143,12 +143,15 @@ public class FollowersActivity extends AppCompatActivity {
                     User user = snapshot.getValue(User.class);
                     for (String id : idList) {
                         if (user.getId().equals(id)) {
-                            mUsers.add(user);
+                            if (!user.getId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                mUsers.add(user);
+                            }
                         }
                     }
                 }
                 userAdapter.notifyDataSetChanged();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

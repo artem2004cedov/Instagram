@@ -1,34 +1,30 @@
 package com.example.instagram.Fragments;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.example.instagram.Adapter.TagAdapter;
-import com.example.instagram.Adapter.UserAdapter;
-import com.example.instagram.Model.User;
+import com.example.instagram.Adapter.PhotoAdapterSearch;
+import com.example.instagram.Model.Post;
 import com.example.instagram.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 //import com.google.firebase.database.ValueEventListener;
 //import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 //import com.rishav.firebasedemo.Adapter.TagAdapter;
@@ -36,166 +32,79 @@ import com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView;
 //import com.rishav.firebasedemo.Model.User;
 //import com.rishav.firebasedemo.R;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SearchFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private List<User> mUsers;
-    private UserAdapter userAdapter;
-
-
-    private RecyclerView recyclerViewTags;
-    private List<String> mHashTags;
-    private List<String> mHashTagsCount;
-    private TagAdapter tagAdapter;
-    private ImageView arrowback;
-
-    private SocialAutoCompleteTextView search_bar;
+    private RecyclerView recycler_view_UserImage;
+    private List<Post> postList;
+    private PhotoAdapterSearch photoAdapterSearch;
+    private SocialAutoCompleteTextView search_bar_image;
+    private RelativeLayout bar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        search_bar = view.findViewById(R.id.search_bar);
-        arrowback = view.findViewById(R.id.arrowback);
+        bar = view.findViewById(R.id.bar);
 
-        recyclerView = view.findViewById(R.id.recycler_view_users);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        search_bar_image = view.findViewById(R.id.search_bar_image);
+        recycler_view_UserImage = view.findViewById(R.id.recycler_view_UserImage);
+        StaggeredGridLayoutManager stagaggeredGridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+        recycler_view_UserImage.setLayoutManager(stagaggeredGridLayoutManager);
 
-        recyclerViewTags = view.findViewById(R.id.recycler_view_tags);
-        recyclerViewTags.setHasFixedSize(true);
-        recyclerViewTags.setLayoutManager(new LinearLayoutManager(getContext()));
+        postList = new ArrayList<>();
+        photoAdapterSearch = new PhotoAdapterSearch(getContext(), postList);
+        recycler_view_UserImage.setAdapter(photoAdapterSearch);
+        recycler_view_UserImage.setVisibility(View.INVISIBLE);
 
-        mHashTags = new ArrayList<>();
-        mHashTagsCount = new ArrayList<>();
-        tagAdapter = new TagAdapter(getContext(), mHashTags, mHashTagsCount);
-        recyclerViewTags.setAdapter(tagAdapter);
-
-        mUsers = new ArrayList<>();
-        userAdapter = new UserAdapter(getContext(), mUsers, true);
-        recyclerView.setAdapter(userAdapter);
-
-        Context context = recyclerView.getContext();
-        LayoutAnimationController layoutAnimationController = AnimationUtils.loadLayoutAnimation(context,R.anim.loyout_slide_recycler);
-        recyclerView.setLayoutAnimation(layoutAnimationController);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
-
-
-        readUsers();
-        readTags();
-//        layoutAnimation(recyclerView);
-
-        search_bar.addTextChangedListener(new TextWatcher() {
+        search_bar_image.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchUser(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                filter(s.toString());
+            public void onClick(View v) {
+                ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.frameSearch, new SearchUserFragment()).commit();
+                bar.setVisibility(View.GONE);
+                recycler_view_UserImage.setVisibility(View.GONE);
             }
         });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                readUserImage();
+
+            }
+        }).start();
+
+        photoAdapterSearch.setData(postList);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recycler_view_UserImage.setVisibility(View.VISIBLE);
+            }
+        }, 200);
+
 
         return view;
     }
 
-    private void layoutAnimation(RecyclerView recyclerView) {
-        Context context = recyclerView.getContext();
-        LayoutAnimationController layoutAnimationController = AnimationUtils.loadLayoutAnimation(context,R.anim.loyout_slide_recycler);
-        recyclerView.setLayoutAnimation(layoutAnimationController);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
-    }
-
-    private void readTags() {
-        FirebaseDatabase.getInstance().getReference().child("HashTags").addValueEventListener(new ValueEventListener() {
+    private void readUserImage() {
+        FirebaseDatabase.getInstance().getReference().child("Posts").addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mHashTags.clear();
-                mHashTagsCount.clear();
-
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    mHashTags.add(snapshot.getKey());
-                    mHashTagsCount.add(snapshot.getChildrenCount() + "");
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    Post post = dataSnapshot.getValue(Post.class);
+                    postList.add(post);
                 }
-
-                tagAdapter.notifyDataSetChanged();
+                photoAdapterSearch.setData(postList);
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
-    }
-
-    private void readUsers() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (TextUtils.isEmpty(search_bar.getText().toString())) {
-                    mUsers.clear();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        User user = snapshot.getValue(User.class);
-                        if (!user.getId().equals(FirebaseAuth.getInstance().getUid()))
-                            mUsers.add(user);
-                    }
-                    userAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void searchUser(String s) {
-        Query query = FirebaseDatabase.getInstance().getReference().child("Users")
-                .orderByChild("username").startAt(s).endAt(s + "\uf8ff");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mUsers.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User user = snapshot.getValue(User.class);
-                    if (!user.getId().equals(FirebaseAuth.getInstance().getUid()))
-                        mUsers.add(user);
-                }
-                userAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void filter(String text) {
-        List<String> mSearchTags = new ArrayList<>();
-        List<String> mSearchTagsCount = new ArrayList<>();
-
-        for (String s : mHashTags) {
-            if (s.toLowerCase().contains(text.toLowerCase())) {
-                mSearchTags.add(s);
-                mSearchTagsCount.add(mHashTagsCount.get(mHashTags.indexOf(s)));
-            }
-        }
-        tagAdapter.filter(mSearchTags, mSearchTagsCount);
     }
 }

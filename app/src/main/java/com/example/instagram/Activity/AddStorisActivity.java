@@ -1,9 +1,5 @@
 package com.example.instagram.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,6 +9,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.instagram.R;
 import com.google.android.gms.tasks.Continuation;
@@ -58,7 +58,6 @@ public class AddStorisActivity extends AppCompatActivity {
             }
         });
     }
-
 
     // при нажатии на продолжить
     private void upload() {
@@ -110,12 +109,10 @@ public class AddStorisActivity extends AppCompatActivity {
             });
         } else {
         }
-
     }
 
     private String getFileExtension(Uri uri) {
         return MimeTypeMap.getSingleton().getExtensionFromMimeType(this.getContentResolver().getType(uri));
-
     }
 
     // открыват фото

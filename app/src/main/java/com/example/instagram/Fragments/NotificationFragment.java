@@ -1,9 +1,13 @@
 package com.example.instagram.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -46,31 +50,25 @@ public class NotificationFragment extends Fragment {
         followingList = new ArrayList<>();
         postList = new ArrayList<>();
 
+        Context context = recyclerView.getContext();
+        LayoutAnimationController layoutAnimationController = AnimationUtils.loadLayoutAnimation(context, R.anim.loyout_to_up_recycler);
+        recyclerView.setLayoutAnimation(layoutAnimationController);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
 
-//        checkFollowingUsers();
+        recyclerView.setVisibility(View.GONE);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                recyclerView.setVisibility(View.VISIBLE);
+            }
+        }, 150);
+
+
         readNotifications();
         return view;
     }
-
-    private void checkFollowingUsers() {
-        FirebaseDatabase.getInstance().getReference().child("Follow").child(FirebaseAuth.getInstance()
-                .getCurrentUser().getUid()).child("following").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                followingList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    followingList.add(snapshot.getKey());
-                }
-                followingList.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
 
     private void readNotifications() {
         FirebaseDatabase.getInstance().getReference().child("Notifications").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
@@ -83,6 +81,7 @@ public class NotificationFragment extends Fragment {
                 Collections.reverse(notificationList);
                 notificationAdapter.notifyDataSetChanged();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

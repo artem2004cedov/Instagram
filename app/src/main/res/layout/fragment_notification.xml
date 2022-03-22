@@ -38,6 +38,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
+        android:layoutAnimation="@anim/loyout_to_up_recycler"
         android:layout_height="wrap_content"
         android:id="@+id/recycler_view"
         android:layout_below="@+id/bar"/>

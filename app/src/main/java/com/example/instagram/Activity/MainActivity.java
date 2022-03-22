@@ -1,10 +1,5 @@
 package com.example.instagram.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.fragment.app.Fragment;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,7 +14,11 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.instagram.Fragments.HomeFragment;
@@ -36,10 +35,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -56,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView heartMani;
     private CircleImageView profaleMani;
     private FirebaseUser fUser;
+    private User userName;
 
     private NotificationManager notificationManager;
     private static final int NOTIFY_ID = 101;
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        userName = new User();
         searchMain = findViewById(R.id.searchMain);
         textnotifications = findViewById(R.id.textnotifications);
         homeMain = findViewById(R.id.homeMain);
@@ -76,11 +75,27 @@ public class MainActivity extends AppCompatActivity {
         profaleMani = findViewById(R.id.profaleMani);
         fUser = FirebaseAuth.getInstance().getCurrentUser();
         notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-
-        readUser();
-        readNotifications();
         onlineTame();
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                readUser();
+                readNotifications();
+            }
+        }).start();
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                bottomMenu();
+            }
+        }).start();
+
+    }
+
+    private void bottomMenu() {
         homeMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readNotifications() {
-        List<Notification> notificationList = new ArrayList<>();
+        LinkedList<Notification> notificationList = new LinkedList<>();
         FirebaseDatabase.getInstance().getReference().child("Notifications").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -211,17 +226,19 @@ public class MainActivity extends AppCompatActivity {
                     Notification notification = dataSnapshot1.getValue(Notification.class);
                     notificationList.add(notification);
                 }
-                for (Notification notification : notificationList) {
-                    phone_notification(notification);
-                }
-
 
                 int num = (int) dataSnapshot.getChildrenCount();
                 int num2 = num;
                 num2++;
+
+                getSharedPreferences("con", MODE_PRIVATE).edit().putInt("num", num).apply();
+                getSharedPreferences("con", MODE_PRIVATE).edit().putInt("num2", num2).apply();
+
                 if (num != 0) {
-                    if (num < num2) {
+                    if (getSharedPreferences("con", MODE_PRIVATE).getInt("num", 0) <
+                            getSharedPreferences("con", MODE_PRIVATE).getInt("num2", 0)) {
                         textnotifications.setVisibility(View.VISIBLE);
+                        phone_notification(notificationList.getLast());
                     } else {
                         textnotifications.setVisibility(View.INVISIBLE);
 
@@ -238,6 +255,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void phone_notification(Notification notification) {
+        getName(notification);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         Intent notificationIntent = new Intent(this, SplashScreenActivity.class);
@@ -251,18 +269,22 @@ public class MainActivity extends AppCompatActivity {
 
 //        Toast.makeText(this, getName(notification), Toast.LENGTH_SHORT).show();
 
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                        .setAutoCancel(false)
-                        .setSmallIcon(R.drawable.iconinst) /* Установка значка уведлений*/
-                        .setWhen(System.currentTimeMillis()) /* Время кведолмения*/
-                        .setContentIntent(contentIntent) /* При нажати перехот в активность*/
-                        .setContentTitle("Instagram") /*Заголовок*/
-                        .setContentText(/*getName(notification) +*/ notification.getText())
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                NotificationCompat.Builder notificationBuilder =
+                        new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                                .setAutoCancel(false)
+                                .setSmallIcon(R.drawable.iconinst) /* Установка значка уведлений*/
+                                .setWhen(System.currentTimeMillis()) /* Время кведолмения*/
+                                .setContentIntent(contentIntent) /* При нажати перехот в активность*/
+                                .setContentTitle("Instagram") /*Заголовок*/
+                                .setContentText(userName.getUsername() + " " + notification.getText())
 //                                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap)) /* Установка большой картинки */
-                        .setSound(defaultSoundUri) /* Установка звука*/
-                        .setAutoCancel(true) /* Авто закрытие после нажатия*/
-                        .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.profilo)) /* Установка значка уведомления*/
+                                .setSound(defaultSoundUri) /* Установка звука*/
+                                .setAutoCancel(true) /* Авто закрытие после нажатия*/
+                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.profilo)) /* Установка значка уведомления*/
 //                        .addAction(R.drawable.pfofaleicon,"Запуск",contentIntent) /* Нижняя надпись*/
 //                        .setStyle(new NotificationCompat.InboxStyle()
 //                                .addLine("Line 1")
@@ -270,10 +292,10 @@ public class MainActivity extends AppCompatActivity {
 //                                .addLine("Line 3")
 //                                .setBigContentTitle("Extended title")
 //                                .setSummaryText("+5 more")) /* Сообощения в столбик*/
-                        .setPriority(PRIORITY_HIGH); /* Устанока приоретета*/
+                                .setPriority(PRIORITY_HIGH); /* Устанока приоретета*/
 
-        createChannelIfNeeded(notificationManager);
-        notificationManager.notify(NOTIFY_ID, notificationBuilder.build());
+                createChannelIfNeeded(notificationManager);
+                notificationManager.notify(NOTIFY_ID, notificationBuilder.build());
 
 
 //        // Установка большой картинки
@@ -303,43 +325,29 @@ public class MainActivity extends AppCompatActivity {
 
 //        createChannelIfNeeded(notificationManager);
 //        notificationManager.notify(NOTIFY_ID, notificationBuilder.build());
+
+            }
+        }, 200);
+
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
-//            super.onBackPressed();
-//            return;
-//        } else {
-//            //popup
-//        }
-//        mBackPressed = System.currentTimeMillis();
-//
-//    }
+    public void getName(Notification notification) {
+        FirebaseDatabase.getInstance().getReference().child("Users").child(notification.getUserid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String nam = snapshot.child("username").getValue().toString();
+                    userName.setUsername(nam);
+                }
+            }
 
-//    public String getName(Notification notification) {
-//        String name;
-//        FirebaseDatabase.getInstance().getReference().child("Users").child(notification.getPostid()).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                String n;
-//                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-//                    User user = dataSnapshot.getValue(User.class);
-//                    n = user.getUsername();
-//                }
-//
-//
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//
-//        return name;
-//    }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
 
     @Override
     public void onBackPressed() {

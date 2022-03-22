@@ -1,10 +1,5 @@
 package com.example.instagram.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +11,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.Adapter.CatheAdapter;
 import com.example.instagram.Model.MassegeModel;
@@ -55,6 +55,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
         findViewById(R.id.image_that_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,26 +66,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        user_profile = findViewById(R.id.user_profile);
-        thatDot = findViewById(R.id.thatDot);
-        thatfollowers = findViewById(R.id.thatfollowers);
-        thatPostCount = findViewById(R.id.thatPostCount);
-        visitProfileBtn = findViewById(R.id.visitProfileBtn);
-        ThatLinerL = findViewById(R.id.ThatLinerL);
-        thatUserProfile = findViewById(R.id.thatUserProfile);
-        statusTextThat = findViewById(R.id.statusTextThat);
-        image_search = findViewById(R.id.image_search);
-        image_cammerea = findViewById(R.id.image_cammerea);
-        thatUserFollowing = findViewById(R.id.thatUserFollowing);
-        username_that = findViewById(R.id.username_that);
-        chat_massage_edit = findViewById(R.id.chat_massage_edit);
-        liner_massage = findViewById(R.id.liner_massage);
-        text_send = findViewById(R.id.text_send);
-        thatUserName = findViewById(R.id.thatUserName);
-        thatName = findViewById(R.id.thatName);
-        database = FirebaseDatabase.getInstance();
-        auth = FirebaseAuth.getInstance();
-
+        init();
         setMassage();
 
         String recieveid = getIntent().getStringExtra("useridrandom");
@@ -258,6 +240,28 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void init() {
+        user_profile = findViewById(R.id.user_profile);
+        thatDot = findViewById(R.id.thatDot);
+        thatfollowers = findViewById(R.id.thatfollowers);
+        thatPostCount = findViewById(R.id.thatPostCount);
+        visitProfileBtn = findViewById(R.id.visitProfileBtn);
+        ThatLinerL = findViewById(R.id.ThatLinerL);
+        thatUserProfile = findViewById(R.id.thatUserProfile);
+        statusTextThat = findViewById(R.id.statusTextThat);
+        image_search = findViewById(R.id.image_search);
+        image_cammerea = findViewById(R.id.image_cammerea);
+        thatUserFollowing = findViewById(R.id.thatUserFollowing);
+        username_that = findViewById(R.id.username_that);
+        chat_massage_edit = findViewById(R.id.chat_massage_edit);
+        liner_massage = findViewById(R.id.liner_massage);
+        text_send = findViewById(R.id.text_send);
+        thatUserName = findViewById(R.id.thatUserName);
+        thatName = findViewById(R.id.thatName);
+        database = FirebaseDatabase.getInstance();
+        auth = FirebaseAuth.getInstance();
     }
 
     @Override

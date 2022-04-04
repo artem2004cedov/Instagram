@@ -163,6 +163,7 @@ public class ProfileFragment extends Fragment {
             toolbarUserAccount.setVisibility(View.GONE);
 
             editProfile.setText("Редактировать профиль");
+            
         } else {
             edit_following.setVisibility(View.VISIBLE);
             edit_chats.setVisibility(View.VISIBLE);

@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".Activity.ChatUsersActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -28,6 +20,7 @@
                     android:layout_marginVertical="15dp">
 
                     <ImageView
+                        android:layout_marginStart="10dp"
                         android:id="@+id/image_back"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
@@ -37,7 +30,7 @@
                         android:id="@+id/name_chat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="40dp"
+                        android:layout_marginStart="60dp"
                         android:textColor="@color/black"
                         android:textSize="16dp"
                         android:textStyle="bold" />
@@ -57,49 +50,7 @@
                         android:layout_marginHorizontal="15dp"
                         android:src="@drawable/editicon" />
                 </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/line1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/bar"
-                    android:layout_marginTop="15dp"
-                    android:orientation="horizontal">
-
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="40dp"
-                        android:layout_weight="1"
-                        android:text="Чаты"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Вызовы"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:text="Запросы"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/text_prost" />
-                
             </LinearLayout>
-
-        </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
 
 
     <com.hendraanggrian.appcompat.widget.SocialAutoCompleteTextView
@@ -107,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/bar"
-        android:layout_marginHorizontal="10dp"
+        android:layout_marginHorizontal="14dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/ed_text_seathc"
         android:drawableStart="@drawable/ic_search"
@@ -117,11 +68,43 @@
         android:textSize="15dp" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_online"
+        android:layout_margin="14dp"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:text="Сообщение"
+            android:textColor="@color/black" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:gravity="end"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginEnd="20dp"
+            android:text="Запросы"
+            android:textColor="@color/sinii_92" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_chat"
-        android:layoutAnimation="@anim/loyout_slide_recycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/search_user"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:layoutAnimation="@anim/loyout_slide_recycler" />
 
-</RelativeLayout>
+</LinearLayout>

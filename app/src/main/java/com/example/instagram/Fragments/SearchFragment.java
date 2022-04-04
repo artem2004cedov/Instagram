@@ -10,12 +10,14 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.instagram.Adapter.PhotoAdapterSearch;
 import com.example.instagram.Model.Post;
 import com.example.instagram.R;
+import com.example.instagram.SearchFragment.SearchMainFragment;
+import com.example.instagram.SearchFragment.SearchUserFragment;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -49,8 +51,8 @@ public class SearchFragment extends Fragment {
 
         search_bar_image = view.findViewById(R.id.search_bar_image);
         recycler_view_UserImage = view.findViewById(R.id.recycler_view_UserImage);
-        StaggeredGridLayoutManager stagaggeredGridLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        recycler_view_UserImage.setLayoutManager(stagaggeredGridLayoutManager);
+        recycler_view_UserImage.setHasFixedSize(true);
+        recycler_view_UserImage.setLayoutManager(new GridLayoutManager(getContext(),3));
 
         postList = new ArrayList<>();
         photoAdapterSearch = new PhotoAdapterSearch(getContext(), postList);
@@ -71,7 +73,6 @@ public class SearchFragment extends Fragment {
             @Override
             public void run() {
                 readUserImage();
-
             }
         }).start();
 
@@ -83,8 +84,7 @@ public class SearchFragment extends Fragment {
             public void run() {
                 recycler_view_UserImage.setVisibility(View.VISIBLE);
             }
-        }, 200);
-
+        }, 300);
 
         return view;
     }

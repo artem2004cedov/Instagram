@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
-    tools:context=".SearchFragment.SearchUserFragment">
+    >
 
 
     <RelativeLayout
@@ -13,7 +13,6 @@
         android:background="@color/white">
 
         <LinearLayout
-            android:layout_marginTop="10dp"
             android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
@@ -52,73 +51,6 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/line1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/bar"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:orientation="vertical"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_weight="1.4">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="Лутшее"
-                android:textColor="@color/black" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:layout_marginEnd="10dp"
-            android:text="Аккаунты"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:text="Метки"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:text="Места"
-            android:maxLines="1"
-            android:textColor="@color/black" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
-
-        <View
-            android:background="@color/black"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="1dp"/>
-
-        <View
-            android:background="#DAD8D8"
-            android:layout_width="0dp"
-            android:layout_weight="3"
-            android:layout_height="1dp"/>
-
-    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -129,6 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_users"

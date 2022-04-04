@@ -1,4 +1,4 @@
-package com.example.instagram.Fragments;
+package com.example.instagram.SearchFragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.Adapter.TagAdapter;
 import com.example.instagram.Adapter.UserAdapter;
+import com.example.instagram.Fragments.SearchFragment;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SearchUserFragment extends Fragment {
+public class SearchPlacesFragment extends Fragment {
 
     private RecyclerView recycler_view_User;
     private List<User> mUsers;

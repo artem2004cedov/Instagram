@@ -4,16 +4,34 @@ public class Notification {
     private String userid;
     private String text;
     private String postid;
+    private String notifid;
     private boolean isPost;
 
     public Notification() {
     }
 
-    public Notification(String userid, String text, String postid, boolean isPost) {
+    public Notification(String userid, String text, String postid, String notifid, boolean isPost) {
         this.userid = userid;
         this.text = text;
         this.postid = postid;
+        this.notifid = notifid;
         this.isPost = isPost;
+    }
+
+    public String getNotifid() {
+        return notifid;
+    }
+
+    public void setNotifid(String notifid) {
+        this.notifid = notifid;
+    }
+
+    public boolean isPost() {
+        return isPost;
+    }
+
+    public void setPost(boolean post) {
+        isPost = post;
     }
 
     public String getUserid() {

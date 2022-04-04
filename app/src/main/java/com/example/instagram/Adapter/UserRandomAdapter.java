@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.instagram.Fragments.ProfileFragment;
 import com.example.instagram.Activity.MainActivity;
 import com.example.instagram.Model.User;
@@ -62,15 +63,14 @@ public class UserRandomAdapter extends RecyclerView.Adapter<UserRandomAdapter.Vi
         if (user.getImageurl().equals("default")) {
             holder.imageRandom.setImageResource(R.drawable.profilo);
         } else {
-            Picasso.get().load(user.getImageurl()).into(holder.imageRandom);
+            Glide.with(context).load(user.getImageurl()).into(holder.imageRandom);
         }
-        isFollowed(user.getId(), holder.btn_RandomFollow);
 
+        isFollowed(user.getId(), holder.btn_RandomFollow);
 
         if (user.getId().equals(firebaseUser.getUid())) {
             holder.btn_RandomFollow.setVisibility(View.GONE);
         }
-
 
         holder.btn_RandomFollow.setOnClickListener(new View.OnClickListener() {
             @Override

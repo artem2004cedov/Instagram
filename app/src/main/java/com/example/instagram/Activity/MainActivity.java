@@ -59,8 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private NotificationManager notificationManager;
     private static final int NOTIFY_ID = 101;
     private static final String CHANNEL_ID = "CHANNEL_ID";
-    private static final int TIME_INTERVAL = 2000;
-    private long mBackPressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +155,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
         }
+
     }
 
     public static void onlineTame() {
@@ -228,15 +227,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 int num = (int) dataSnapshot.getChildrenCount();
-                int num2 = num;
-                num2++;
-
-                getSharedPreferences("con", MODE_PRIVATE).edit().putInt("num", num).apply();
-                getSharedPreferences("con", MODE_PRIVATE).edit().putInt("num2", num2).apply();
 
                 if (num != 0) {
-                    if (getSharedPreferences("con", MODE_PRIVATE).getInt("num", 0) <
-                            getSharedPreferences("con", MODE_PRIVATE).getInt("num2", 0)) {
                         textnotifications.setVisibility(View.VISIBLE);
                         phone_notification(notificationList.getLast());
                     } else {
@@ -244,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }
-            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -349,10 +340,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
-    }
 
     public static void createChannelIfNeeded(NotificationManager manager) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

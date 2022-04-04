@@ -71,6 +71,6 @@ public class StoryWindowActivity extends AppCompatActivity {
                 }
             }
         };
-        timer.schedule(timerTask, 0, 40);
+        timer.schedule(timerTask, 0, 50);
     }
 }

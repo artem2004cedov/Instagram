@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.instagram.Adapter.CommentAdapter;
 import com.example.instagram.Model.Comment;
 import com.example.instagram.Model.User;
@@ -132,7 +133,7 @@ public class CommentActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(CommentActivity.this, "Комментарий добавлен", Toast.LENGTH_SHORT).show();
-                    addNotification(postId,authorId);
+                    addNotification(postId, authorId);
                     addComment.setText("");
                 } else {
                 }
@@ -162,7 +163,11 @@ public class CommentActivity extends AppCompatActivity {
                 if (user.getImageurl().equals("default")) {
                     imageProfile.setImageResource(R.drawable.profilo);
                 } else {
-                    Picasso.get().load(user.getImageurl()).into(imageProfile);
+                    try {
+                        Glide.with(CommentActivity.this).load(user.getImageurl()).into(imageProfile);
+                    } catch (Exception e) {
+
+                    }
                 }
             }
 

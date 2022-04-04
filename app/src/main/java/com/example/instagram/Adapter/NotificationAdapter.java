@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -19,8 +20,11 @@ import com.example.instagram.Model.Notification;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -55,7 +59,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         getUser(holder.image_profile11, holder.username1, notification.getUserid());
         holder.comment.setText(notification.getText());
 
-        if (notification.isIsPost()) {
+        if (notification.isPost()) {
             holder.postImage.setVisibility(View.VISIBLE);
             getPostImage(holder.postImage, notification.getPostid());
         } else {
@@ -78,6 +82,30 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     ((FragmentActivity) mContext).getSupportFragmentManager()
                             .beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
                 }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(mContext);
+                bottomSheetDialog.setContentView(R.layout.delete_notification);
+                bottomSheetDialog.setCanceledOnTouchOutside(true);
+                bottomSheetDialog.setCancelable(true);
+
+                TextView textDeleteNotification = bottomSheetDialog.findViewById(R.id.textDeleteNotification);
+                textDeleteNotification.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Notifications");
+                        databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(notification.getNotifid()).removeValue();
+                        Toast.makeText(mContext, "Уведомление удаленно", Toast.LENGTH_SHORT).show();
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+
+                bottomSheetDialog.show();
+                return false;
             }
         });
 

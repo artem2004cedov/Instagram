@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -28,6 +29,7 @@ import com.example.instagram.Activity.AddStorisActivity;
 import com.example.instagram.Activity.ChatActivity;
 import com.example.instagram.Activity.EditProfileActivity;
 import com.example.instagram.Activity.FollowersActivity;
+import com.example.instagram.Activity.MainActivity;
 import com.example.instagram.Activity.OptionsActivity;
 import com.example.instagram.Adapter.PhotoAdapter;
 import com.example.instagram.Adapter.ProfilAdapter;
@@ -76,17 +78,18 @@ public class ProfileFragment extends Fragment {
     private boolean biog = false;
     private boolean foll = false;
 
-    private View view1;
-    private View view2;
+    private View view1,view2;
+
+    private Toolbar toolbarMyAccount,toolbarUserAccount;
 
     private CircleImageView imageProfile;
     private ImageView options;
     private TextView followers, following;
-    private TextView posts, count;
+    private TextView posts, count,nameProfileUser;
     private TextView fullname, text_all_random_profile;
     private TextView bio, textAddFoto, textAddStories;
     private TextView username;
-    private ImageView myPictures, bottomArrow, doneIconImage;
+    private ImageView myPictures, bottomArrow, doneIconImage,backProfile,doneIconImageUser;
     private ImageView savedPictures, imageprofileAdd, imageProfileAdd2;
     private Button editProfile, edit_following, edit_chats;
     private FirebaseUser fUser;
@@ -100,6 +103,8 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        toolbarMyAccount = view.findViewById(R.id.toolbarMyAccount);
+        toolbarUserAccount = view.findViewById(R.id.toolbarUserAccount);
         fUser = FirebaseAuth.getInstance().getCurrentUser();
 
         String data = getContext().getSharedPreferences("PROFILE", Context.MODE_PRIVATE).getString("profileId", "none");
@@ -128,7 +133,6 @@ public class ProfileFragment extends Fragment {
         photoAdapter = new PhotoAdapter(getContext(), myPhotoList);
         recyclerView.setAdapter(photoAdapter);
 
-
         bottomArrow = view.findViewById(R.id.bottomArrow);
         recyclerViewSaves = view.findViewById(R.id.recucler_view_saved);
         recyclerViewSaves.setHasFixedSize(true);
@@ -155,6 +159,8 @@ public class ProfileFragment extends Fragment {
             edit_chats.setVisibility(View.GONE);
             bottomArrow.setVisibility(View.VISIBLE);
             linearFollowing.setVisibility(View.GONE);
+            toolbarMyAccount.setVisibility(View.VISIBLE);
+            toolbarUserAccount.setVisibility(View.GONE);
 
             editProfile.setText("Редактировать профиль");
         } else {
@@ -167,7 +173,8 @@ public class ProfileFragment extends Fragment {
             linearProfale.setVisibility(View.GONE);
             bottomArrow.setVisibility(View.GONE);
             linearFollowing.setVisibility(View.VISIBLE);
-
+            toolbarMyAccount.setVisibility(View.GONE);
+            toolbarUserAccount.setVisibility(View.VISIBLE);
         }
 
         editProfile.setOnClickListener(new View.OnClickListener() {
@@ -353,6 +360,9 @@ public class ProfileFragment extends Fragment {
         editProfile = view.findViewById(R.id.edit_profile);
         edit_following = view.findViewById(R.id.edit_following);
         edit_chats = view.findViewById(R.id.edit_chats);
+        nameProfileUser = view.findViewById(R.id.nameProfileUser);
+        backProfile = view.findViewById(R.id.backProfile);
+        doneIconImageUser = view.findViewById(R.id.doneIconImageUser);
         myPhotoList = new ArrayList<>();
 
         imageprofileAdd.setOnClickListener(new View.OnClickListener() {
@@ -377,6 +387,13 @@ public class ProfileFragment extends Fragment {
                     imageProfileAdd2.setImageResource(R.drawable.addusericon);
                     layoutRandomProfile.setVisibility(View.GONE);
                 }
+            }
+        });
+
+        backProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               startActivity(new Intent(getActivity(), MainActivity.class));
             }
         });
     }
@@ -533,8 +550,9 @@ public class ProfileFragment extends Fragment {
 
                             for (String id : savedIds) {
                                 if (post.getPostid().equals(id)) {
-                                    if (post.getPublisher().equals(profileId))
+                                    if (profileId.equals(fUser.getUid())) {
                                         mySavedPosts.add(post);
+                                    }
                                 }
                             }
                         }
@@ -678,7 +696,6 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-
     }
 
     private void userInfo() {
@@ -694,11 +711,14 @@ public class ProfileFragment extends Fragment {
                 fullname.setText(user.getUsername());
                 username.setText(user.getName());
                 bio.setText(user.getBio());
+                nameProfileUser.setText(user.getUsername());
 
                 if (user.isPosition()) {
                     doneIconImage.setVisibility(View.VISIBLE);
+                    doneIconImageUser.setVisibility(View.VISIBLE);
                 } else {
                     doneIconImage.setVisibility(View.GONE);
+                    doneIconImageUser.setVisibility(View.GONE);
                 }
 
                 edit_chats.setOnClickListener(new View.OnClickListener() {
@@ -750,6 +770,5 @@ public class ProfileFragment extends Fragment {
 
             }
         });
-
     }
 }

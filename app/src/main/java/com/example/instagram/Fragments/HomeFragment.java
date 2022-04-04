@@ -58,25 +58,27 @@ public class HomeFragment extends Fragment {
     private RecyclerView recycler_view_story;
     private RecyclerView recyclerUserRandom;
     private RecyclerView recyclerLower;
+
     private PostAdapter postAdapter;
     private StorisAdapter storisAdapter;
+
     private List<Post> postList;
-    private List<User> wellcomList;
+    private List<User> welcomeList;
     private List<Post> postListLower;
     private List<Stories> storiesList;
+    private List<User> follListRandom;
+    private List<String> followingList;
+    private List<User> listUserRandom;
+    private List<User> listUserRandomWelcome;
+
     private CircleImageView image_storis;
     private FirebaseUser fUser;
-    private LinearLayout layoutRandom,wellcomLiner;
+    private LinearLayout layoutRandom, welcomeLiner;
     private ProgressBar progresbarHome;
     private WellcomeAdapter wellcomAdapter;
 
-    private List<User> listRandom;
     private UserRandomAdapter userRandomAdapter;
-
     private Random randomGenerator;
-    private List<User> follListRandom;
-    private List<String> followingList;
-
     private ViewPager2 homeViewpager;
 
     @Override
@@ -86,7 +88,6 @@ public class HomeFragment extends Fragment {
 
         init(view);
         bottomPanel(inflater, view);
-
         return view;
     }
 
@@ -103,8 +104,8 @@ public class HomeFragment extends Fragment {
             @Override
             public void run() {
                 getImageUser();
-                readUsers();
                 checkFollowingUsers();
+                readUsersRandom();
             }
         }).start();
 
@@ -141,62 +142,22 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        recycler_view_story.setVisibility(View.GONE);
-        recyclerLower.setVisibility(View.GONE);
-        recyclerViewPosts.setVisibility(View.GONE);
-        recyclerUserRandom.setVisibility(View.GONE);
-    }
 
     private void init(View view) {
         postListLower = new ArrayList<>();
-        randomGenerator = new Random();
-        layoutRandom = view.findViewById(R.id.layoutRandom);
-
-        progresbarHome = view.findViewById(R.id.progresbarHome);
-        wellcomLiner = view.findViewById(R.id.wellcomLiner);
-
-        listRandom = new ArrayList<>();
+        listUserRandomWelcome = new ArrayList<>();
+        followingList = new ArrayList<>();
+        listUserRandom = new ArrayList<>();
         follListRandom = new ArrayList<>();
+        randomGenerator = new Random();
+
+        layoutRandom = view.findViewById(R.id.layoutRandom);
+        progresbarHome = view.findViewById(R.id.progresbarHome);
+        welcomeLiner = view.findViewById(R.id.welcomeLiner);
+
         recyclerUserRandom = view.findViewById(R.id.recyclerUserRandom);
         recyclerUserRandom.setHasFixedSize(true);
         recyclerUserRandom.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-
-        userRandomAdapter = new UserRandomAdapter(getContext(), listRandom, true);
-        recyclerUserRandom.setAdapter(userRandomAdapter);
-        homeViewpager = view.findViewById(R.id.homeViewpager);
-
-        wellcomList = new ArrayList<>();
-        wellcomAdapter = new WellcomeAdapter(getContext(),listRandom,false);
-        homeViewpager.setAdapter(wellcomAdapter);
-        homeViewpager.setClipToPadding(false);
-        homeViewpager.setClipChildren(false);
-        homeViewpager.setOffscreenPageLimit(3);
-
-        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
-        compositePageTransformer.addTransformer(new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-                float a = 1 - Math.abs(position);
-                page.setScaleX(0.85f + a*.15f);
-
-            }
-        });
-
-        homeViewpager.setPageTransformer(compositePageTransformer);
-
-        CompositePageTransformer transformer = new CompositePageTransformer();
-        transformer.addTransformer(new ViewPager2.PageTransformer() {
-            @Override
-            public void transformPage(@NonNull View page, float position) {
-                float a = 1 - Math.abs(position);
-                page.setScaleX(0.85f + a*.15f);
-            }
-        });
-
-        homeViewpager.setPageTransformer(transformer);
 
         fUser = FirebaseAuth.getInstance().getCurrentUser();
         image_storis = view.findViewById(R.id.image_storis);
@@ -208,20 +169,15 @@ public class HomeFragment extends Fragment {
         linearLayoutManager1.setReverseLayout(true);
         recyclerViewPosts.setLayoutManager(linearLayoutManager1);
         postList = new ArrayList<>();
-        recyclerUserRandom.setVisibility(View.GONE);
-        recyclerViewPosts.setVisibility(View.GONE);
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                recyclerUserRandom.setVisibility(View.VISIBLE);
-                recyclerViewPosts.setVisibility(View.VISIBLE);
-            }
-        },150);
 
         recyclerLower = view.findViewById(R.id.recyclerLower);
         recyclerLower.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        homeViewpager = view.findViewById(R.id.homeViewpager);
+        welcomeList = new ArrayList<>();
+
+        userRandomAdapter = new UserRandomAdapter(getContext(), listUserRandom, true);
+        recyclerUserRandom.setAdapter(userRandomAdapter);
 
         recycler_view_story = view.findViewById(R.id.recycler_view_story);
         recycler_view_story.setHasFixedSize(true);
@@ -230,75 +186,54 @@ public class HomeFragment extends Fragment {
         storiesList = new ArrayList<>();
         storisAdapter = new StorisAdapter(getContext(), storiesList);
         recycler_view_story.setAdapter(storisAdapter);
-        followingList = new ArrayList<>();
     }
 
-    private void readPosts() {
-        FirebaseDatabase.getInstance().getReference().child("Posts").addValueEventListener(new ValueEventListener() {
+    private void readWelcome() {
+        welcomeLiner.setVisibility(View.VISIBLE);
+        wellcomAdapter = new WellcomeAdapter(getContext(),
+                listUserRandomWelcome, false);
+        homeViewpager.setAdapter(wellcomAdapter);
+        homeViewpager.setClipToPadding(false);
+        homeViewpager.setClipChildren(false);
+        homeViewpager.setOffscreenPageLimit(3);
+
+        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+        compositePageTransformer.addTransformer(new ViewPager2.PageTransformer() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                postList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Post post = snapshot.getValue(Post.class);
-                    for (String id : followingList) {
-//                        если id пользователя ,и все свопадет
-                        if (post.getPublisher().equals(id)) {
-                            postList.add(post);
-                        }
-                    }
-                }
-
-                if (postList.size() != 0) {
-                    progresbarHome.setVisibility(View.GONE);
-                    wellcomLiner.setVisibility(View.GONE);
-                    List<Post> posL = new ArrayList<>();
-                    Post post = postList.get(0);
-                    if (postList.size() >= 2) {
-                        Post post1 = postList.get(1);
-                        posL.add(post1);
-                    }
-                    posL.add(post);
-                    postAdapter = new PostAdapter(getContext(), posL);
-                    recyclerViewPosts.setAdapter(postAdapter);
-                    postAdapter.notifyDataSetChanged();
-                } else {
-                    wellcomLiner.setVisibility(View.VISIBLE);
-                }
-
-                if (postList.size() >= 2) {
-                    List<Post> pList = new ArrayList<>();
-                    pList.addAll(postList);
-                    pList.remove(0);
-                    pList.remove(0);
-                    postAdapter = new PostAdapter(getContext(), pList);
-                    recyclerLower.setAdapter(postAdapter);
-                    postAdapter.notifyDataSetChanged();
-                }
-                layoutRandom.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void transformPage(@NonNull View page, float position) {
+                float a = 1 - Math.abs(position);
+                page.setScaleX(0.85f + a * .15f);
 
             }
         });
-    }
 
-    private void readUsers() {
+        homeViewpager.setPageTransformer(compositePageTransformer);
+        CompositePageTransformer transformer = new CompositePageTransformer();
+        transformer.addTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                float a = 1 - Math.abs(position);
+                page.setScaleX(0.85f + a * .15f);
+            }
+        });
+
+        homeViewpager.setPageTransformer(transformer);
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                listRandom.clear();
+
                 followingList.clear();
-                wellcomList.clear();
+                welcomeList.clear();
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
                     if (user != null)
-                    if (!user.getId().equals(fUser.getUid())) {
-                        follListRandom.add(user);
-                        wellcomList.add(user);
-                    }
+                        if (!user.getId().equals(fUser.getUid())) {
+                            follListRandom.add(user);
+                            welcomeList.add(user);
+                        }
                 }
 
                 Set<User> items_id = new HashSet<>();
@@ -311,12 +246,98 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 }
+
                 for (User user : items_id) {
-                    listRandom.add(user);
+                    listUserRandomWelcome.add(user);
                 }
 
-                userRandomAdapter.notifyDataSetChanged();
                 wellcomAdapter.notifyDataSetChanged();
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void readPosts() {
+        FirebaseDatabase.getInstance().getReference().child("Posts").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                postList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Post post = snapshot.getValue(Post.class);
+                    for (String id : followingList) {
+                        if (post.getPublisher().equals(id)) {
+                            postList.add(post);
+                        }
+                    }
+                }
+
+                settingInformation();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void settingInformation() {
+
+        if (postList.size() != 0) {
+            progresbarHome.setVisibility(View.GONE);
+            welcomeLiner.setVisibility(View.GONE);
+            recyclerViewPosts.setVisibility(View.VISIBLE);
+
+            postAdapter = new PostAdapter(getContext(), postList);
+            recyclerViewPosts.setAdapter(postAdapter);
+            postAdapter.notifyDataSetChanged();
+            layoutRandom.setVisibility(View.VISIBLE);
+
+        } else {
+            readWelcome();
+            recyclerViewPosts.setVisibility(View.GONE);
+            recyclerUserRandom.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void readUsersRandom() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                listUserRandom.clear();
+                welcomeList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    User user = snapshot.getValue(User.class);
+                    if (user != null)
+                        if (!user.getId().equals(fUser.getUid())) {
+                            follListRandom.add(user);
+                            welcomeList.add(user);
+                        }
+                }
+
+                Set<User> items_id = new HashSet<>();
+                if (follListRandom.size() != 0) {
+                    if (follListRandom.size() != 0) {
+                        for (int i = 0; i < 30; i++) {
+                            int index = randomGenerator.nextInt(follListRandom.size());
+                            User random = follListRandom.get(index);
+                            items_id.add(random);
+                        }
+                    }
+                }
+
+                for (User user : items_id) {
+                    listUserRandom.add(user);
+                }
+                userRandomAdapter.notifyDataSetChanged();
             }
 
 

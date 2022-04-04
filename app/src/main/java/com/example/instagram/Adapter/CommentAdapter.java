@@ -1,8 +1,11 @@
 package com.example.instagram.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +43,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     private FirebaseUser fUser;
 
-    public CommentAdapter(Context mContext, List<Comment> mComments , String postId) {
+    public CommentAdapter(Context mContext, List<Comment> mComments, String postId) {
         this.mContext = mContext;
         this.mComments = mComments;
         this.postId = postId;
@@ -103,35 +106,39 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
             @Override
             public boolean onLongClick(View v) {
                 if (comment.getPublisher().endsWith(fUser.getUid())) {
-                    AlertDialog alertDialog = new AlertDialog.Builder(mContext).create();
-                    alertDialog.setTitle("Удалить комментарий ?");
-                    alertDialog.setMessage("Вы уверенны что хотите удалить");
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "нет", new DialogInterface.OnClickListener() {
+
+                    Dialog alertDialog = new Dialog(mContext);
+                    alertDialog.setContentView(R.layout.deletecomment);
+                    alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    TextView deleteText = alertDialog.findViewById(R.id.deleteText);
+                    deleteText.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "да", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialog, int which) {
+                        public void onClick(View v) {
                             FirebaseDatabase.getInstance().getReference().child("Comments")
                                     .child(postId).child(comment.getId()).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         Toast.makeText(mContext, "Комментарий удален", Toast.LENGTH_SHORT).show();
-                                        dialog.dismiss();
+                                        alertDialog.dismiss();
                                     }
                                 }
                             });
+                        }
+                    });
+
+                    TextView deletepostback = alertDialog.findViewById(R.id.deletepostback);
+                    deletepostback.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
                         }
                     });
                     alertDialog.show();
                 }
 
                 return true;
-            };
+            }
         });
 
 //        FirebaseDatabase.getInstance().getReference().child("Comments")
@@ -171,7 +178,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         return mComments.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         public CircleImageView imageProfile;
         public TextView username;

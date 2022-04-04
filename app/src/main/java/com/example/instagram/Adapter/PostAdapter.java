@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -234,6 +235,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             TextView deleteText = dialog.findViewById(R.id.deleteText);
                             TextView deletepostback = dialog.findViewById(R.id.deletepostback);
+
                             deletepostback.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -312,7 +314,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.Viewholder> {
                         @Override
                         public void run() {
                             thread_started = true;
-//                            +79634164421
                             try {
                                 Thread.sleep(DELAY_BETWEEN_CLICKS_IN_MILLISECONDS);
                                 if (number_of_clicks == 1) {

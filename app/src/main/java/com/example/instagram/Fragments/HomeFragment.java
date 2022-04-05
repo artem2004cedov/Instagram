@@ -393,19 +393,38 @@ public class HomeFragment extends Fragment {
     }
 
     private void readStories() {
-        FirebaseDatabase.getInstance().getReference().child("Stories").addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("Story").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 storiesList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Stories stories = snapshot.getValue(Stories.class);
-                    for (String id : followingList) {
-                        if (stories.getPublisher().equals(id)) {
-                            storiesList.add(stories);
-                        }
+                long current = System.currentTimeMillis();
+//                storiesList.add(new Stories("",0,0,"",FirebaseAuth.getInstance().getCurrentUser().getUid()));
+
+                for (String id : followingList) {
+                    int contStory = 0;
+                    Stories stories = null;
+
+                    for (DataSnapshot snapshot : dataSnapshot.child(id).getChildren()) {
+                        stories = snapshot.getValue(Stories.class);
+
+                            if (stories.getPublisher().equals(id)) {
+                                if (current > stories.getTimestart() && current < stories.getTimeend()) {
+                                    contStory++;
+                                }
+                            }
+                    }
+
+                    if (contStory > 0) {
+                        storiesList.add(stories);
                     }
                 }
                 storisAdapter.notifyDataSetChanged();
+
+//                for (String id : followingList) {
+//                    int contStory = 0;
+//                    Stories stories = null;
+//                    for (DataSnapshot dataSnapshot1 : dataSnapshot.child())
+//                }
             }
 
             @Override

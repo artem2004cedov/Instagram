@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instagram.Adapter.UserAdapter;
+import com.example.instagram.Model.Stories;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
@@ -27,10 +29,10 @@ public class FollowersActivity extends AppCompatActivity {
     private String id;
     private String title;
     private List<String> idList;
+    private List<User> mUsers;
 
     private RecyclerView recyclerView;
     private UserAdapter userAdapter;
-    private List<User> mUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +75,31 @@ public class FollowersActivity extends AppCompatActivity {
 
             case "Отметки\"Нравится\"":
                 getLikes();
+            case "Просмотры":
                 break;
         }
     }
+
+  /*  private void getViews() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Story").child(id).
+                child(getIntent().getStringExtra("storyId")).child("views");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                idList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    idList.add(dataSnapshot.getKey());
+
+                }
+                showUsers();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }*/
 
     private void getFollowers() {
         FirebaseDatabase.getInstance().getReference().child("Follow").child(id).child("followers").addValueEventListener(new ValueEventListener() {

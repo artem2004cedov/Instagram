@@ -6,9 +6,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +24,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -88,19 +91,32 @@ public class AddStorisActivity extends AppCompatActivity {
                     Uri downloadUri = task.getResult();
                     imageUrl = downloadUri.toString();
 
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Stories");
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Story");
                     String storiesid = ref.push().getKey();
+                    long timeend = System.currentTimeMillis() + 86400000;
 
                     HashMap<String, Object> map = new HashMap<>();
                     map.put("storiesid", storiesid);
                     map.put("imageurl", imageUrl);
+                    map.put("timestart", ServerValue.TIMESTAMP);
+                    map.put("timeend", timeend);
                     map.put("publisher", FirebaseAuth.getInstance().getCurrentUser().getUid());
 
-                    ref.child(storiesid).setValue(map);
+                    ref.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(storiesid).setValue(map);
 
                     pd.dismiss();
-                    startActivity(new Intent(AddStorisActivity.this, MainActivity.class));
-                    finish();
+                    if (task.isSuccessful()) {
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(new Intent(AddStorisActivity.this,MainActivity.class));
+                                finish();
+                            }
+                        },600);
+
+                    }
+
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

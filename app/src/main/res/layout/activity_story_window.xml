@@ -9,19 +9,33 @@
     tools:context=".Activity.StoryWindowActivity">
 
 
+    <FrameLayout
+        android:visibility="visible"
+        android:id="@+id/frameStory"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@color/black_89" />
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:background="#A5A0A0"
-        android:layout_margin="6dp"
-        android:indeterminateTint="@color/white"
+    <ImageView
+        android:id="@+id/mainWindowStories"
         android:layout_width="match_parent"
-        android:layout_height="1.5dp" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/linearMain"
+        android:scaleType="centerCrop" />
+
+    <jp.shts.android.storiesprogressview.StoriesProgressView
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="1.5dp"
+        android:layout_margin="10dp"
+        android:layout_marginTop="8dp"
+        android:background="#A5A0A0"
+        android:indeterminateTint="@color/white" />
 
     <LinearLayout
         android:id="@+id/layout"
@@ -29,11 +43,12 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="34dp"
             android:id="@+id/stories_profale"
+            android:layout_width="34dp"
             android:layout_height="34dp"
             android:src="@drawable/profilo" />
 
@@ -41,10 +56,10 @@
             android:id="@+id/name_user_stories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="13dp"
-            android:textStyle="bold"
             android:layout_marginStart="10dp"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="13dp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,6 +74,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:id="@+id/settingStory"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignParentEnd="true"
@@ -67,12 +83,27 @@
 
     </LinearLayout>
 
-
-    <ImageView
-        android:id="@+id/mainWindowStories"
-        android:layout_below="@id/layout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_above="@id/linearMain"
+        android:layout_below="@id/layout"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/reverse"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <View
+            android:id="@+id/skip"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
 
     <ImageView
         android:layout_width="match_parent"
@@ -81,40 +112,102 @@
         android:background="@color/black"
         android:paddingBottom="70dp" />
 
-
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/linearMain"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="center_horizontal"
-        android:paddingHorizontal="10dp"
-        android:layout_marginBottom="8dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="0dp"
-            android:id="@+id/massege_stories"
+        <LinearLayout
+            android:id="@+id/linearStoryMy"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_weight="5"
-            android:background="@drawable/ed_stories_thate"
-            android:hint="Отправить сообщение"
-            android:textColor="@color/white"
-            android:padding="15dp"
-            android:textColorHint="@color/white"
-            android:textSize="12dp" />
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/add_comment_stories"
-            android:layout_width="0dp"
-            android:layout_height="34dp"
-            android:layout_alignParentEnd="true"
-            android:fadingEdge="none"
-            android:layout_weight="1"
-            android:layout_marginVertical="8dp"
-            android:src="@drawable/send_24" />
+            <LinearLayout
+                android:id="@+id/linearView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profileStory"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/profilo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:text="Действия"
+                    android:textColor="@color/white"
+                    android:textSize="8dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/settingsStoryBottom"
+                    android:layout_width="160dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/bottomstory" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearStory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:visibility="gone">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/massege_stories"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_weight="6"
+                android:background="@drawable/ed_stories_thate"
+                android:hint="Отправить сообщение"
+                android:padding="15dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:textSize="12dp" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:fadingEdge="none"
+                android:src="@drawable/likestoryicon" />
+
+            <ImageView
+                android:id="@+id/add_comment_stories"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:fadingEdge="none"
+                android:src="@drawable/sendstoryicon" />
+
+        </LinearLayout>
     </LinearLayout>
 
 

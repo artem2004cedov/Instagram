@@ -262,10 +262,10 @@ public class StoryWindowActivity extends AppCompatActivity implements StoriesPro
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Stories stories = dataSnapshot.getValue(Stories.class);
                     long timecurrent = System.currentTimeMillis();
-                    if (timecurrent > stories.getTimestart() && timecurrent < stories.getTimeend()) {
+//                    if (timecurrent > stories.getTimestart() && timecurrent < stories.getTimeend()) {
                         images.add(stories.getImageurl());
                         storyId.add(stories.getStoriesid());
-                    }
+//                    }
                 }
 
                 progress.setStoriesCount(images.size());

@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import com.example.instagram.Fragments.HomeFragment;
 import com.example.instagram.Fragments.NotificationFragment;
 import com.example.instagram.Fragments.ProfileFragment;
 import com.example.instagram.Fragments.SearchFragment;
+import com.example.instagram.Login.VxotActivity;
 import com.example.instagram.Model.Notification;
 import com.example.instagram.Model.User;
 import com.example.instagram.R;
@@ -75,22 +77,17 @@ public class MainActivity extends AppCompatActivity {
         notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         onlineTame();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                readUser();
-                readNotifications();
-            }
-        }).start();
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    readUser();
+                    readNotifications();
+                }
+            }).start();
+        }
 
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                bottomMenu();
-            }
-        }).start();
-
+        bottomMenu();
     }
 
     private void bottomMenu() {
@@ -156,6 +153,13 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
         }
 
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+            }
+        }, 10);
     }
 
     public static void onlineTame() {
@@ -200,7 +204,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        offline();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(MainActivity.this, VxotActivity.class));
+        } else {
+            offline();
+        }
     }
 
     public static void offline() {
@@ -213,7 +221,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        online();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(MainActivity.this, VxotActivity.class));
+        } else {
+            online();
+        }
     }
 
     private void readNotifications() {

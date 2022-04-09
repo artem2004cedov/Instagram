@@ -47,11 +47,12 @@
 
     <ProgressBar
         android:id="@+id/progresbarHome"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerInParent="true"
+        android:indeterminateDrawable="@drawable/progresbar_main"
         android:indeterminate="true"
-        android:indeterminateTint="#605F5F" />
+        />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -79,10 +80,11 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/image_storis"
-                        android:layout_width="66dp"
-                        android:layout_height="66dp"
+                        android:layout_width="74dp"
+                        android:layout_height="74dp"
+                        android:background="@drawable/winding_profil_views"
                         android:src="@drawable/profilo"
-                        app:civ_border_width="0.1dp" />
+                         />
 
                     <ImageView
                         android:layout_width="18dp"

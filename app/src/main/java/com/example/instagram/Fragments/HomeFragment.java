@@ -408,9 +408,9 @@ public class HomeFragment extends Fragment {
                         stories = snapshot.getValue(Stories.class);
 
                             if (stories.getPublisher().equals(id)) {
-                                if (current > stories.getTimestart() && current < stories.getTimeend()) {
+//                                if (current > stories.getTimestart() && current < stories.getTimeend()) {
                                     contStory++;
-                                }
+//                                }
                             }
                     }
 

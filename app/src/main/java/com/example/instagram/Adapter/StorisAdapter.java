@@ -43,13 +43,8 @@ public class StorisAdapter extends RecyclerView.Adapter<StorisAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-//        if (viewType == 0) {
-//            View view = LayoutInflater.from(context).inflate(R.layout.add_storis_item, parent, false);
-//            return new ViewHolder(view);
-//        } else {
         View view = LayoutInflater.from(context).inflate(R.layout.storis_item, parent, false);
         return new ViewHolder(view);
-//        }
     }
 
     @Override
@@ -160,7 +155,7 @@ public class StorisAdapter extends RecyclerView.Adapter<StorisAdapter.ViewHolder
                 int i = 0;
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (!dataSnapshot.child("views").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).exists()
-                            && System.currentTimeMillis() < dataSnapshot.getValue(Stories.class).getTimeend()) {
+                            /*&& System.currentTimeMillis() < dataSnapshot.getValue(Stories.class).getTimeend()*/) {
                         i++;
                     }
                 }

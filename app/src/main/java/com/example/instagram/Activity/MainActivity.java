@@ -73,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
         addMain = findViewById(R.id.addMain);
         heartMani = findViewById(R.id.heartMani);
         profaleMani = findViewById(R.id.profaleMani);
-        fUser = FirebaseAuth.getInstance().getCurrentUser();
+
         notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        onlineTame();
+        fUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             new Thread(new Runnable() {
@@ -85,9 +85,12 @@ public class MainActivity extends AppCompatActivity {
                     readNotifications();
                 }
             }).start();
-        }
 
-        bottomMenu();
+            onlineTame();
+            bottomMenu();
+        } else {
+            startActivity(new Intent(MainActivity.this, VxotActivity.class));
+        }
     }
 
     private void bottomMenu() {
@@ -205,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(MainActivity.this, VxotActivity.class));
         } else {
             offline();

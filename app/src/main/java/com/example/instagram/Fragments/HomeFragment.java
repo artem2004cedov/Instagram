@@ -32,6 +32,7 @@ import com.example.instagram.Adapter.PostAdapter;
 import com.example.instagram.Adapter.StorisAdapter;
 import com.example.instagram.Adapter.UserRandomAdapter;
 import com.example.instagram.Adapter.WellcomeAdapter;
+import com.example.instagram.Login.VxotActivity;
 import com.example.instagram.Model.Post;
 import com.example.instagram.Model.Stories;
 import com.example.instagram.Model.User;
@@ -100,14 +101,19 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                getImageUser();
-                checkFollowingUsers();
-                readUsersRandom();
-            }
-        }).start();
+        if (fUser != null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    getImageUser();
+                    checkFollowingUsers();
+                    readUsersRandom();
+                }
+            }).start();
+        } else {
+            startActivity(new Intent(getContext(), VxotActivity.class));
+        }
+
 
         image_storis.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,47 +225,50 @@ public class HomeFragment extends Fragment {
 
         homeViewpager.setPageTransformer(transformer);
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                followingList.clear();
-                welcomeList.clear();
+        if (fUser != null) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    User user = snapshot.getValue(User.class);
-                    if (user != null)
-                        if (!user.getId().equals(fUser.getUid())) {
-                            follListRandom.add(user);
-                            welcomeList.add(user);
-                        }
-                }
+                    followingList.clear();
+                    welcomeList.clear();
 
-                Set<User> items_id = new HashSet<>();
-                if (follListRandom.size() != 0) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        User user = snapshot.getValue(User.class);
+                        if (user != null)
+                            if (!user.getId().equals(fUser.getUid())) {
+                                follListRandom.add(user);
+                                welcomeList.add(user);
+                            }
+                    }
+
+                    Set<User> items_id = new HashSet<>();
                     if (follListRandom.size() != 0) {
-                        for (int i = 0; i < 30; i++) {
-                            int index = randomGenerator.nextInt(follListRandom.size());
-                            User random = follListRandom.get(index);
-                            items_id.add(random);
+                        if (follListRandom.size() != 0) {
+                            for (int i = 0; i < 30; i++) {
+                                int index = randomGenerator.nextInt(follListRandom.size());
+                                User random = follListRandom.get(index);
+                                items_id.add(random);
+                            }
                         }
                     }
+
+                    for (User user : items_id) {
+                        listUserRandomWelcome.add(user);
+                    }
+
+                    wellcomAdapter.notifyDataSetChanged();
                 }
 
-                for (User user : items_id) {
-                    listUserRandomWelcome.add(user);
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
                 }
-
-                wellcomAdapter.notifyDataSetChanged();
-            }
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+            });
+        }
     }
 
     private void readPosts() {
@@ -303,7 +312,6 @@ public class HomeFragment extends Fragment {
             recyclerViewPosts.setVisibility(View.GONE);
             recyclerUserRandom.setVisibility(View.GONE);
         }
-
     }
 
     private void readUsersRandom() {

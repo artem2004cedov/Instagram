@@ -3,242 +3,265 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Activity.ChatActivity">
+    android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/bar"
+    <RelativeLayout
+        android:id="@+id/rel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:background="@color/white"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/image_that_back"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_arrow_levo" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/user_profile"
+                            android:layout_width="33dp"
+                            android:layout_height="33dp"
+                            android:layout_marginStart="20dp"
+                            android:src="@drawable/profilo" />
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/thatDot"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginStart="40dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@android:color/transparent"
+                            android:src="@drawable/doticon"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+
+                    <LinearLayout
+                        android:id="@+id/layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@id/user_profile"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/username_that"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="14dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/statusTextThat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="11dp" />
+                    </LinearLayout>
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginHorizontal="10dp"
+                                android:src="@drawable/phone" />
+
+                            <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginHorizontal="15dp"
+                                android:src="@drawable/camera" />
+
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+    </RelativeLayout>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_below="@id/rel"
+        android:layout_above="@id/relav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:background="@color/white"
-            android:gravity="center_vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/ThatLinerL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_below="@id/rel"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                <ImageView
-                    android:id="@+id/image_that_back"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/ic_arrow_levo" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/thatUserProfile"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/profilo" />
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/user_profile"
-                        android:layout_width="33dp"
-                        android:layout_height="33dp"
-                        android:layout_marginStart="20dp"
-                        android:src="@drawable/profilo" />
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/thatDot"
-                        android:layout_width="14dp"
-                        android:layout_marginTop="20dp"
-                        android:visibility="gone"
-                        android:layout_marginStart="40dp"
-                        android:background="@android:color/transparent"
-                        android:layout_height="14dp"
-                        android:src="@drawable/doticon" />
-                </RelativeLayout>
-
+                <TextView
+                    android:id="@+id/thatName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
 
                 <LinearLayout
-                    android:id="@+id/layout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@id/user_profile"
-                    android:orientation="vertical">
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/username_that"
+                        android:id="@+id/thatUserName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:textSize="14dp"
-                        android:textStyle="bold" />
+                        android:textAlignment="center"
+                        android:textColor="#8C8A8A"
+                        android:textSize="12dp" />
 
                     <TextView
-                        android:id="@+id/statusTextThat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="11dp" />
+                        android:text=" : Instagram"
+                        android:textAlignment="center"
+                        android:textColor="#8C8A8A"
+                        android:textSize="12dp" />
                 </LinearLayout>
 
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
+                        android:gravity="center_horizontal"
                         android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginHorizontal="10dp"
-                            android:src="@drawable/phone" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Подписчики: "
+                            android:textAlignment="center"
+                            android:textColor="#8C8A8A"
+                            android:textSize="12dp" />
 
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginHorizontal="15dp"
-                            android:src="@drawable/camera" />
-
+                        <TextView
+                            android:id="@+id/thatfollowers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textAlignment="center"
+                            android:textColor="#8C8A8A"
+                            android:textSize="12dp" />
                     </LinearLayout>
-                </RelativeLayout>
-            </LinearLayout>
-        </androidx.appcompat.widget.Toolbar>
-    </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_that"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/relav"
-        android:layout_below="@id/bar"
-        android:visibility="gone" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
 
-    <LinearLayout
-        android:id="@+id/ThatLinerL"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/bar"
-        android:layout_marginTop="30dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:visibility="visible">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Публикации: "
+                            android:textAlignment="center"
+                            android:textColor="#8C8A8A"
+                            android:textSize="12dp" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/thatUserProfile"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/profilo" />
+                        <TextView
+                            android:id="@+id/thatPostCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textAlignment="center"
+                            android:textColor="#8C8A8A"
+                            android:textSize="12dp" />
+                    </LinearLayout>
 
-        <TextView
-            android:id="@+id/thatName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="14dp"
-            android:textStyle="bold" />
+                </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/thatUserName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textColor="#8C8A8A"
-                android:textSize="12dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" : Instagram"
-                android:textAlignment="center"
-                android:textColor="#8C8A8A"
-                android:textSize="12dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:gravity="center_horizontal"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/thatUserFollowing"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Подписчики: "
                     android:textAlignment="center"
                     android:textColor="#8C8A8A"
-                    android:textSize="12dp" />
+                    android:textSize="13dp" />
 
-                <TextView
-                    android:id="@+id/thatfollowers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="#8C8A8A"
-                    android:textSize="12dp" />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/visitProfileBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/buuton_bio"
+                    android:text="посмотреть профиль"
+                    android:textSize="10dp"
+                    android:textStyle="bold" />
+
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_that"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Публикации: "
-                    android:textAlignment="center"
-                    android:textColor="#8C8A8A"
-                    android:textSize="12dp" />
-
-                <TextView
-                    android:id="@+id/thatPostCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="#8C8A8A"
-                    android:textSize="12dp" />
-            </LinearLayout>
+                android:layout_above="@id/relav"
+                android:layout_below="@id/ThatLinerL"
+                android:layout_margin="16dp"
+                android:visibility="visible" />
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/thatUserFollowing"
-            android:layout_width="match_parent"
-            android:textColor="#8C8A8A"
-            android:textAlignment="center"
-            android:textSize="13dp"
-            android:layout_height="wrap_content"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="150dp"
-            android:id="@+id/visitProfileBtn"
-            android:layout_marginTop="15dp"
-            android:text="посмотреть профиль"
-            android:textSize="10dp"
-            android:textStyle="bold"
-            android:background="@drawable/buuton_bio"
-            android:layout_height="28dp"/>
-
-
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 
     <RelativeLayout
@@ -253,7 +276,6 @@
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="10dp"
             android:background="@drawable/ed_thats">
-
 
             <LinearLayout
                 android:layout_width="match_parent"

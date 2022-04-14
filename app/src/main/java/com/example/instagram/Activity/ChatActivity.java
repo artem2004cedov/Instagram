@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.instagram.Adapter.CatheAdapter;
 import com.example.instagram.Model.MassegeModel;
 import com.example.instagram.Model.Post;
@@ -39,14 +40,15 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatActivity extends AppCompatActivity {
-    private CircleImageView user_profile,thatUserProfile,thatDot;
-    private TextView username_that, text_send,statusTextThat,thatUserName,thatName,thatPostCount,thatfollowers,thatUserFollowing;
+
+    private CircleImageView user_profile, thatUserProfile, thatDot;
+    private TextView username_that, text_send, statusTextThat, thatUserName, thatName, thatPostCount, thatfollowers, thatUserFollowing;
     private RecyclerView recycler_view_that;
     private ImageView image_cammerea, image_search;
     private CatheAdapter catheAdapter;
     private ArrayList<MassegeModel> massegeModels;
     private SocialAutoCompleteTextView chat_massage_edit;
-    private LinearLayout liner_massage,ThatLinerL;
+    private LinearLayout liner_massage, ThatLinerL;
     private FirebaseDatabase database;
     private Button visitProfileBtn;
     private FirebaseAuth auth;
@@ -62,7 +64,7 @@ public class ChatActivity extends AppCompatActivity {
                 Map<String, Object> map = new HashMap<>();
                 map.put("status", "Сейчас в сети");
                 FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid()).updateChildren(map);
-                startActivity(new Intent(getApplicationContext(),ChatUsersActivity.class));
+                startActivity(new Intent(getApplicationContext(), ChatUsersActivity.class));
             }
         });
 
@@ -91,8 +93,10 @@ public class ChatActivity extends AppCompatActivity {
             user_profile.setImageResource(R.drawable.profilo);
             thatUserProfile.setImageResource(R.drawable.profilo);
         } else {
-            Picasso.get().load(profailPic).into(user_profile);
-            Picasso.get().load(profailPic).into(thatUserProfile);
+//            Picasso.get().load(profailPic).into(user_profile);
+//            Picasso.get().load(profailPic).into(thatUserProfile);
+            Glide.with(this).load(profailPic).into(user_profile);
+            Glide.with(this).load(profailPic).into(thatUserProfile);
         }
 
         recycler_view_that = findViewById(R.id.recycler_view_that);
@@ -131,15 +135,9 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 catheAdapter.notifyDataSetChanged();
 
-                int num = (int) snapshot.getChildrenCount();
 
-                if (num >= 1) {
-                    ThatLinerL.setVisibility(View.GONE);
-                    recycler_view_that.setVisibility(View.VISIBLE);
-                } else {
-                    ThatLinerL.setVisibility(View.VISIBLE);
-                    recycler_view_that.setVisibility(View.GONE);
-                }
+//                ThatLinerL.setVisibility(View.GONE);
+//                recycler_view_that.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -174,6 +172,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 thatfollowers.setText("" + dataSnapshot.getChildrenCount() + " ");
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -203,7 +202,7 @@ public class ChatActivity extends AppCompatActivity {
         visitProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),MainActivity.class).putExtra("publisherId",userId));
+                startActivity(new Intent(ChatActivity.this, MainActivity.class).putExtra("publisherId", userId));
             }
         });
 
@@ -273,13 +272,13 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-       MainActivity.offline();
+        MainActivity.offline();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-       MainActivity.online();
+        MainActivity.online();
     }
 
     private void setMassage() {

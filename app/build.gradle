@@ -42,6 +42,8 @@ dependencies {
     implementation 'com.github.shts:StoriesProgressView:3.0.0'
 
     implementation 'com.github.bumptech.glide:glide:4.13.0'
+    implementation 'com.android.support:support-annotations:28.0.0'
+    implementation 'org.jetbrains:annotations:15.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
 
     implementation 'br.com.simplepass:loading-button-android:2.2.0'

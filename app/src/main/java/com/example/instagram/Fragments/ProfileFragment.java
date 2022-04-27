@@ -1,5 +1,6 @@
 package com.example.instagram.Fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -74,22 +76,25 @@ public class ProfileFragment extends Fragment {
     private RecyclerView recyclerView;
     private PhotoAdapter photoAdapter;
     private List<Post> myPhotoList;
+    private User userMain = null;
+
     private boolean prof = false;
     private boolean biog = false;
     private boolean foll = false;
 
-    private View view1,view2;
+    private View view1, view2;
+    private Dialog dialog;
 
-    private Toolbar toolbarMyAccount,toolbarUserAccount;
+    private Toolbar toolbarMyAccount, toolbarUserAccount;
 
     private CircleImageView imageProfile;
     private ImageView options;
     private TextView followers, following;
-    private TextView posts, count,nameProfileUser;
+    private TextView posts, count, nameProfileUser;
     private TextView fullname, text_all_random_profile;
     private TextView bio, textAddFoto, textAddStories;
     private TextView username;
-    private ImageView myPictures, bottomArrow, doneIconImage,backProfile,doneIconImageUser;
+    private ImageView myPictures, bottomArrow, doneIconImage, backProfile, doneIconImageUser;
     private ImageView savedPictures, imageprofileAdd, imageProfileAdd2;
     private Button editProfile, edit_following, edit_chats;
     private FirebaseUser fUser;
@@ -161,9 +166,10 @@ public class ProfileFragment extends Fragment {
             linearFollowing.setVisibility(View.GONE);
             toolbarMyAccount.setVisibility(View.VISIBLE);
             toolbarUserAccount.setVisibility(View.GONE);
+            clikProfile();
 
             editProfile.setText("Редактировать профиль");
-            
+
         } else {
             edit_following.setVisibility(View.VISIBLE);
             edit_chats.setVisibility(View.VISIBLE);
@@ -331,7 +337,7 @@ public class ProfileFragment extends Fragment {
                     edit_following.setTextColor(getResources().getColor(R.color.white));
                 }
             }
-        },100);
+        }, 100);
 
     }
 
@@ -394,7 +400,7 @@ public class ProfileFragment extends Fragment {
         backProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               startActivity(new Intent(getActivity(), MainActivity.class));
+                startActivity(new Intent(getActivity(), MainActivity.class));
             }
         });
     }
@@ -454,15 +460,20 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-//        textAddStories = view.findViewById(R.id.textAddStories);
+
+    }
+
+    private void clikProfile() {
         imageProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builderAl = new AlertDialog.Builder(getContext());
-                LinearLayout layout = (LinearLayout) getLayoutInflater().inflate(R.layout.alerdialogprofile, null);
-                builderAl.setView(layout);
 
-                TextView textAddFoto = layout.findViewById(R.id.textAddFoto);
+                dialog = new Dialog(getContext());
+                dialog.setContentView(R.layout.alerdialogprofile);
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setCancelable(true);
+
+                TextView textAddFoto = dialog.findViewById(R.id.textAddFoto);
                 textAddFoto.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -470,7 +481,7 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
-                TextView textAddStories = layout.findViewById(R.id.textAddStories);
+                TextView textAddStories = dialog.findViewById(R.id.textAddStories);
                 textAddStories.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -478,11 +489,9 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
-                builderAl.show();
-
+                dialog.show();
             }
         });
-
     }
 
     private void setProfale(View view) {
@@ -704,6 +713,7 @@ public class ProfileFragment extends Fragment {
         username.setText(sharedPref.getString("usernamep", ""));
         bio.setText(sharedPref.getString("biop", ""));
 
+
         FirebaseDatabase.getInstance().getReference().child("Users").child(profileId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -713,6 +723,8 @@ public class ProfileFragment extends Fragment {
                 username.setText(user.getName());
                 bio.setText(user.getBio());
                 nameProfileUser.setText(user.getUsername());
+
+                userMain = user;
 
                 if (user.isPosition()) {
                     doneIconImage.setVisibility(View.VISIBLE);
@@ -752,8 +764,8 @@ public class ProfileFragment extends Fragment {
                             "Выберите фото для своего", "профиля Instagram.", "Изменить фото", "item_prof", "#FF000000"));
                     profilAdapter.notifyDataSetChanged();
                     if (getView() != null) {
-                        Glide.with(getView())
-                                .load(user.getImageurl())
+                        Glide.with(getContext())
+                                .load(userMain.getImageurl())
                                 .into(imageProfile);
                     }
                 }
@@ -771,5 +783,31 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+
+
+//        Glide.with(getContext())
+//                .load(userMain.getImageurl())
+//                .into(imageProfile);
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (userMain != null) {
+//                            Glide.with(getContext())
+//                .load(userMain.getImageurl())
+//                .into(imageProfile);
+//                }
+//            }
+//        },300);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (dialog != null) {
+            dialog.dismiss();
+        } else {
+        }
     }
 }

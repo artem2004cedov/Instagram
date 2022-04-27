@@ -50,9 +50,8 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:indeterminateDrawable="@drawable/progresbar_main"
         android:indeterminate="true"
-        />
+        android:indeterminateDrawable="@drawable/progresbar_main" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -65,53 +64,60 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="4dp"
-                android:orientation="horizontal"
-                android:padding="2dp">
+            <HorizontalScrollView
+                android:scrollbars="none"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="6dp"
-                    android:orientation="vertical">
+                    android:layout_marginHorizontal="4dp"
+                    android:orientation="horizontal"
+                    android:padding="2dp">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/image_storis"
-                        android:layout_width="74dp"
-                        android:layout_height="74dp"
-                        android:background="@drawable/winding_profil_views"
-                        android:src="@drawable/profilo"
-                         />
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_below="@id/image_storis"
-                        android:layout_marginStart="48dp"
-                        android:layout_marginTop="-22dp"
-                        android:src="@drawable/plusicon" />
-
-                    <TextView
-                        android:paddingVertical="6dp"
+                    <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/image_storis"
-                        android:layout_marginTop="5dp"
-                        android:text="Ваша история "
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="10dp" />
+                        android:layout_margin="6dp"
+                        android:orientation="vertical">
 
-                </RelativeLayout>
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/image_storis"
+                            android:layout_width="74dp"
+                            android:layout_height="74dp"
+                            android:background="@drawable/winding_profil_views"
+                            android:src="@drawable/profilo" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view_story"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
-            </LinearLayout>
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_below="@id/image_storis"
+                            android:layout_marginStart="48dp"
+                            android:layout_marginTop="-22dp"
+                            android:src="@drawable/plusicon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/image_storis"
+                            android:layout_marginTop="5dp"
+                            android:paddingVertical="6dp"
+                            android:text="Ваша история "
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="10dp" />
+
+                    </RelativeLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view_story"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" />
+                </LinearLayout>
+
+            </HorizontalScrollView>
+
 
             <View
                 android:layout_width="match_parent"
@@ -122,8 +128,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_posts"
                 android:layout_width="match_parent"
-                android:layoutAnimation="@anim/loyout_fill_recycler"
                 android:layout_height="wrap_content"
+                android:layoutAnimation="@anim/loyout_fill_recycler"
                 android:visibility="visible" />
 
             <LinearLayout
@@ -132,8 +138,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="#FEFEFE"
-                android:paddingBottom="30dp"
                 android:orientation="vertical"
+                android:paddingBottom="30dp"
                 android:visibility="gone">
 
                 <TextView
@@ -160,7 +166,7 @@
                     android:id="@+id/homeViewpager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="65dp"/>
+                    android:padding="65dp" />
 
             </LinearLayout>
 
@@ -173,9 +179,9 @@
                 android:visibility="gone">
 
                 <RelativeLayout
-                    android:layout_margin="4dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -192,8 +198,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:padding="2dp"
                         android:layout_marginEnd="8dp"
+                        android:padding="2dp"
                         android:text="Все"
                         android:textColor="@color/sinii_92"
                         android:textSize="13dp"
@@ -214,6 +220,7 @@
                 android:visibility="gone" />
 
         </LinearLayout>
+
 
     </androidx.core.widget.NestedScrollView>
 

@@ -196,8 +196,10 @@ public class HomeFragment extends Fragment {
 
     private void readWelcome() {
         welcomeLiner.setVisibility(View.VISIBLE);
+
         wellcomAdapter = new WellcomeAdapter(getContext(),
                 listUserRandomWelcome, false);
+
         homeViewpager.setAdapter(wellcomAdapter);
         homeViewpager.setClipToPadding(false);
         homeViewpager.setClipChildren(false);
@@ -224,7 +226,6 @@ public class HomeFragment extends Fragment {
         });
 
         homeViewpager.setPageTransformer(transformer);
-
 
         if (fUser != null) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("Users");

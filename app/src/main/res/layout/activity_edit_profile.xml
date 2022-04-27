@@ -84,6 +84,7 @@
             android:textSize="18sp"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
+            android:maxLength="20"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/fullname"
@@ -94,6 +95,7 @@
 
 
         <com.rengwuxian.materialedittext.MaterialEditText
+            android:maxLength="30"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/username"
@@ -103,6 +105,7 @@
             app:met_floatingLabel="normal"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
+            android:maxLength="30"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/site"
@@ -112,6 +115,7 @@
             app:met_floatingLabel="normal"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
+            android:maxLength="50"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/bio"

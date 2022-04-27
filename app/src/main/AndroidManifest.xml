@@ -26,14 +26,14 @@
         <activity android:name=".Activity.PhotoinprofileActivity" />
         <activity android:name=".Activity.ChatUsersActivity" />
         <activity android:name=".Activity.ChatActivity" /> <!-- <activity android:name=".Activity.MainActivity" /> -->
-        <activity android:name=".Login.VxotActivity" />
+        <activity android:name=".Activity.MainActivity" />
         <activity android:name=".Activity.CommentActivity" />
         <activity android:name=".Activity.EditProfileActivity" />
         <activity android:name=".Activity.FollowersActivity" />
         <activity android:name=".Activity.OptionsActivity" />
         <activity android:name=".Activity.PostActivity" />
         <activity android:name=".Login.RegistActivity" />
-        <activity android:name=".Activity.MainActivity">
+        <activity android:name=".Login.VxotActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
